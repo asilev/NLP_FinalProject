@@ -1,22 +1,19 @@
+package il.ac.openu.nlp.finalproject.json_reader;
 
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.io.FileReader;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class JSONReader {
 	
 	// Path of the file that contains the Twitter texts; the file is in JSON format
-	private static String sPath = "C:\\Users\\Ronen Jashek\\eclipse-workspace\\JSONReader\\data\\iw_tweets_20180706040002-20180710040003.json";
+	private static String sPath;
 	
 	// The encoding of the Twitts themselves (in our case in Hebrew)
 	private static String sEncoding = "UTF8";
@@ -31,8 +28,7 @@ public class JSONReader {
 	static HashMap<String, String> hmTransLiterate = new HashMap<String, String>();
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+		sPath = args[0];
 		createTransLiterateHM();		
 		readTwitterFile();
 	}
@@ -52,7 +48,7 @@ public class JSONReader {
                 
                 String text = (String) jsonObject.get("text");
                 String tlText = transLiterateString(text);
-                String author = (String) jsonObject.get("id_str");
+                String author = (String) ((JSONObject)jsonObject.get("user")).get("screen_name");
                 
                 System.out.println("Original Text: " + text);
                 System.out.println("TransLiterated Text: " + tlText);
@@ -108,6 +104,7 @@ public class JSONReader {
 		hmTransLiterate.put("(", "LRB");
 		hmTransLiterate.put(")", "RRB");
 		hmTransLiterate.put("...", "ELPS");
+		hmTransLiterate.put("'", "OPOS");
 		
 		// English characters
 		hmTransLiterate.put("A", "A");
@@ -164,9 +161,23 @@ public class JSONReader {
 		hmTransLiterate.put("y", "Y");
 		hmTransLiterate.put("z", "Z");
 		
+		// Digits
+		hmTransLiterate.put("1", "1");
+		hmTransLiterate.put("2", "2");
+		hmTransLiterate.put("3", "3");
+		hmTransLiterate.put("4", "4");
+		hmTransLiterate.put("5", "5");
+		hmTransLiterate.put("6", "6");
+		hmTransLiterate.put("7", "7");
+		hmTransLiterate.put("8", "8");
+		hmTransLiterate.put("9", "9");
+		hmTransLiterate.put("0", "0");
+		
 		
 		// Other characters
 		hmTransLiterate.put("@", "@");
+		
+		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls
 	}
 	
 	public static String transLiterateString(String s)
@@ -204,7 +215,7 @@ public class JSONReader {
 			return false;
 		
 		if (s.equals("CLN") || s.equals("SCLN") || s.equals("DOT") || s.equals("CM") || s.equals("DASH") || s.equals("QUOT") || 
-				s.equals("QM") || s.equals("EXCL") || s.equals("LRB") || s.equals("RRB") || s.equals("ELPS"))
+				s.equals("QM") || s.equals("EXCL") || s.equals("LRB") || s.equals("RRB") || s.equals("ELPS") || s.equals("OPOS"))
 			isSpecial = true;
 		
 		return isSpecial;
