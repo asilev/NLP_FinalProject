@@ -1,22 +1,23 @@
+package il.ac.openu.nlp.finalproject.json_reader;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.FileReader;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class JSONReader {
 	
 	// Path of the file that contains the Twitter texts; the file is in JSON format
-	private static String sPath = "C:\\Users\\Ronen Jashek\\eclipse-workspace\\JSONReader\\data\\iw_tweets_20180706040002-20180710040003.json";
+	private static String sInputPath;
+	private static String sOutputPath;
 	
 	// The encoding of the Twitts themselves (in our case in Hebrew)
 	private static String sEncoding = "UTF8";
@@ -31,8 +32,8 @@ public class JSONReader {
 	static HashMap<String, String> hmTransLiterate = new HashMap<String, String>();
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+		sInputPath = args[0];
+		sOutputPath = args[1];
 		createTransLiterateHM();		
 		readTwitterFile();
 	}
@@ -42,8 +43,10 @@ public class JSONReader {
 		try {
         	Object obj = null;
         	
-        	File fileDir = new File(sPath);
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(fileDir), sEncoding));
+        	File inputFile = new File(sInputPath);
+        	File outputFile = new File(sOutputPath);
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), sEncoding));
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), sEncoding));
     		String line;
         	while ((line = in.readLine()) != null) {
         		// process the line
@@ -52,15 +55,18 @@ public class JSONReader {
                 
                 String text = (String) jsonObject.get("text");
                 String tlText = transLiterateString(text);
-                String author = (String) jsonObject.get("id_str");
+                String author = (String) ((JSONObject)jsonObject.get("user")).get("screen_name");
+                
+                out.write("["+author+"] ");
+                out.write(tlText+"\n");                
                 
                 System.out.println("Original Text: " + text);
                 System.out.println("TransLiterated Text: " + tlText);
                 System.out.println("Author ID: " + author);
                 hm.put(author,  "HEB: [" + text + "] TL: [" + tlText + "]");
         	}
-        	
-        	in.close();	 
+        	in.close();
+        	out.close();        	
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,17 +103,22 @@ public class JSONReader {
 		hmTransLiterate.put("ù", "F");
 		hmTransLiterate.put("ú", "T");
 		hmTransLiterate.put("\"", "U");
-		hmTransLiterate.put(":", "CLN");
-		hmTransLiterate.put(";", "SCLN");
-		hmTransLiterate.put(".", "DOT");
-		hmTransLiterate.put(",", "CM");
-		hmTransLiterate.put("-", "DASH");
-		hmTransLiterate.put("\"", "QUOT");
-		hmTransLiterate.put("?", "QM");
-		hmTransLiterate.put("!", "EXCL");
-		hmTransLiterate.put("(", "LRB");
-		hmTransLiterate.put(")", "RRB");
-		hmTransLiterate.put("...", "ELPS");
+		hmTransLiterate.put(":", "[CLN]");
+		hmTransLiterate.put(";", "[SCLN]");
+		hmTransLiterate.put(".", "[DOT]");
+		hmTransLiterate.put(",", "[CM]");
+		hmTransLiterate.put("-", "[DASH]");
+		hmTransLiterate.put("\"", "[QUOT]");
+		hmTransLiterate.put("?", "[QM]");
+		hmTransLiterate.put("!", "[EXCL]");
+		hmTransLiterate.put("(", "[LRB]");
+		hmTransLiterate.put(")", "[RRB]");
+		hmTransLiterate.put("...", "[ELPS]");
+		hmTransLiterate.put("'", "[OPOS]");
+		hmTransLiterate.put("\n", "[LF]");
+		hmTransLiterate.put("&", "[AMPS]");
+		hmTransLiterate.put("\\", "[BS]");
+		hmTransLiterate.put("/", "[FS]");
 		
 		// English characters
 		hmTransLiterate.put("A", "A");
@@ -164,9 +175,23 @@ public class JSONReader {
 		hmTransLiterate.put("y", "Y");
 		hmTransLiterate.put("z", "Z");
 		
+		// Digits
+		hmTransLiterate.put("1", "1");
+		hmTransLiterate.put("2", "2");
+		hmTransLiterate.put("3", "3");
+		hmTransLiterate.put("4", "4");
+		hmTransLiterate.put("5", "5");
+		hmTransLiterate.put("6", "6");
+		hmTransLiterate.put("7", "7");
+		hmTransLiterate.put("8", "8");
+		hmTransLiterate.put("9", "9");
+		hmTransLiterate.put("0", "0");
+		
 		
 		// Other characters
 		hmTransLiterate.put("@", "@");
+		
+		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls
 	}
 	
 	public static String transLiterateString(String s)
@@ -181,13 +206,11 @@ public class JSONReader {
 			if (c != ' ')
 			{
 				String sTemp = hmTransLiterate.get(""+c);
-				if (isSpecialString(sTemp) == true)
-					sFormattedString += " " + sTemp + " ";
-				else
-					sFormattedString += sTemp;
+				sFormattedString += sTemp;
 			}
-			else 
+			else { 
 				sFormattedString += " ";
+			}
 		}
 		
 		return sFormattedString;
@@ -200,12 +223,13 @@ public class JSONReader {
 		// e.g. quotes need to be represent separately 
 		boolean isSpecial = false;
 		
-		if (s == null)
+		if (s == null) {
 			return false;
+		}
 		
-		if (s.equals("CLN") || s.equals("SCLN") || s.equals("DOT") || s.equals("CM") || s.equals("DASH") || s.equals("QUOT") || 
-				s.equals("QM") || s.equals("EXCL") || s.equals("LRB") || s.equals("RRB") || s.equals("ELPS"))
+		if (s.startsWith("[")) {
 			isSpecial = true;
+		}
 		
 		return isSpecial;
 	}
