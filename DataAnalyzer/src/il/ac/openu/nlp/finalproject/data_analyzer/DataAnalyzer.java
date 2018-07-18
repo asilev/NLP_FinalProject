@@ -21,7 +21,6 @@ public class DataAnalyzer {
 	private static List<Integer> histogram ;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		File dataFile = new File(args[0]);
 		Pattern pattern;
 		try {
@@ -56,13 +55,10 @@ public class DataAnalyzer {
         		System.out.println(i+": "+histogram.get(i));
         	}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
