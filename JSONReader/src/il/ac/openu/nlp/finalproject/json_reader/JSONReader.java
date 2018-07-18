@@ -57,7 +57,7 @@ public class JSONReader {
                 String tlText = transLiterateString(text);
                 String author = (String) ((JSONObject)jsonObject.get("user")).get("screen_name");
                 
-                out.write("["+author+"] ");
+                out.write("<"+author+"> ");
                 out.write(tlText+"\n");                
                 
                 System.out.println("Original Text: " + text);
