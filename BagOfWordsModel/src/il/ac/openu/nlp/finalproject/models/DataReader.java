@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataReader {
+	//TODO: Remove this comment
 	private File dataFile;
 	private BufferedReader dataReader;
 	private Pattern pattern = Pattern.compile("^(<[^>]*>) (.*)$");
