@@ -50,7 +50,7 @@ public class TwitterReader {
 	// The transliterate table
 	static HashMap<String, String> hmTransLiterate = new HashMap<String, String>();
 	
-	//private static String[] sTwitterUsers = {"alonbd"};
+	//private static String[] sTwitterUsers = {"zionnenko"};
 	private static String[] sTwitterUsers = {"BenCaspit", "NadavEyalDesk", "amit_segal", "AyalaHasson", "grolnik", 
 											 "talschneider", "alonbd", "RinoZror", "OrHeller", "baruchikra",
 											 "usegal", "kereneubach", "amsterdamski2", "roysharon11", "akivanovick",
@@ -158,6 +158,7 @@ public class TwitterReader {
 	            PrintWriter out2 = new PrintWriter(new File(sOutNormFile), "UTF-8");
 	            
 	            for (int j=0 ; j<mNumOfTweetsToGet/200 ; j++)
+	            //for (int j=0 ; j<1 ; j++)
 	            {
 	    			pg.setPage(j+1);
 	    			pg.setCount(200);
@@ -168,12 +169,11 @@ public class TwitterReader {
 		            //    statuses = twitter.getUserTimeline();
 
 		            System.out.println("Showing @" + sUser + "'s user timeline. Page #" + (j+1));
-		            
 		            for (Status status : statuses) {
 		            	String sNormTweet = normalizeTweet(status.getText());
 		                //System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
 		                out.println(status.toString());
-		                
+		             
 		             // Some Tweets may return empty e.g. if original Tweet was 100% in English, and YAP does not accept empty sections
 		                if (sNormTweet.equals("") == false)	
 		                	out2.println(sNormTweet + "\n");
@@ -202,7 +202,8 @@ public class TwitterReader {
 		}
 		
 		sNormalizedTweet = sNormalizedTweet.trim();
-		sNormalizedTweet = sNormalizedTweet.replace("\n\n", "\n");
+		sNormalizedTweet = sNormalizedTweet.replaceAll("\n+", "\n");
+		
 		return sNormalizedTweet;
 	}
 	
