@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class JSONReader {
-	
+	// TODO: Remove this comment
 	// Path of the file that contains the Twitter texts; the file is in JSON format
 	private static String sInputPath;
 	private static String sOutputPath;
