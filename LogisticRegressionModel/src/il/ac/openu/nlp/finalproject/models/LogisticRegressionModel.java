@@ -2,38 +2,22 @@ package il.ac.openu.nlp.finalproject.models;
 
 public class LogisticRegressionModel {
 	private static double x[][];
-//	private static Map<String, Map<String, Integer>> x;
-//	private static List<List<Double>> x;
 	private static int y[];
 	private static double ALPHA = 0.01;
 	private static int numOfIterations = 5000;
 	private static double j(double[] theta) throws Exception {
 		double cost = 0;
 		int numOfTrainingDataSet = x.length;
-//		int numOfTrainingDataSet = x.size();
-//		int i=0;
-//		for (Map.Entry<String, Map<String, Integer>> dataEntry : x.entrySet()) {
-//			cost += cost(h(theta, dataEntry),y[i]);
-//			i++;
-//		}
 		for (int i=0;i<numOfTrainingDataSet;++i) {
 			cost += cost(h(theta, x[i]),y[i]);
-//			cost += cost(h(theta, x.get(i)),y[i]);
 		}
 		return cost/numOfTrainingDataSet;
 	}
 	
 	public static double h(double[] theta, double[] x) {
-//	public static double h(double[] theta, Map.Entry<String, Map<String, Integer>> dataEntry) {
-//	public static double h(double[] theta, List<Double> x) {
 		double thetaX = theta[0];
-//		int i=0;
 		for (int i=0;i<x.length;++i) {
-//		for (Map.Entry<String, Integer> feature : dataEntry.getValue().entrySet()) {
 			thetaX += theta[i+1]*x[i];
-//			thetaX += theta[i+1]*feature.getValue();
-//			thetaX += theta[i+1]*x.get(i);
-//			i++;
 		}
 		return g(thetaX);
 	}
@@ -67,12 +51,8 @@ public class LogisticRegressionModel {
 		int m=x.length;
 		double returnValue = 0;
 		for (int i=0;i<m;++i) {
-//		for (Map.Entry<String, Map<String, Integer>> dataEntry : x.entrySet()) {
 			double xij = (j==0)?1:x[i][j-1];
-//			double xij = (j==0)?1:x.get(dataEntry.getKey()).get(j)
-//			double xij = (j==0)?1:x.get(i).get(j-1);
 			returnValue += (h(theta, x[i])-y[i])*xij;
-//			returnValue += (h(theta, x.get(i))-y[i])*xij;
 		}
 		return returnValue;
 	}
