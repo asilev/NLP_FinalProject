@@ -1,10 +1,23 @@
 package il.ac.openu.nlp.finalproject.models;
 
+import java.io.IOException;
+
 public class LogisticRegressionModel {
+	private TrainingDataWriter trainingDataWriter;
+	private TrainingDataReader trainingDataReader;
 	private static double x[][];
 	private static int y[];
 	private static double ALPHA = 0.01;
 	private static int numOfIterations = 5000;
+	
+	public LogisticRegressionModel(String trainingFileName) throws IOException {
+		trainingDataWriter = new TrainingDataWriter(trainingFileName);
+		trainingDataReader = new TrainingDataReader(trainingFileName);
+	}
+	public void addTrainingData(double[] x, int y) throws IOException {
+		trainingDataWriter.write(new TrainingDataRecord(x, y));
+	}
+	
 	private static double j(double[] theta) throws Exception {
 		double cost = 0;
 		int numOfTrainingDataSet = x.length;
@@ -82,6 +95,7 @@ public class LogisticRegressionModel {
 		x[0][2] = 5;
 		x[0][3] = 9;
 		x[0][4] = 1;
+		
 //		x.add(new ArrayList<>(5));
 //		List<Double> x1 = x.get(1);
 //		x1.add(0.1);
