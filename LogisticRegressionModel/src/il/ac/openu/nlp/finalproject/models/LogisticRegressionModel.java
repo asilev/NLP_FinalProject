@@ -1,45 +1,50 @@
 package il.ac.openu.nlp.finalproject.models;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.NotImplementedException;
 
 public class LogisticRegressionModel {
-	private TrainingDataWriter trainingDataWriter;
-	private TrainingDataReader trainingDataReader;
-	private static double x[][];
-	private static int y[];
+	private TrainingDataWriter trainingDataWriter; //TODO
+	private TrainingDataReader trainingDataReader; //TODO
+	private static TrainingDataRecord<String>[] data;
 	private static double ALPHA = 0.01;
 	private static int numOfIterations = 5000;
 	
 	public LogisticRegressionModel(String trainingFileName) throws IOException {
-		trainingDataWriter = new TrainingDataWriter(trainingFileName);
-		trainingDataReader = new TrainingDataReader(trainingFileName);
-	}
-	public void addTrainingData(double[] x, int y) throws IOException {
-		trainingDataWriter.write(new TrainingDataRecord(x, y));
+		throw new NotImplementedException("File Constructor");
+//		trainingDataWriter = new TrainingDataWriter(trainingFileName);
+//		trainingDataReader = new TrainingDataReader(trainingFileName);
 	}
 	
-	private static double j(double[] theta) throws Exception {
-		double cost = 0;
-		int numOfTrainingDataSet = x.length;
-		for (int i=0;i<numOfTrainingDataSet;++i) {
-			cost += cost(h(theta, x[i]),y[i]);
-		}
-		return cost/numOfTrainingDataSet;
+	public LogisticRegressionModel(TrainingDataRecord<String>[] data) {
+		LogisticRegressionModel.data = data;
 	}
-	
-	public static double h(double[] theta, double[] x) {
-		double thetaX = theta[0];
-		for (int i=0;i<x.length;++i) {
-			thetaX += theta[i+1]*x[i];
+
+	public static double h(Map<String, Double> theta, FeatureVector<String> x) {
+		double thetaX = theta.get("Zero");
+		for (String key : theta.keySet()) {
+			thetaX += theta.get(key)*x.getFeature(key);
 		}
 		return g(thetaX);
 	}
-	
+
 	private static double g(double z) {
 		return 1.0/(1+Math.pow(Math.E, -1*z));
 	}
 	
-	private static double cost(double hThetaX, double y) throws Exception {
+	private static double j(Map<String, Double> theta, String target) throws Exception {
+		double cost = 0;
+		int numOfTrainingDataSet = data.length;
+		for (int i=0;i<numOfTrainingDataSet;++i) {
+			cost += cost(h(theta, data[i].getTrainingFeaturesVector()),data[i].getTrainingDataRecordClass().equals(target)?1:0);
+		}
+		return cost/numOfTrainingDataSet;
+	}
+	
+	private static double cost(double hThetaX, int y) throws Exception {
 		if (y==0) {
 			return -1*Math.log(1-hThetaX);
 		}
@@ -51,139 +56,79 @@ public class LogisticRegressionModel {
 		}
 	}
 	
-	private static double[] minJ(double[] theta) {
-		double[] returnTheta = new double[theta.length];
-		int m = x.length;
-		for (int j=0;j<theta.length;++j) {
-			returnTheta[j] = theta[j] - (ALPHA/m)*sumDerivations(theta, j);
+	private static Map<String, Double> minJ(Map<String, Double> theta, String klass) {
+		Map<String, Double> returnTheta = new HashMap<>();
+		int m = data.length;
+		for (String key : theta.keySet()) {
+			double value = theta.get(key) - (ALPHA/m)*sumDerivations(theta, key, klass);
+			returnTheta.put(key, value);
 		}
 		return returnTheta;
 	}
 	
-	private static double sumDerivations(double[] theta, int j) {
-		int m=x.length;
+	private static double sumDerivations(Map<String, Double>theta, String j, String klass) {
+		int m = data.length;
 		double returnValue = 0;
 		for (int i=0;i<m;++i) {
-			double xij = (j==0)?1:x[i][j-1];
-			returnValue += (h(theta, x[i])-y[i])*xij;
+			double xij = data[i].getTrainingFeaturesVector().getFeature(j);
+			returnValue += (h(theta, data[i].getTrainingFeaturesVector())-(data[i].getTrainingDataRecordClass().equals(klass)?1.0:0.0))*xij;
 		}
 		return returnValue;
 	}
 	
-	public static double[] findThetas(double[] initialThetas) throws Exception {
+	public static Map<String, Double> findThetas(Map<String, Double>initialThetas, String klass) throws Exception {
 		for (int i=0;i<numOfIterations;++i) {
-			System.out.println("cost "+i+": "+j(initialThetas));
-			System.out.println("probability: "+h(initialThetas,x[0]));
-			initialThetas = minJ(initialThetas);
+			System.out.println("cost "+i+": "+j(initialThetas, klass));
+			System.out.println("probability: "+h(initialThetas,data[0].getTrainingFeaturesVector()));
+			initialThetas = minJ(initialThetas, klass);
 		}
 		return initialThetas;
 	}
 	
 	public static void main(String[] args) throws Exception {
-		x = new double[4][5];
-//		x = new ArrayList<>(4);
-		y = new int[4];
-//		x.add(new ArrayList<>(5));
-//		List<Double> x0 = x.get(0);
-//		x0.add(7.0);
-//		x0.add(8.0);
-//		x0.add(5.0);
-//		x0.add(9.0);
-//		x0.add(1.0);
-		x[0][0] = 7;
-		x[0][1] = 8;
-		x[0][2] = 5;
-		x[0][3] = 9;
-		x[0][4] = 1;
+		data = new TrainingDataRecord[3];
+		data[0] = new TrainingDataRecord<String>("Zero", "A");
+		data[0].getTrainingFeaturesVector().putFeature("a", 1.0);
+		data[0].getTrainingFeaturesVector().putFeature("b", 1.0);
+		data[0].getTrainingFeaturesVector().putFeature("c", 1.0);
 		
-//		x.add(new ArrayList<>(5));
-//		List<Double> x1 = x.get(1);
-//		x1.add(0.1);
-//		x1.add(1.0);
-//		x1.add(2.0);
-//		x1.add(1.0);
-//		x1.add(3.0);
-		x[1][0] = 0.1;
-		x[1][1] = 1;
-		x[1][2] = 2;
-		x[1][3] = 1;
-		x[1][4] = 3;
-//		x.add(new ArrayList<>(5));
-//		List<Double> x2 = x.get(2);
-//		x2.add(9.0);
-//		x2.add(3.0);
-//		x2.add(4.0);
-//		x2.add(5.0);
-//		x2.add(1.0);
-		x[2][0] = 9;
-		x[2][1] = 3;
-		x[2][2] = 4;
-		x[2][3] = 5;
-		x[2][4] = 1;
-//		x.add(new ArrayList<>(5));
-//		List<Double> x3 = x.get(3);
-//		x3.add(0.1);
-//		x3.add(0.1);
-//		x3.add(3.0);
-//		x3.add(9.0);
-//		x3.add(2.0);
-		x[3][0] = 0.1;
-		x[3][1] = 0.1;
-		x[3][2] = 3;
-		x[3][3] = 9;
-		x[3][4] = 2;
+		data[1] = new TrainingDataRecord<String>("Zero", "B");
+		data[1].getTrainingFeaturesVector().putFeature("a", 1.0);
+		data[1].getTrainingFeaturesVector().putFeature("b", 1.0);
+		data[1].getTrainingFeaturesVector().putFeature("d", 1.0);
 		
-		double[] initialThetas = new double[6];
-		initialThetas[0]=1;
-		initialThetas[1]=1;
-		initialThetas[2]=1;
-		initialThetas[3]=1;
-		initialThetas[4]=1;
-		initialThetas[5]=1;
+		data[2] = new TrainingDataRecord<String>("Zero", "C");
+		data[2].getTrainingFeaturesVector().putFeature("b", 1.0);
+		data[2].getTrainingFeaturesVector().putFeature("c", 1.0);
+		data[2].getTrainingFeaturesVector().putFeature("d", 1.0);
 		
-		y[0] = 1;
-		y[1] = 0;
-		y[2] = 0;
-		y[3] = 0;
-		double[] thetas1 = findThetas(initialThetas);
-		y[0] = 0;
-		y[1] = 1;
-		y[2] = 0;
-		y[3] = 0;
-		double[] thetas2 = findThetas(initialThetas);
-		y[0] = 0;
-		y[1] = 0;
-		y[2] = 1;
-		y[3] = 0;
-		double[] thetas3 = findThetas(initialThetas);
-		y[0] = 0;
-		y[1] = 0;
-		y[2] = 0;
-		y[3] = 1;
-		double[] thetas4 = findThetas(initialThetas);
-
+		Map<String, Double> thetas = new HashMap<>();
+		thetas.put("Zero", 1.0);
+		thetas.put("a", 1.0);
+		thetas.put("b", 1.0);
+		thetas.put("c", 1.0);
+		thetas.put("d", 1.0);
+		thetas.put("e", 1.0);
 		
-		double[] evalX = new double[5];
-//		List<Double> evalX = new ArrayList<>(5);
-//		evalX.add(1.0);
-//		evalX.add(1.0);
-//		evalX.add(0.0);
-//		evalX.add(1.0);
-//		evalX.add(0.0);
-		evalX[0]=1;
-		evalX[1]=1;
-		evalX[2]=0;
-		evalX[3]=1;
-		evalX[4]=0;
+		thetas = findThetas(thetas, "C");
 		
-		double[] probs = new double[4];
-		probs[0] = h(thetas1,evalX);
-		probs[1] = h(thetas2,evalX);
-		probs[2] = h(thetas3,evalX);
-		probs[3] = h(thetas4,evalX);
+		FeatureVector<String> f = new FeatureVector<>();
+		f.putFeature("a", 1.0);
+		f.putFeature("b", 1.0);
+		f.putFeature("e", 1.0);
 		
-		for (int i=0;i<4;++i) {
-			System.out.println(probs[i]);
-		}
+		double p1 = h(thetas,data[0].getTrainingFeaturesVector());
+		System.out.println("p1="+p1);
+		
+		double p2 = h(thetas,data[1].getTrainingFeaturesVector());
+		System.out.println("p2="+p2);
+		
+		double p3 = h(thetas,data[2].getTrainingFeaturesVector());
+		System.out.println("p3="+p3);
+		
+		double pf = h(thetas,f);
+		System.out.println("pf="+pf);
+		
+		
 	}
 }
