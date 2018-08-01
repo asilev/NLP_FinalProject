@@ -88,23 +88,23 @@ public class LogisticRegressionModel {
 	
 	public static void main(String[] args) throws Exception {
 		trainingData = new TrainingDataRecord[3];
-		trainingData[0] = new TrainingDataRecord<String>("Zero", "A");
+		trainingData[0] = new TrainingDataRecord<String>(ZERO_INDEX, "A");
 		trainingData[0].getTrainingFeaturesVector().putFeature("a", 1.0);
 		trainingData[0].getTrainingFeaturesVector().putFeature("b", 1.0);
 		trainingData[0].getTrainingFeaturesVector().putFeature("c", 1.0);
 		
-		trainingData[1] = new TrainingDataRecord<String>("Zero", "B");
+		trainingData[1] = new TrainingDataRecord<String>(ZERO_INDEX, "B");
 		trainingData[1].getTrainingFeaturesVector().putFeature("a", 1.0);
 		trainingData[1].getTrainingFeaturesVector().putFeature("b", 1.0);
 		trainingData[1].getTrainingFeaturesVector().putFeature("d", 1.0);
 		
-		trainingData[2] = new TrainingDataRecord<String>("Zero", "C");
+		trainingData[2] = new TrainingDataRecord<String>(ZERO_INDEX, "C");
 		trainingData[2].getTrainingFeaturesVector().putFeature("b", 1.0);
 		trainingData[2].getTrainingFeaturesVector().putFeature("c", 1.0);
 		trainingData[2].getTrainingFeaturesVector().putFeature("d", 1.0);
 		
 		Map<String, Double> thetas = new HashMap<>();
-		thetas.put("Zero", 1.0);
+		thetas.put(ZERO_INDEX, 1.0);
 		thetas.put("a", 1.0);
 		thetas.put("b", 1.0);
 		thetas.put("c", 1.0);
