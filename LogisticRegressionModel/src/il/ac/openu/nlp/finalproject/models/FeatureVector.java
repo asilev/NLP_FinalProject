@@ -3,14 +3,16 @@ package il.ac.openu.nlp.finalproject.models;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FeatureVector<K> {
+public class FeatureVector<K> extends HashMap<K, Double> {
+	private static final long serialVersionUID = 1L;
 	private Map<K, Double> keyValueMap = new HashMap<>();
 	
-	public double getFeature(K index) {
-		return keyValueMap.get(index)==null?(0.0):(double) keyValueMap.get(index);
-	}
-	
-	public void putFeature(K index, Double value) {
-		keyValueMap.put(index, value);
+	@Override
+	public Double get(Object key) {
+		Double returnValue = super.get(key);
+		if (returnValue==null) {
+			returnValue=0.0;
+		}
+		return returnValue;
 	}
 }

@@ -15,7 +15,7 @@ public class TrainingDataRecord<K> implements Serializable {
 	public TrainingDataRecord(K zeroIndex, String y) {
 		this.ZERO_INDEX = zeroIndex;
 		FeatureVector<K> newX = new FeatureVector<>();
-		newX.putFeature(zeroIndex, 1.0);
+		newX.put(zeroIndex, 1.0);
 		setTrainingDataRecord(newX, y);
 	}
 	
