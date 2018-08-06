@@ -6,14 +6,11 @@ public class TrainingDataRecord<K> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private FeatureVector<K> x;
 	private String y;
-	private K ZERO_INDEX;
-	
 	public TrainingDataRecord(FeatureVector<K> x, String y) {
 		setTrainingDataRecord(x, y);
 	}
 	
 	public TrainingDataRecord(K zeroIndex, String y) {
-		this.ZERO_INDEX = zeroIndex;
 		FeatureVector<K> newX = new FeatureVector<>();
 		newX.put(zeroIndex, 1.0);
 		setTrainingDataRecord(newX, y);

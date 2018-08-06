@@ -17,7 +17,7 @@ public class TrainingDataWriter {
 		trainingDataObjectOutputStream = new ObjectOutputStream(trainingDataFileOutputStream);
 	}
 	
-	public void write(TrainingDataRecord trainingDataRecord) throws IOException {
+	public void write(TrainingDataRecord<String> trainingDataRecord) throws IOException {
 		trainingDataObjectOutputStream.writeObject(trainingDataRecord);
 	}
 	

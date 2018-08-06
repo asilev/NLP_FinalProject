@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
 
-public class TrainingDataReader implements Iterable<TrainingDataRecord>{
+public class TrainingDataReader implements Iterable<TrainingDataRecord<String>>{
 	private File trainingDataFile;
 	private FileInputStream trainingDataFileInputStream;
 	private ObjectInputStream trainingDataObjectInputStream;
@@ -22,10 +22,19 @@ public class TrainingDataReader implements Iterable<TrainingDataRecord>{
 	}
 	
 	@Override
-	public Iterator<TrainingDataRecord> iterator() {
+	public Iterator<TrainingDataRecord<String>> iterator() {
 		try {
-			return new Iterator<TrainingDataRecord>() {
-				private TrainingDataRecord nextDataRecord = (TrainingDataRecord) trainingDataObjectInputStream.readObject();
+			return new Iterator<TrainingDataRecord<String>>() {
+				private TrainingDataRecord<String> nextDataRecord = getNextRecord();
+
+				@SuppressWarnings("unchecked")
+				private TrainingDataRecord<String> getNextRecord() throws IOException, ClassNotFoundException {
+					Object o = trainingDataObjectInputStream.readObject();
+					if (o instanceof TrainingDataRecord<?>) {
+						return (TrainingDataRecord<String>)o ;
+					}
+					return null;
+				}
 				private boolean hasNext = nextDataRecord!=null;
 				
 				@Override
@@ -34,10 +43,10 @@ public class TrainingDataReader implements Iterable<TrainingDataRecord>{
 				}
 
 				@Override
-				public TrainingDataRecord next() {
-					TrainingDataRecord thisDataRecord = nextDataRecord; 
+				public TrainingDataRecord<String> next() {
+					TrainingDataRecord<String> thisDataRecord = nextDataRecord; 
 					try {
-						nextDataRecord = (TrainingDataRecord) trainingDataObjectInputStream.readObject();
+						nextDataRecord = getNextRecord();
 					} catch (ClassNotFoundException | IOException e) {
 						hasNext=false;
 					}
