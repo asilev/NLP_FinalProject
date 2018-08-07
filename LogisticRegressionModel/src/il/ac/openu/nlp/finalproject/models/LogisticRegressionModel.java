@@ -7,9 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.NotImplementedException;
 
 public class LogisticRegressionModel {
-	private TrainingDataWriter trainingDataWriter; //TODO
-	private TrainingDataReader trainingDataReader; //TODO
-	private static TrainingDataRecord<String>[] trainingData;
+	private static ClassifiedFeatureRecord<String>[] trainingData;
 	private static double ALPHA = 0.01;
 	private static int numOfIterations = 5000;
 	private static final String ZERO_INDEX = "Zero"; 
@@ -20,7 +18,7 @@ public class LogisticRegressionModel {
 //		trainingDataReader = new TrainingDataReader(trainingFileName);
 	}
 	
-	public LogisticRegressionModel(TrainingDataRecord<String>[] data) {
+	public LogisticRegressionModel(ClassifiedFeatureRecord<String>[] data) {
 		LogisticRegressionModel.trainingData = data;
 	}
 
@@ -87,18 +85,18 @@ public class LogisticRegressionModel {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		trainingData = new TrainingDataRecord[3];
-		trainingData[0] = new TrainingDataRecord<String>(ZERO_INDEX, "A");
+		trainingData = new ClassifiedFeatureRecord[3];
+		trainingData[0] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "A");
 		trainingData[0].getTrainingFeaturesVector().put("a", 1.0);
 		trainingData[0].getTrainingFeaturesVector().put("b", 1.0);
 		trainingData[0].getTrainingFeaturesVector().put("c", 1.0);
 		
-		trainingData[1] = new TrainingDataRecord<String>(ZERO_INDEX, "B");
+		trainingData[1] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "B");
 		trainingData[1].getTrainingFeaturesVector().put("a", 1.0);
 		trainingData[1].getTrainingFeaturesVector().put("b", 1.0);
 		trainingData[1].getTrainingFeaturesVector().put("d", 1.0);
 		
-		trainingData[2] = new TrainingDataRecord<String>(ZERO_INDEX, "C");
+		trainingData[2] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "C");
 		trainingData[2].getTrainingFeaturesVector().put("b", 1.0);
 		trainingData[2].getTrainingFeaturesVector().put("c", 1.0);
 		trainingData[2].getTrainingFeaturesVector().put("d", 1.0);

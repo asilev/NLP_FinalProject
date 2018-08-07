@@ -14,7 +14,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class JSONReader {
-	// TODO: Remove this comment
 	// Path of the file that contains the Twitter texts; the file is in JSON format
 	private static String sInputPath;
 	private static String sOutputPath;
@@ -75,33 +74,33 @@ public class JSONReader {
 	public static void createTransLiterateHM()
 	{
 		// Hebrew characters
-		hmTransLiterate.put("à", "A");
-		hmTransLiterate.put("á", "B");
-		hmTransLiterate.put("â", "G");
-		hmTransLiterate.put("ã", "D");
-		hmTransLiterate.put("ä", "H");
-		hmTransLiterate.put("å", "W");
-		hmTransLiterate.put("æ", "Z");
-		hmTransLiterate.put("ç", "X");
-		hmTransLiterate.put("è", "J");
-		hmTransLiterate.put("é", "I");
-		hmTransLiterate.put("ë", "K");
-		hmTransLiterate.put("ê", "K");
-		hmTransLiterate.put("ì", "L");
-		hmTransLiterate.put("î", "M");
-		hmTransLiterate.put("í", "M");
-		hmTransLiterate.put("ğ", "N");
-		hmTransLiterate.put("ï", "N");
-		hmTransLiterate.put("ñ", "S");
-		hmTransLiterate.put("ò", "E");
-		hmTransLiterate.put("ô", "P");
-		hmTransLiterate.put("ó", "P");
-		hmTransLiterate.put("ö", "C");
-		hmTransLiterate.put("õ", "C");
-		hmTransLiterate.put("÷", "Q");
-		hmTransLiterate.put("ø", "R");
-		hmTransLiterate.put("ù", "F");
-		hmTransLiterate.put("ú", "T");
+		hmTransLiterate.put("ï¿½", "A");
+		hmTransLiterate.put("ï¿½", "B");
+		hmTransLiterate.put("ï¿½", "G");
+		hmTransLiterate.put("ï¿½", "D");
+		hmTransLiterate.put("ï¿½", "H");
+		hmTransLiterate.put("ï¿½", "W");
+		hmTransLiterate.put("ï¿½", "Z");
+		hmTransLiterate.put("ï¿½", "X");
+		hmTransLiterate.put("ï¿½", "J");
+		hmTransLiterate.put("ï¿½", "I");
+		hmTransLiterate.put("ï¿½", "K");
+		hmTransLiterate.put("ï¿½", "K");
+		hmTransLiterate.put("ï¿½", "L");
+		hmTransLiterate.put("ï¿½", "M");
+		hmTransLiterate.put("ï¿½", "M");
+		hmTransLiterate.put("ï¿½", "N");
+		hmTransLiterate.put("ï¿½", "N");
+		hmTransLiterate.put("ï¿½", "S");
+		hmTransLiterate.put("ï¿½", "E");
+		hmTransLiterate.put("ï¿½", "P");
+		hmTransLiterate.put("ï¿½", "P");
+		hmTransLiterate.put("ï¿½", "C");
+		hmTransLiterate.put("ï¿½", "C");
+		hmTransLiterate.put("ï¿½", "Q");
+		hmTransLiterate.put("ï¿½", "R");
+		hmTransLiterate.put("ï¿½", "F");
+		hmTransLiterate.put("ï¿½", "T");
 		hmTransLiterate.put("\"", "U");
 		hmTransLiterate.put(":", "[CLN]");
 		hmTransLiterate.put(";", "[SCLN]");

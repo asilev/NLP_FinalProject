@@ -2,15 +2,15 @@ package il.ac.openu.nlp.finalproject.models;
 
 import java.io.Serializable;
 
-public class TrainingDataRecord<K> implements Serializable {
+public class ClassifiedFeatureRecord<K> implements Serializable { //TODO: should change from contains to inheriting the feature vector?
 	private static final long serialVersionUID = 1L;
 	private FeatureVector<K> x;
 	private String y;
-	public TrainingDataRecord(FeatureVector<K> x, String y) {
+	public ClassifiedFeatureRecord(FeatureVector<K> x, String y) {
 		setTrainingDataRecord(x, y);
 	}
 	
-	public TrainingDataRecord(K zeroIndex, String y) {
+	public ClassifiedFeatureRecord(K zeroIndex, String y) {
 		FeatureVector<K> newX = new FeatureVector<>();
 		newX.put(zeroIndex, 1.0);
 		setTrainingDataRecord(newX, y);

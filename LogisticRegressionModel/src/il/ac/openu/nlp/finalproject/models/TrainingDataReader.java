@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
 
-public class TrainingDataReader implements Iterable<TrainingDataRecord<String>>{
+public class TrainingDataReader implements Iterable<ClassifiedFeatureRecord<String>>{
 	private File trainingDataFile;
 	private FileInputStream trainingDataFileInputStream;
 	private ObjectInputStream trainingDataObjectInputStream;
@@ -22,16 +22,16 @@ public class TrainingDataReader implements Iterable<TrainingDataRecord<String>>{
 	}
 	
 	@Override
-	public Iterator<TrainingDataRecord<String>> iterator() {
+	public Iterator<ClassifiedFeatureRecord<String>> iterator() {
 		try {
-			return new Iterator<TrainingDataRecord<String>>() {
-				private TrainingDataRecord<String> nextDataRecord = getNextRecord();
+			return new Iterator<ClassifiedFeatureRecord<String>>() {
+				private ClassifiedFeatureRecord<String> nextDataRecord = getNextRecord();
 
 				@SuppressWarnings("unchecked")
-				private TrainingDataRecord<String> getNextRecord() throws IOException, ClassNotFoundException {
+				private ClassifiedFeatureRecord<String> getNextRecord() throws IOException, ClassNotFoundException {
 					Object o = trainingDataObjectInputStream.readObject();
-					if (o instanceof TrainingDataRecord<?>) {
-						return (TrainingDataRecord<String>)o ;
+					if (o instanceof ClassifiedFeatureRecord<?>) {
+						return (ClassifiedFeatureRecord<String>)o ;
 					}
 					return null;
 				}
@@ -43,8 +43,8 @@ public class TrainingDataReader implements Iterable<TrainingDataRecord<String>>{
 				}
 
 				@Override
-				public TrainingDataRecord<String> next() {
-					TrainingDataRecord<String> thisDataRecord = nextDataRecord; 
+				public ClassifiedFeatureRecord<String> next() {
+					ClassifiedFeatureRecord<String> thisDataRecord = nextDataRecord; 
 					try {
 						nextDataRecord = getNextRecord();
 					} catch (ClassNotFoundException | IOException e) {
