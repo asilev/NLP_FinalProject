@@ -361,7 +361,7 @@ public class TwitterDataSourceReader {
 		// Other characters
 		hmTransLiterate.put("@", "@");
 		
-		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls
+		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls. This currently not an issue, since transliterate is not used.
 	}
 	
 	public static String transLiterateString(String s)
