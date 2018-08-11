@@ -3,6 +3,7 @@ package il.ac.openu.nlp.finalproject.models;
 import java.io.Serializable;
 
 public class ClassifiedFeatureRecord<K> implements Serializable { //TODO: should change from contains to inheriting the feature vector?
+																	//TODO: This is duplicated with taggedFeatureVector
 	private static final long serialVersionUID = 1L;
 	private FeatureVector<K> x;
 	private String y;

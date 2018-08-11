@@ -23,7 +23,7 @@ public class LogisticRegressionModel {
 
 	public static double h(Map<String, Double> parameters, FeatureVector<String> featureVector) {
 		double parametersXfeatures = parameters.get(ZERO_INDEX); // Initial
-		for (String featureKey : parameters.keySet()) {
+		for (String featureKey : featureVector.keySet()) {
 			parametersXfeatures += parameters.get(featureKey)*featureVector.get(featureKey);
 		}
 		return g(parametersXfeatures);
@@ -35,7 +35,6 @@ public class LogisticRegressionModel {
 	
 	private static double j(Map<String, Double> parameters, String targetClass) throws Exception {
 		double cost = 0;
-//		int numOfTrainingDataSet = trainingData.size();
 		for (TaggedFeatureVector<String> trainingExample : trainingData) {
 			cost += cost(h(parameters,trainingExample.getFeatureVector()), trainingExample.getTag().equals(targetClass));
 		}
@@ -60,8 +59,10 @@ public class LogisticRegressionModel {
 	private static Map<String, Double> minJ(Map<String, Double> parameters, String targetClass) {
 		Map<String, Double> returnParameters = new HashMap<>();
 		int m = trainingData.size();
+//		int i=0;
 		for (String featureKey : parameters.keySet()) {
 			double returnParameterValue = parameters.get(featureKey) - (ALPHA/m)*sumDerivations(parameters, featureKey, targetClass);
+//			System.out.println(i++);
 			returnParameters.put(featureKey, returnParameterValue);
 		}
 		return returnParameters;
@@ -71,7 +72,9 @@ public class LogisticRegressionModel {
 		double returnValue = 0;
 		for (TaggedFeatureVector<String> trainingExample : trainingData) {
 			double xij = trainingExample.getFeatureVector().get(featureKey);
-			returnValue += (h(parameters, trainingExample.getFeatureVector())-(trainingExample.getTag().equals(targetClass)?1.0:0.0))*xij;
+			if (xij!=0) {
+				returnValue += (h(parameters, trainingExample.getFeatureVector())-(trainingExample.getTag().equals(targetClass)?1.0:0.0))*xij;
+			}
 		}
 		return returnValue;
 	}
@@ -79,7 +82,7 @@ public class LogisticRegressionModel {
 	public static Map<String, Double> trainParameters(Map<String, Double>initialparameters, String targetClass) throws Exception {
 		for (int i=0;i<numOfIterations;++i) {
 			System.out.println("cost "+i+": "+j(initialparameters, targetClass));
-//			System.out.println("probability: "+h(initialparameters,trainingData[0].getTrainingFeaturesVector()));
+//			System.out.println("probability: "+h(initialparameters,trainingData.get(0).getFeatureVector()));
 			initialparameters = minJ(initialparameters, targetClass);
 		}
 		return initialparameters;
@@ -102,16 +105,23 @@ public class LogisticRegressionModel {
 //		trainingData[2].getTrainingFeaturesVector().put("c", 1.0);
 //		trainingData[2].getTrainingFeaturesVector().put("d", 1.0);
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
+		System.out.println("Building bag of words");
 		trainingData = dataReader.buildAuthorBagOfWords(); 
 		
+		System.out.println("Building initial thetas");
+		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
 		Map<String, Double> thetas = new HashMap<>();
 		thetas.put(ZERO_INDEX, 1.0);
-		thetas.put("a", 1.0);
-		thetas.put("b", 1.0);
-		thetas.put("c", 1.0);
-		thetas.put("d", 1.0);
-		thetas.put("e", 1.0);
-		
+		// TODO: getListOfUniqueWords must be called after training. Should be fixed 
+		for (String word : dataReader.getListOfUniqueWords()) {
+			thetas.put(word, 1.0);
+		}
+//		thetas.put("a", 1.0);
+//		thetas.put("b", 1.0);
+//		thetas.put("c", 1.0);
+//		thetas.put("d", 1.0);
+//		thetas.put("e", 1.0);
+		System.out.println("Training Thetas for bencaspit");
 		thetas = trainParameters(thetas, "bencaspit");
 		
 		FeatureVector<String> f = new FeatureVector<>();
