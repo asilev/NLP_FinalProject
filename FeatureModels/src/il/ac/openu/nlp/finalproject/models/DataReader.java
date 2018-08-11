@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWords;
+
 public class DataReader {
 	private File dataFile;
 	private BufferedReader dataReader;

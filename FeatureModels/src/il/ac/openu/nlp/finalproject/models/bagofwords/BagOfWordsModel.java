@@ -1,8 +1,10 @@
-package il.ac.openu.nlp.finalproject.models;
+package il.ac.openu.nlp.finalproject.models.bagofwords;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import il.ac.openu.nlp.finalproject.models.DataReader;
 
 public class BagOfWordsModel {
 	private static DataReader dataReader;

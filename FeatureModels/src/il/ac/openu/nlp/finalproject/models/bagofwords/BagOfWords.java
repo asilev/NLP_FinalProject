@@ -1,4 +1,4 @@
-package il.ac.openu.nlp.finalproject.models;
+package il.ac.openu.nlp.finalproject.models.bagofwords;
 
 import java.util.HashMap;
 import java.util.Map;
