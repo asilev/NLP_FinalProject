@@ -5,17 +5,18 @@ import java.util.HashMap;
 public class FeatureVector<K> extends HashMap<K, Double> {
 	private static final long serialVersionUID = 1L;
 
-//	public FeatureVector(K zeroIndex) {
-//		super();
-//		this.put(zeroIndex, 0.0);
-//	}
+	public FeatureVector(K zeroIndex) {
+		super();
+		this.put(zeroIndex, 1.0);
+	}
 	
 	@Override
 	public Double get(Object key) {
-		Double returnValue = super.get(key);
-		if (returnValue==null) {
-			returnValue=0.0;
+		if (containsKey(key)) {
+			return super.get(key);
 		}
-		return returnValue;
+		else {
+			return 0.0;
+		}
 	}
 }

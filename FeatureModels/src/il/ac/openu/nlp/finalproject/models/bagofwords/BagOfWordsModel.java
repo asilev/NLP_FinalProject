@@ -7,6 +7,7 @@ import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class BagOfWordsModel {
+	private static final String ZERO_INDEX = "Zero";
 	private static StructuredDataReader dataReader;
 	private static List<TaggedFeatureVector<String>> taggedFeatureVectorList;
 	
@@ -23,7 +24,7 @@ public class BagOfWordsModel {
 			printUsage();
 			System.exit(-1);
 		}
-		taggedFeatureVectorList = dataReader.buildAuthorBagOfWords();
+		taggedFeatureVectorList = dataReader.buildAuthorBagOfWords(ZERO_INDEX);
 	}
 
 	private static void printUsage() {

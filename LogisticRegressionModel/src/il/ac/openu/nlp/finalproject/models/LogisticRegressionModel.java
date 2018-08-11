@@ -1,26 +1,21 @@
 package il.ac.openu.nlp.finalproject.models;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
-	private static double ALPHA = 0.01;
-	private static int numOfIterations = 5000;
-	private static final String ZERO_INDEX = "Zero"; 
+	private static double ALPHA = 0.1;
+	private static int numOfIterations = 500;
+	private static String ZERO_INDEX; 
 	
-	public LogisticRegressionModel(String trainingFileName) throws IOException {
-		throw new NotImplementedException("File Constructor");
-	}
-	
-	public LogisticRegressionModel(List<TaggedFeatureVector<String>> data) {
+	public LogisticRegressionModel(List<TaggedFeatureVector<String>> data, String ZERO_INDEX) {
 		LogisticRegressionModel.trainingData = data;
+		LogisticRegressionModel.ZERO_INDEX = ZERO_INDEX;
 	}
 
+	// Hypothesis Function
 	public static double h(Map<String, Double> parameters, FeatureVector<String> featureVector) {
 		double parametersXfeatures = parameters.get(ZERO_INDEX); // Initial
 		for (String featureKey : featureVector.keySet()) {
@@ -29,21 +24,21 @@ public class LogisticRegressionModel {
 		return g(parametersXfeatures);
 	}
 
-	private static double g(double z) { // Sigmoid Function
+	// Sigmoid Function
+	private static double g(double z) {
 		return 1.0/(1+Math.pow(Math.E, -1*z));
 	}
 	
+	// Loss Function
 	private static double j(Map<String, Double> parameters, String targetClass) throws Exception {
 		double cost = 0;
 		for (TaggedFeatureVector<String> trainingExample : trainingData) {
 			cost += cost(h(parameters,trainingExample.getFeatureVector()), trainingExample.getTag().equals(targetClass));
 		}
-//		for (int i=0;i<numOfTrainingDataSet;++i) {
-//			cost += cost(h(parameters, trainingData[i].getTrainingFeaturesVector()),trainingData[i].getTrainingDataRecordClass().equals(targetClass)?1:0);
-//		}
 		return cost/trainingData.size();
 	}
 	
+	// Cost Function
 	private static double cost(double hThetaX, boolean y) throws Exception {
 		if (!y) {
 			return -1*Math.log(1-hThetaX);
@@ -56,18 +51,18 @@ public class LogisticRegressionModel {
 		}
 	}
 	
+	// Gradient Descent Function
 	private static Map<String, Double> minJ(Map<String, Double> parameters, String targetClass) {
 		Map<String, Double> returnParameters = new HashMap<>();
 		int m = trainingData.size();
-//		int i=0;
 		for (String featureKey : parameters.keySet()) {
 			double returnParameterValue = parameters.get(featureKey) - (ALPHA/m)*sumDerivations(parameters, featureKey, targetClass);
-//			System.out.println(i++);
 			returnParameters.put(featureKey, returnParameterValue);
 		}
 		return returnParameters;
 	}
 	
+	// Sum of derivations Function
 	private static double sumDerivations(Map<String, Double>parameters, String featureKey, String targetClass) {
 		double returnValue = 0;
 		for (TaggedFeatureVector<String> trainingExample : trainingData) {
@@ -79,6 +74,7 @@ public class LogisticRegressionModel {
 		return returnValue;
 	}
 	
+	// Training theta parameters
 	public static Map<String, Double> trainParameters(Map<String, Double>initialparameters, String targetClass) throws Exception {
 		for (int i=0;i<numOfIterations;++i) {
 			System.out.println("cost "+i+": "+j(initialparameters, targetClass));
@@ -89,24 +85,9 @@ public class LogisticRegressionModel {
 	}
 	
 	public static void main(String[] args) throws Exception {
-//		trainingData = new ClassifiedFeatureRecord[3];
-//		trainingData[0] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "A");
-//		trainingData[0].getTrainingFeaturesVector().put("a", 1.0);
-//		trainingData[0].getTrainingFeaturesVector().put("b", 1.0);
-//		trainingData[0].getTrainingFeaturesVector().put("c", 1.0);
-//		
-//		trainingData[1] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "B");
-//		trainingData[1].getTrainingFeaturesVector().put("a", 1.0);
-//		trainingData[1].getTrainingFeaturesVector().put("b", 1.0);
-//		trainingData[1].getTrainingFeaturesVector().put("d", 1.0);
-//		
-//		trainingData[2] = new ClassifiedFeatureRecord<String>(ZERO_INDEX, "C");
-//		trainingData[2].getTrainingFeaturesVector().put("b", 1.0);
-//		trainingData[2].getTrainingFeaturesVector().put("c", 1.0);
-//		trainingData[2].getTrainingFeaturesVector().put("d", 1.0);
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building bag of words");
-		trainingData = dataReader.buildAuthorBagOfWords(); 
+		trainingData = dataReader.buildAuthorBagOfWords(ZERO_INDEX);
 		
 		System.out.println("Building initial thetas");
 		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
@@ -116,15 +97,10 @@ public class LogisticRegressionModel {
 		for (String word : dataReader.getListOfUniqueWords()) {
 			thetas.put(word, 1.0);
 		}
-//		thetas.put("a", 1.0);
-//		thetas.put("b", 1.0);
-//		thetas.put("c", 1.0);
-//		thetas.put("d", 1.0);
-//		thetas.put("e", 1.0);
 		System.out.println("Training Thetas for bencaspit");
 		thetas = trainParameters(thetas, "bencaspit");
 		
-		FeatureVector<String> f = new FeatureVector<>();
+		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
 		f.put("a", 1.0);
 		f.put("b", 1.0);
 		f.put("e", 1.0);

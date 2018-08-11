@@ -13,7 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StructuredDataReader {
-	// TODO: This should be static class
 	// This class handles the YAP output files
 	
 	private boolean bFilterPunctEnabled = true;
@@ -27,12 +26,11 @@ public class StructuredDataReader {
 	public StructuredDataReader(String structuredDataPath, String encoding)
 	{
 		File folder = new File(structuredDataPath);
-		//"C:\\Users\\Ronen Jashek\\git\\NLP_FinalProject\\TwitterReader\\OutputFromYap"
 		listOfFiles = folder.listFiles();
 		this.encoding = encoding;
 	}
 	
-	public void buildUserWordCountMap() throws IOException
+	private void buildUserWordCountMap(String ZERO_INDEX) throws IOException
 	{
 		usersTweets = new ArrayList<TaggedFeatureVector<String>>();
 
@@ -42,7 +40,7 @@ public class StructuredDataReader {
 		        String sName = file.getName();
 		        String[] tokens = sName.split("_");
 		        String currUserName = tokens[1];
-		        TaggedFeatureVector<String> newTweet = new TaggedFeatureVector<>(currUserName);
+		        TaggedFeatureVector<String> newTweet = new TaggedFeatureVector<>(currUserName, ZERO_INDEX);
 		        
 		        BufferedReader in;
 				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
@@ -78,7 +76,7 @@ public class StructuredDataReader {
 		        		// now we can add it to the user's list of tweets and prepare
 		        		// for the next tweet
 		        		usersTweets.add(newTweet);
-				        newTweet = new TaggedFeatureVector<>(currUserName);
+				        newTweet = new TaggedFeatureVector<>(currUserName, ZERO_INDEX);
 		        	}
 		        }
 			        
@@ -88,8 +86,8 @@ public class StructuredDataReader {
 		}
 	}
 
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords() throws IOException {
-		buildUserWordCountMap();
+	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords(String ZERO_INDEX) throws IOException {
+		buildUserWordCountMap(ZERO_INDEX);
 		return usersTweets;
 	}
 	

@@ -20,10 +20,9 @@ public class TaggedFeatureVector<K> {
 		this.featureVector = featureVector;
 		this.tag = tag;
 	}
-	public TaggedFeatureVector(String tag) {
+	public TaggedFeatureVector(String tag, K ZERO_INDEX) {
 		super();
-		this.featureVector = new FeatureVector<>();
+		this.featureVector = new FeatureVector<>(ZERO_INDEX);
 		this.tag = tag;
 	}
-
 }
