@@ -10,20 +10,23 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StructuredDataReader {  
+public class StructuredDataReader {
+	// TODO: This should be static class
 	// This class handles the YAP output files
 	
 	private boolean bFilterPunctEnabled = true;
 	private boolean bStemmingEnabled = false;
 	private boolean bPunctDetected = false;
-	private static File[] listOfFiles = null;
+	private File[] listOfFiles = null;
 	private List<TaggedFeatureVector<String>> usersTweets;
+	private String encoding;
 	
-	public StructuredDataReader(String structuredDataPath)
+	public StructuredDataReader(String structuredDataPath, String encoding)
 	{
 		File folder = new File(structuredDataPath);
 		//"C:\\Users\\Ronen Jashek\\git\\NLP_FinalProject\\TwitterReader\\OutputFromYap"
 		listOfFiles = folder.listFiles();
+		this.encoding = encoding;
 	}
 	
 	public void buildUserWordCountMap() throws IOException
@@ -39,7 +42,7 @@ public class StructuredDataReader {
 		        TaggedFeatureVector<String> newTweet = new TaggedFeatureVector<>(currUserName);
 		        
 		        BufferedReader in;
-				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
+				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
 				Pattern p = Pattern.compile("\\p{Punct}");
 			    Matcher m = null;
 					
@@ -78,5 +81,10 @@ public class StructuredDataReader {
 		        in.close();
 		    }
 		}
+	}
+
+	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords() throws IOException {
+		buildUserWordCountMap();
+		return usersTweets;
 	}
 }

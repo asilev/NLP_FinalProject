@@ -1,49 +1,32 @@
 package il.ac.openu.nlp.finalproject.models.bagofwords;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import il.ac.openu.nlp.finalproject.models.DataReader;
+import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
+import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class BagOfWordsModel {
-	private static DataReader dataReader;
-	private static Map<String, Integer> wordsIndex = new HashMap<>();
-	private static Map<String, Integer> authorIndex = new HashMap<>();
-	private static int newAuthorIndex = 0;
-	private static int newWordIndex = 0;
+	private static StructuredDataReader dataReader;
+	private static List<TaggedFeatureVector<String>> taggedFeatureVectorList;
 	
 	public static void main(String[] args) throws IOException {
-		dataReader = new DataReader(args[0], "UTF8");
-		Map<String, BagOfWords> authorBagOfWords = dataReader.setAuthorBagOfWords();
-		double[][] authorWordsArray;
-//		List<ArrayList<Double>> authorWordsArray;
-		authorWordsArray = new double[authorBagOfWords.size()][];
-//		authorWordsArray = new ArrayList<>();
-//		for (int i=0;i<authorBagOfWords.size();++i) {
-//			authorWordsArray.add(new ArrayList<Double>());
-//		}
-		for (Map.Entry<String, BagOfWords> e : authorBagOfWords.entrySet()) {
-			BagOfWords bagOfWords = e.getValue();
-			if (!authorIndex.containsKey(e.getKey())) {
-				authorIndex.put(e.getKey(), newAuthorIndex++);
+		if (args.length>0) {
+			if (args.length==1) {
+				dataReader = new StructuredDataReader(args[0], "UTF8");
 			}
-			System.out.println(newAuthorIndex);
-			System.out.println("Allocating "+(newWordIndex+e.getValue().size()));
-			authorWordsArray[authorIndex.get(e.getKey())] = new double[newWordIndex+e.getValue().size()];
-//			ArrayList<Double> newDoubleList = new ArrayList<Double>(newWordIndex+e.getValue().size());
-//			authorWordsArray.set(authorIndex.get(e.getKey()), new ArrayList<Double>());
-//			for (int i=0; i<newWordIndex+e.getValue().size();++i) {
-//				authorWordsArray.get(authorIndex.get(e.getKey())).add(new Double(0.0));
-//			}
-			for (String word : bagOfWords.getWords()) {
-				if (!wordsIndex.containsKey(word)) {
-					wordsIndex.put(word, newWordIndex++);
-				}
-				System.out.println("word "+wordsIndex.get(word));
-				authorWordsArray[authorIndex.get(e.getKey())][wordsIndex.get(word)] = bagOfWords.getNumOfOccurances(word);
-//				authorWordsArray.get(authorIndex.get(e.getKey())).set(wordsIndex.get(word), new Double(bagOfWords.getNumOfOccurances(word)));
+			else if (args.length > 1) {
+				dataReader = new StructuredDataReader(args[0], args[1]);
 			}
-		}		
+		}
+		else {
+			printUsage();
+			System.exit(-1);
+		}
+		taggedFeatureVectorList = dataReader.buildAuthorBagOfWords();
+	}
+
+	private static void printUsage() {
+		System.out.println("Usage: BagOfWordsModel <output from yac folder> <encoding(=UTF8)>");
 	}
 }
