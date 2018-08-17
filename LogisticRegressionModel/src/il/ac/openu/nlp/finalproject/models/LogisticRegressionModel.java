@@ -1,13 +1,16 @@
 package il.ac.openu.nlp.finalproject.models;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
-	private static double ALPHA = 0.1;
-	private static int numOfIterations = 500;
+	private static double ALPHA = 1;
+	private static int numOfIterations = 50;
 	private static String ZERO_INDEX; 
 	
 	public LogisticRegressionModel(List<TaggedFeatureVector<String>> data, String ZERO_INDEX) {
@@ -55,6 +58,7 @@ public class LogisticRegressionModel {
 	private static Map<String, Double> minJ(Map<String, Double> parameters, String targetClass) {
 		Map<String, Double> returnParameters = new HashMap<>();
 		int m = trainingData.size();
+		 
 		for (String featureKey : parameters.keySet()) {
 			double returnParameterValue = parameters.get(featureKey) - (ALPHA/m)*sumDerivations(parameters, featureKey, targetClass);
 			returnParameters.put(featureKey, returnParameterValue);
@@ -80,6 +84,7 @@ public class LogisticRegressionModel {
 			System.out.println("cost "+i+": "+j(initialparameters, targetClass));
 //			System.out.println("probability: "+h(initialparameters,trainingData.get(0).getFeatureVector()));
 			initialparameters = minJ(initialparameters, targetClass);
+//			saveToFile("output/"+targetClass+"Parameters.pars", initialparameters);
 		}
 		return initialparameters;
 	}
@@ -98,7 +103,10 @@ public class LogisticRegressionModel {
 			thetas.put(word, 1.0);
 		}
 		System.out.println("Training Thetas for bencaspit");
-		thetas = trainParameters(thetas, "bencaspit");
+		String label = "bencaspit";
+		thetas = trainParameters(thetas, label);
+		
+		saveToFile("outputBenCaspitParameters.pars", thetas);
 		
 		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
 		f.put("a", 1.0);
@@ -116,5 +124,19 @@ public class LogisticRegressionModel {
 		
 		double pf = h(thetas,f);
 		System.out.println("pf="+pf);
+	}
+
+	private static void saveToFile(String thetasFilename, Map<String, Double> thetas) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(thetasFilename));
+		for (Map.Entry<String, Double> mapEntry: thetas.entrySet()) {
+			if (mapEntry.getKey()==null) {
+				bw.write("");				
+			}
+			else {
+				bw.write(mapEntry.getKey());
+			}
+			bw.write("\t"+mapEntry.getValue().toString()+"\n");
+		}
+		bw.close();
 	}
 }
