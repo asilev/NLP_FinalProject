@@ -34,9 +34,9 @@ public class StructuredDataReader {
 		this.encoding = encoding;
 	}
 	
-	public Map<String, List<MorphemeRecord>> readStructuredData() throws IOException
+	public Map<String, List<List<MorphemeRecord>>> readStructuredData() throws IOException
 	{
-		Map<String, List<MorphemeRecord>> userTweets = new HashMap<>();
+		Map<String, List<List<MorphemeRecord>>> userTweets = new HashMap<>();
 		for (File file : listOfFiles) {
 		    if (file.isFile()) {
 		        System.out.println("Processing the file: " + file.getName());
@@ -75,7 +75,13 @@ public class StructuredDataReader {
 		        		// An empty line indicates we completed processing a tweet,
 		        		// now we can add it to the user's list of tweets and prepare
 		        		// for the next tweet
-		        		userTweets.put(currUserName, tweet);
+		        		
+		        		List<List<MorphemeRecord>> tweets = userTweets.get(currUserName);
+		        		if (tweets == null) {
+		        			tweets = new ArrayList<>();
+		        			userTweets.put(currUserName, tweets);
+		        		}
+		        		tweets.add(tweet);
 				        tweet = new ArrayList<>();
 		        	}
 		        }

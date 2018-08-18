@@ -98,7 +98,7 @@ public class LogisticRegressionModel {
 	public static void main(String[] args) throws Exception {
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building bag of words");
-		Map<String, List<MorphemeRecord>> data = dataReader.readStructuredData();
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
 		BagOfWordsModel bow = new BagOfWordsModel();
 		trainingData = bow.buildAuthorBagOfWords(data, ZERO_INDEX);
 		

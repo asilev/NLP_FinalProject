@@ -20,7 +20,7 @@ import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 public class SupportVectorMachine {
 	public static void prepareSvmInputsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String outputFilename) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<MorphemeRecord>> data = dataReader.readStructuredData();
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
 		BagOfWordsModel bow = new BagOfWordsModel();
 		List<TaggedFeatureVector<String>> trainingData = bow.buildAuthorBagOfWords(data, ZERO_INDEX);
 		HashMap<String, Integer> stringMapper = new HashMap<>();
