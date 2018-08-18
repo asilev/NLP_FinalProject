@@ -26,4 +26,14 @@ public class KeyMapper<K> implements Serializable{
 	public Map<K, Integer> getMapper() {
 		return mapper;
 	}
+	
+	public void setMapper(Map<K, Integer> mapper) {
+		this.mapper = mapper;
+		this.lastIndexInUse = 0;
+		for (Integer index : mapper.values()) {
+			if (index>lastIndexInUse) {
+				lastIndexInUse = index;
+			}
+		}
+	}
 }
