@@ -38,6 +38,7 @@ public class SupportVectorMachine {
 		for (Map.Entry<String, Integer> e : keyMapper.entrySet()) {
 			bw.write(e.getKey()+"\t"+e.getValue()+"\n");
 		}
+		bw.close();
 	}
 	
 	public static void prepareSvmEvaluationsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
@@ -66,6 +67,7 @@ public class SupportVectorMachine {
 				bw.write(" "+a.getKey()+":"+a.getValue());
 			}
 			bw.write("\n");
+			bw.flush();
 		}
 		bw.close();
 	}
