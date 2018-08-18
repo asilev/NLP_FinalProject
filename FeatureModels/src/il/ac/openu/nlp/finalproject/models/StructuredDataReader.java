@@ -37,7 +37,7 @@ public class StructuredDataReader {
 	{
 		Map<String, List<List<MorphemeRecord>>> userTweets = new HashMap<>();
 		for (File file : listOfFiles) {
-		    if (file.isFile()) {
+		    if (file.isFile() && file.getName().endsWith(".gold")) {
 		        System.out.println("Processing the file: " + file.getName());
 		        String sName = file.getName();
 		        String[] tokens = sName.split("_");

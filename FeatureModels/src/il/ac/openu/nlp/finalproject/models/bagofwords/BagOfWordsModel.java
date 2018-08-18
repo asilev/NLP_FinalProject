@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
+import il.ac.openu.nlp.finalproject.models.KeyMapper;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class BagOfWordsModel {
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -24,7 +25,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -38,7 +39,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 	
-	public List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
