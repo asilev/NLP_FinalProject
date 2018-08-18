@@ -98,6 +98,36 @@ public class StructuredDataReader {
 		}
 		return usersTweetsVector;
 	}
+
+	public List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(String ZERO_INDEX) throws IOException {
+		buildUserWordCountMap();
+		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
+		for (Map.Entry<String, List<MorphemeRecord>> tweet : userTweets.entrySet()) {
+			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
+			for (MorphemeRecord morpheme : tweet.getValue()) {
+				bagOfWords.put(morpheme.stemmedWord, bagOfWords.get(morpheme)+1);
+			}
+			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, tweet.getKey()));
+		}
+		return usersTweetsVector;
+	}
+	
+	public List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(String ZERO_INDEX) throws IOException {
+		buildUserWordCountMap();
+		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
+		for (Map.Entry<String, List<MorphemeRecord>> tweet : userTweets.entrySet()) {
+			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
+			bagOfWords.put("SOS "+tweet.getValue().get(0), 1.0);
+			for (int i=0; i<tweet.getValue().size()-1; ++i) {
+				String _2gram = tweet.getValue().get(i)+" "+tweet.getValue().get(i+1);
+				bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
+			}
+			bagOfWords.put(tweet.getValue().get(tweet.getValue().size()-1)+" EOS", 1.0);
+			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, tweet.getKey()));
+		}
+		return usersTweetsVector;
+	}
+
 	
 	public Set<String> getListOfUniqueWords() {
 		return listOfUniqueWords;
