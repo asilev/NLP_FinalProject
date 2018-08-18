@@ -11,13 +11,18 @@ import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
 import il.ac.openu.nlp.finalproject.models.FeatureVector.Attribute;
+import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
+import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWords;
+import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 
 public class SupportVectorMachine {
 	public static void prepareSvmInputsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String outputFilename) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		List<TaggedFeatureVector<String>> trainingData = dataReader.buildAuthorBagOfWords(ZERO_INDEX);
+		Map<String, List<MorphemeRecord>> data = dataReader.readStructuredData();
+		BagOfWordsModel bow = new BagOfWordsModel();
+		List<TaggedFeatureVector<String>> trainingData = bow.buildAuthorBagOfWords(data, ZERO_INDEX);
 		HashMap<String, Integer> stringMapper = new HashMap<>();
 		Integer lastIndex = 0;
 		BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilename));

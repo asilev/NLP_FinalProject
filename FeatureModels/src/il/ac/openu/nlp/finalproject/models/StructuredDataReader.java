@@ -18,7 +18,7 @@ public class StructuredDataReader {
 	// This class handles the YAP output files
 	
 	// Hash from author to a list of sentences. Each sentence is a list of morphemes.
-	private Map<String, List<MorphemeRecord>> userTweets;
+//	private Map<String, List<MorphemeRecord>> userTweets;
 	private boolean bFilterPunctEnabled = true;
 	private boolean bStemmingEnabled = false;
 	private boolean bPunctDetected = false;
@@ -32,11 +32,11 @@ public class StructuredDataReader {
 		File folder = new File(structuredDataPath);
 		listOfFiles = folder.listFiles();
 		this.encoding = encoding;
-		userTweets = new HashMap<>();
 	}
 	
-	private void buildUserWordCountMap() throws IOException
+	public Map<String, List<MorphemeRecord>> readStructuredData() throws IOException
 	{
+		Map<String, List<MorphemeRecord>> userTweets = new HashMap<>();
 		for (File file : listOfFiles) {
 		    if (file.isFile()) {
 		        System.out.println("Processing the file: " + file.getName());
@@ -84,51 +84,9 @@ public class StructuredDataReader {
 		        in.close();
 		    }
 		}
+		return userTweets;
 	}
 
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords(String ZERO_INDEX) throws IOException {
-		buildUserWordCountMap();
-		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
-		for (Map.Entry<String, List<MorphemeRecord>> tweet : userTweets.entrySet()) {
-			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-			for (MorphemeRecord morpheme : tweet.getValue()) {
-				bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
-			}
-			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, tweet.getKey()));
-		}
-		return usersTweetsVector;
-	}
-
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(String ZERO_INDEX) throws IOException {
-		buildUserWordCountMap();
-		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
-		for (Map.Entry<String, List<MorphemeRecord>> tweet : userTweets.entrySet()) {
-			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-			for (MorphemeRecord morpheme : tweet.getValue()) {
-				bagOfWords.put(morpheme.stemmedWord, bagOfWords.get(morpheme)+1);
-			}
-			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, tweet.getKey()));
-		}
-		return usersTweetsVector;
-	}
-	
-	public List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(String ZERO_INDEX) throws IOException {
-		buildUserWordCountMap();
-		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
-		for (Map.Entry<String, List<MorphemeRecord>> tweet : userTweets.entrySet()) {
-			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-			bagOfWords.put("SOS "+tweet.getValue().get(0), 1.0);
-			for (int i=0; i<tweet.getValue().size()-1; ++i) {
-				String _2gram = tweet.getValue().get(i)+" "+tweet.getValue().get(i+1);
-				bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
-			}
-			bagOfWords.put(tweet.getValue().get(tweet.getValue().size()-1)+" EOS", 1.0);
-			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, tweet.getKey()));
-		}
-		return usersTweetsVector;
-	}
-
-	
 	public Set<String> getListOfUniqueWords() {
 		return listOfUniqueWords;
 	}

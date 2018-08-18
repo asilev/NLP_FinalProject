@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
+import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
+import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
@@ -96,7 +98,9 @@ public class LogisticRegressionModel {
 	public static void main(String[] args) throws Exception {
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building bag of words");
-		trainingData = dataReader.buildAuthorBagOfWords(ZERO_INDEX);
+		Map<String, List<MorphemeRecord>> data = dataReader.readStructuredData();
+		BagOfWordsModel bow = new BagOfWordsModel();
+		trainingData = bow.buildAuthorBagOfWords(data, ZERO_INDEX);
 		
 		System.out.println("Building initial thetas");
 		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
