@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +22,7 @@ public class DataAnalyzer {
 	private static String sEncoding = "UTF8";
 	private static Map<String, Integer> numOfTwittsPerAuthor = new HashMap<>();
 	private static List<Integer> histogram ;
+	private static Set<String> wordsSet = new HashSet<>();
 
 	public static void main(String[] args) {
 		File dataFile = new File(args[0]);
@@ -40,9 +44,13 @@ public class DataAnalyzer {
         		else {
         			numOfTwittsPerAuthor.put(matcher.group(1),1);
         		}
+        		String[] wordsArray = matcher.group(2).split(" ");
+//        		List<String> wordsList = new ArrayList<>(Arrays.asList(wordsArray));
+        		wordsSet.addAll(new ArrayList<String>(Arrays.asList(wordsArray)));
         	}
         	in.close();
         	System.out.println("Num of original authors = "+numOfTwittsPerAuthor.size());
+        	System.out.println("Num of unique messages: "+wordsSet.size());
         	histogram = new ArrayList<>();
         	for (int i=0;i<=maxNumOfTwitts;++i) {
         		histogram.add(0);
