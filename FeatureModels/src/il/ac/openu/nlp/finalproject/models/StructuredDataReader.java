@@ -34,6 +34,7 @@ public class StructuredDataReader {
 		this.encoding = encoding;
 	}
 	
+	// Return value is map from author to a list of sentences (tweets). Each sentence is a list of morphemes.
 	public Map<String, List<List<MorphemeRecord>>> readStructuredData() throws IOException
 	{
 		Map<String, List<List<MorphemeRecord>>> userTweets = new HashMap<>();

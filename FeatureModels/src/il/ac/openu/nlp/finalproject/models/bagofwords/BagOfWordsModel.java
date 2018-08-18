@@ -48,12 +48,12 @@ public class BagOfWordsModel {
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
 				FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-				bagOfWords.put("SOS "+tweet.get(0), 1.0);
+				bagOfWords.put("<SOS> "+tweet.get(0), 1.0);
 				for (int i=0; i<tweet.size()-1; ++i) {
 					String _2gram = tweet.get(i)+" "+tweet.get(i+1);
 					bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
 				}
-				bagOfWords.put(tweet.get(tweet.size()-1)+" EOS", 1.0);
+				bagOfWords.put(tweet.get(tweet.size()-1)+" <EOS>", 1.0);
 				usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, user.getKey()));
 			}
 		}
