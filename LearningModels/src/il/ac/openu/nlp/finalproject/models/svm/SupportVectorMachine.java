@@ -34,7 +34,6 @@ public class SupportVectorMachine {
 		for (Map.Entry<String, Integer> e : keyMapper.entrySet()) {
 			bw.write(e.getKey()+"\t"+e.getValue()+"\n");
 		}
-		
 	}
 	
 	public static void main(String[] args) throws IOException {

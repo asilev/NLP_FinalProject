@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
-import il.ac.openu.nlp.finalproject.models.KeyMapper;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 

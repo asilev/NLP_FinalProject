@@ -1,10 +1,6 @@
 package il.ac.openu.nlp.finalproject.models;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class FeatureVector<K> extends HashMap<K, Double> {
 	private static final long serialVersionUID = 1L;
