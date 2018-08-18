@@ -25,9 +25,6 @@ import java.util.List;
 
 public class TwitterDataSourceReader {
 	
-	// Path of the file that contains the Twitter texts; the file is in JSON format
-	private static String sPath = "C:\\Users\\Ronen Jashek\\eclipse-workspace\\JSONReader\\data\\iw_tweets_20180706040002-20180710040003.json";
-	// Path of the file that contains the Twitter texts; the file is in JSON format
 	private static String sInputPath;
 	private static String sOutputPath;
 	
@@ -48,7 +45,6 @@ public class TwitterDataSourceReader {
 											 "talschneider", "alonbd", "RinoZror", "OrHeller", "baruchikra",
 											 "usegal", "kereneubach", "amsterdamski2", "roysharon11", "akivanovick",
 											 "sefiova", "YoazHendel1", "Danmargalit", "SivanRahav", "zionnenko"};
-	private static String sPunctuationMarks = ".,";
 	private static String sCWD = "";
 	private static String sOutputDir = "";
 	private static int mNumOfTweetsToGet = 1000;
@@ -85,7 +81,7 @@ public class TwitterDataSourceReader {
 			//BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), sEncoding));
             // The above line does not compile with Java JDK 1.8.0 - replacing with the below line
 			// [Error message is "The constructor BufferedWriter(OutputStreamWriter) is undefined"]
-			PrintWriter out = new PrintWriter(new File(sOutputPath), "UTF-8");
+			PrintWriter out = new PrintWriter(outputFile, "UTF-8");
     		
             String line;
         	while ((line = in.readLine()) != null) {
@@ -360,8 +356,6 @@ public class TwitterDataSourceReader {
 		hmTransLiterate.put("0", "0");
 		// Other characters
 		hmTransLiterate.put("@", "@");
-		
-		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls. This currently not an issue, since transliterate is not used.
 	}
 	
 	public static String transLiterateString(String s)

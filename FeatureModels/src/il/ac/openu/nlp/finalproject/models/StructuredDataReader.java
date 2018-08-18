@@ -19,8 +19,6 @@ public class StructuredDataReader {
 	
 	// Hash from author to a list of sentences. Each sentence is a list of morphemes.
 //	private Map<String, List<MorphemeRecord>> userTweets;
-	private boolean bFilterPunctEnabled = true;
-	private boolean bStemmingEnabled = false;
 	private boolean bPunctDetected = false;
 	private File[] listOfFiles = null;
 //	private List<TaggedFeatureVector<String>> usersTweets;

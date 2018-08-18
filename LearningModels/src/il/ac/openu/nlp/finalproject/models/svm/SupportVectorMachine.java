@@ -10,11 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
-import il.ac.openu.nlp.finalproject.models.FeatureVector.Attribute;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
-import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWords;
 import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 
 public class SupportVectorMachine {
@@ -29,7 +27,7 @@ public class SupportVectorMachine {
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
 			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
 			
-			List<Attribute> attributesList = new ArrayList<>();
+			List<FeatureVector<String>.Attribute> attributesList = new ArrayList<>();
 			for (Map.Entry<String, Double> fv : taggedFeatureVector.getFeatureVector().entrySet()) {
 				if (!stringMapper.containsKey(fv.getKey())) {
 					stringMapper.put(fv.getKey(), ++lastIndex);
@@ -37,7 +35,7 @@ public class SupportVectorMachine {
 				attributesList.add(taggedFeatureVector.getFeatureVector().new Attribute(stringMapper.get(fv.getKey()),fv.getValue()));
 			}
 			Collections.sort(attributesList);
-			for (Attribute a : attributesList) {
+			for (FeatureVector<String>.Attribute a : attributesList) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
 			}
 			bw.write("\n");
