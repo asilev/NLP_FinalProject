@@ -35,8 +35,8 @@ public class DataSetSplitter {
 		        System.out.println("Processing the file: " + file.getName());
 		        String fullFileName = file.getAbsolutePath();
 		        String fileWithoutExt = fullFileName.substring(0, fullFileName.indexOf("."));
-		        String trainFileName = fileWithoutExt + ".test";
-		        String goldenFileName = fileWithoutExt + ".gold";
+		        String trainFileName = fileWithoutExt + ".gold";
+		        String goldenFileName = fileWithoutExt + ".test";
 		        
 		        try {
 					lines = Files.readAllLines(Paths.get(fullFileName), StandardCharsets.UTF_8);
@@ -58,7 +58,7 @@ public class DataSetSplitter {
 					
 					// At this point we may be in the middle of a tweet, so finish
 					// it first before writing the remainder of the file to 
-					// the second file (the golden one)
+					// the second file (the TEST one)
 					while (lines.get(linesCounter).equals("") == false)
 					{
 						line = lines.get(linesCounter++);
