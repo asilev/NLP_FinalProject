@@ -99,8 +99,7 @@ public class LogisticRegressionModel {
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building bag of words");
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
-		BagOfWordsModel bow = new BagOfWordsModel();
-		trainingData = bow.buildAuthorBagOfWords(data, ZERO_INDEX);
+		trainingData = BagOfWordsModel.buildAuthorBagOfWords(data, ZERO_INDEX);
 		
 		System.out.println("Building initial thetas");
 		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());

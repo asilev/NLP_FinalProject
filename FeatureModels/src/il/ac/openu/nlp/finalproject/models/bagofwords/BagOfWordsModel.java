@@ -7,15 +7,10 @@ import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
-import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class BagOfWordsModel {
-	private static final String ZERO_INDEX = "Zero";
-	private static StructuredDataReader dataReader;
-	private static List<TaggedFeatureVector<String>> taggedFeatureVectorList;
-	
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -29,7 +24,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -43,7 +38,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 	
-	public List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -58,27 +53,5 @@ public class BagOfWordsModel {
 			}
 		}
 		return usersTweetsVector;
-	}
-
-	public static void main(String[] args) throws IOException {
-		if (args.length>0) {
-			if (args.length==1) {
-				dataReader = new StructuredDataReader(args[0], "UTF8");
-			}
-			else if (args.length > 1) {
-				dataReader = new StructuredDataReader(args[0], args[1]);
-			}
-		}
-		else {
-			printUsage();
-			System.exit(-1);
-		}
-		BagOfWordsModel bow = new BagOfWordsModel();
-		Map<String,List<List<MorphemeRecord>>> tweets = dataReader.readStructuredData();
-		taggedFeatureVectorList = bow.buildAuthorBagOfWords(tweets, ZERO_INDEX);
-	}
-
-	private static void printUsage() {
-		System.out.println("Usage: BagOfWordsModel <output from yac folder> <encoding(=UTF8)>");
 	}
 }

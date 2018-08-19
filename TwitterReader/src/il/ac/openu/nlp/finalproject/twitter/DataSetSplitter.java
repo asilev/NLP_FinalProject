@@ -58,7 +58,7 @@ public class DataSetSplitter {
 					
 					// At this point we may be in the middle of a tweet, so finish
 					// it first before writing the remainder of the file to 
-					// the second file (the golden one)
+					// the second file (the TEST one)
 					while (lines.get(linesCounter).equals("") == false)
 					{
 						line = lines.get(linesCounter++);
@@ -78,7 +78,6 @@ public class DataSetSplitter {
 					linesCounter = 0;
 					numOfLines = 0;
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		    }

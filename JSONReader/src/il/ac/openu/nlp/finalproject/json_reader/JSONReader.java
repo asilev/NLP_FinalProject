@@ -190,7 +190,6 @@ public class JSONReader {
 		// Other characters
 		hmTransLiterate.put("@", "@");
 		
-		//TODO: Handle linefeed. (see "@ArtsiDraw"), &, ,/ ?... all other nulls
 	}
 	
 	public static String transLiterateString(String s)

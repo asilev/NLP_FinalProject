@@ -19,8 +19,6 @@ public class StructuredDataReader {
 	
 	// Hash from author to a list of sentences. Each sentence is a list of morphemes.
 //	private Map<String, List<MorphemeRecord>> userTweets;
-	private boolean bFilterPunctEnabled = true;
-	private boolean bStemmingEnabled = false;
 	private boolean bPunctDetected = false;
 	private File[] listOfFiles = null;
 //	private List<TaggedFeatureVector<String>> usersTweets;
@@ -39,7 +37,7 @@ public class StructuredDataReader {
 	{
 		Map<String, List<List<MorphemeRecord>>> userTweets = new HashMap<>();
 		for (File file : listOfFiles) {
-		    if (file.isFile()) {
+		    if (file.isFile() && file.getName().endsWith(".gold")) {
 		        System.out.println("Processing the file: " + file.getName());
 		        String sName = file.getName();
 		        String[] tokens = sName.split("_");
