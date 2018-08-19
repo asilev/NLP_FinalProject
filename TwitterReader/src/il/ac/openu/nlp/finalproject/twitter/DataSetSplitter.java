@@ -35,8 +35,8 @@ public class DataSetSplitter {
 		        System.out.println("Processing the file: " + file.getName());
 		        String fullFileName = file.getAbsolutePath();
 		        String fileWithoutExt = fullFileName.substring(0, fullFileName.indexOf("."));
-		        String trainFileName = fileWithoutExt + ".test";
-		        String goldenFileName = fileWithoutExt + ".gold";
+		        String trainFileName = fileWithoutExt + ".gold";
+		        String goldenFileName = fileWithoutExt + ".test";
 		        
 		        try {
 					lines = Files.readAllLines(Paths.get(fullFileName), StandardCharsets.UTF_8);
