@@ -20,7 +20,7 @@ public class SupportVectorMachine {
 	public static void prepareSvmInputsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
 		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold");
-		List<TaggedFeatureVector<String>> trainingData = BagOfWordsModel.buildAuthorBagOfWords(structuredData, ZERO_INDEX);
+		List<TaggedFeatureVector<String>> trainingData = BagOfWordsModel.buildAuthorBagOf2GramsWords(structuredData, ZERO_INDEX);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
@@ -44,7 +44,7 @@ public class SupportVectorMachine {
 	public static void prepareSvmEvaluationsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
 		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test");
-		List<TaggedFeatureVector<String>> evaluationData = BagOfWordsModel.buildAuthorBagOfWords(structuredData, ZERO_INDEX);
+		List<TaggedFeatureVector<String>> evaluationData = BagOfWordsModel.buildAuthorBagOf2GramsWords(structuredData, ZERO_INDEX);
 		Map<String, Integer> mapper = new HashMap<>();
 		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
 		String line;

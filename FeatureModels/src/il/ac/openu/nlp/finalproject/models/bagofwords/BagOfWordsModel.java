@@ -43,12 +43,15 @@ public class BagOfWordsModel {
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
 				FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-				bagOfWords.put("<SOS> "+tweet.get(0).originalWord, 1.0);
-				for (int i=0; i<tweet.size()-1; ++i) {
-					String _2gram = tweet.get(i).originalWord+" "+tweet.get(i+1).originalWord;
-					bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
+				if (tweet.size()>0) {
+					bagOfWords.put("<SOS> "+tweet.get(0).originalWord, 1.0);
+				
+					for (int i=0; i<tweet.size()-1; ++i) {
+						String _2gram = tweet.get(i).originalWord+" "+tweet.get(i+1).originalWord;
+						bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
+					}
+					bagOfWords.put(tweet.get(tweet.size()-1).originalWord+" <EOS>", 1.0);
 				}
-				bagOfWords.put(tweet.get(tweet.size()-1).originalWord+" <EOS>", 1.0);
 				usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, user.getKey()));
 			}
 		}
@@ -88,12 +91,14 @@ public class BagOfWordsModel {
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
 			for (List<MorphemeRecord> tweet : user.getValue()) {
-				bagOfWords.put("<SOS> "+tweet.get(0).originalWord, 1.0);
-				for (int i=0; i<tweet.size()-1; ++i) {
-					String _2gram = tweet.get(i).originalWord+" "+tweet.get(i+1).originalWord;
-					bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
+				if (tweet.size() > 0) {
+					bagOfWords.put("<SOS> "+tweet.get(0).originalWord, 1.0);
+					for (int i=0; i<tweet.size()-1; ++i) {
+						String _2gram = tweet.get(i).originalWord+" "+tweet.get(i+1).originalWord;
+						bagOfWords.put(_2gram, bagOfWords.get(_2gram)+1);
+					}
+					bagOfWords.put(tweet.get(tweet.size()-1).originalWord+" <EOS>", 1.0);
 				}
-				bagOfWords.put(tweet.get(tweet.size()-1).originalWord+" <EOS>", 1.0);
 			}
 			usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, user.getKey()));
 		}
