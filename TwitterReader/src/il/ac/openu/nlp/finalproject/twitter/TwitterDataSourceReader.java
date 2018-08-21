@@ -40,14 +40,16 @@ public class TwitterDataSourceReader {
 	// The transliterate table
 	static HashMap<String, String> hmTransLiterate = new HashMap<String, String>();
 	
-	//private static String[] sTwitterUsers = {"zionnenko"};
+	private static String[] sTwitterUsers = {"Danmargalit", "SivanRahav", "zionnenko"};
+	/*
 	private static String[] sTwitterUsers = {"BenCaspit", "NadavEyalDesk", "amit_segal", "AyalaHasson", "grolnik", 
 											 "talschneider", "alonbd", "RinoZror", "OrHeller", "baruchikra",
 											 "usegal", "kereneubach", "amsterdamski2", "roysharon11", "akivanovick",
 											 "sefiova", "YoazHendel1", "Danmargalit", "SivanRahav", "zionnenko"};
+											 */
 	private static String sCWD = "";
 	private static String sOutputDir = "";
-	private static int mNumOfTweetsToGet = 1000;
+	private static int mNumOfTweetsToGet = 10000;
 
 	public static void main(String[] args) {
 		
@@ -136,8 +138,8 @@ public class TwitterDataSourceReader {
 			
 	        try {
 	        	// Prepare the output files - one for the raw Tweets, and one for the normalized ones
-	        	String sOutFile = sOutputDir + "\\" + String.format("%02d", i) + "_" + sUser + ".txt";
-	        	String sOutNormFile = sOutputDir + "\\" + String.format("%02d", i) + "_" + sUser + "-Normalized.txt";
+	        	String sOutFile = sOutputPath + "\\" + String.format("%02d", i) + "_" + sUser + ".txt";
+	        	String sOutNormFile = sOutputPath + "\\" + String.format("%02d", i) + "_" + sUser + "-Normalized.txt";
 	        	FileWriter fw = new FileWriter(sOutFile, true);
 	            BufferedWriter bw = new BufferedWriter(fw);
 	            PrintWriter out = new PrintWriter(bw);
@@ -164,8 +166,8 @@ public class TwitterDataSourceReader {
 		                out.println(status.toString());
 		             
 		             // Some Tweets may return empty e.g. if original Tweet was 100% in English, and YAP does not accept empty sections
-		                if (sNormTweet.equals("") == false)	
-		                	out2.println(sNormTweet + "\n");
+		             if (sNormTweet.equals("") == false)
+		            	 out2.println(sNormTweet + "\n");
 		            }
 	            }
 	            out.close();
