@@ -43,7 +43,7 @@ public class FeatureMarkerModel {
 		// Simple test function to test "buildFeatureMarkerTweetSize"
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building FeatureMarker");
-		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
 		trainingData = buildFeatureMarkerTweetSize(data, ZERO_INDEX);
 	}
 }
