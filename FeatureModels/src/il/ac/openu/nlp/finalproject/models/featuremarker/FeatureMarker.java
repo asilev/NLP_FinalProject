@@ -8,9 +8,9 @@ public class FeatureMarker {
 	{
 	}
 	
-	public FeatureMarker(Object val)
+	public FeatureMarker(String name)
 	{
-		this.value = val;
+		this.sFeatureName = name;
 	}
 	
 	public FeatureMarker(String name, Object val)
@@ -37,6 +37,13 @@ public class FeatureMarker {
 	public void setName(String name)
 	{
 		this.sFeatureName = name;
+	}
+	
+	public Object applyFeatureCond(Object inObj)
+	{
+		// Default function that does nothing, to be overridden 
+		Object outObj = null;
+		return outObj;
 	}
 }
 

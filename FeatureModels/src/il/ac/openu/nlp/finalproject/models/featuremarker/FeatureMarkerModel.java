@@ -14,36 +14,45 @@ import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 public class FeatureMarkerModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
 	private static String ZERO_INDEX;
+	private static ArrayList<FeatureMarker> fml;	// A list of FeatureMarkers
 	
-	public static List<TaggedFeatureVector<String>> buildFeatureMarkerTweetSize(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
-		FeatureMarker fm = new FeatureMarker("tweet_size", 10);
-
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
-				FeatureVector<String> wordsPerTweet = new FeatureVector<String>(ZERO_INDEX);
 				
-				// Check if the tweet's length if equal or larger to the given length in the FeatureMarker
-				if (tweet.size() >= (int)fm.getValue()) {
-					// If yes, "re-build" the tweet itself since the variable 'tweet' contains discreet morphemes
+				/*
+				FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
+				for (MorphemeRecord morpheme : tweet) {
+					bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
+				}*/
+				
+				for (FeatureMarker fm : fml)
+				{
+					// Traverse the list of features, for each call the feature implementation/test function
+					// For now - just one feature of "num_of_morphemes"
+					FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+					String sOriginalTweet = "";
 					for (MorphemeRecord morpheme : tweet) {
-						wordsPerTweet.put(morpheme.originalWord, 1.0);
+						sOriginalTweet += morpheme.originalWord + " ";
 					}
-					usersTweetsVector.add(new TaggedFeatureVector<>(wordsPerTweet, user.getKey()));
+					numOfMorphemes.put(fm.getName() + ": [" + sOriginalTweet + "]", (double)tweet.size());
+					usersTweetsVector.add(new TaggedFeatureVector<>(numOfMorphemes, user.getKey()));
 				}
 			}
 		}
-		
-		// Return all the tweets from all the users that comply with the condition of FeatureMarker
 		return usersTweetsVector;
 	}
 	
 	public static void main (String[] args) throws Exception
 	{
 		// Simple test function to test "buildFeatureMarkerTweetSize"
+		
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building FeatureMarker");
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
-		trainingData = buildFeatureMarkerTweetSize(data, ZERO_INDEX);
+		fml = new ArrayList<FeatureMarker>();
+		fml.add(new FeatureMarker("num_of_morphemes"));
+		trainingData = buildFeatureMarker(data, ZERO_INDEX);
 	}
 }
