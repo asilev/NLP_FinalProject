@@ -35,19 +35,19 @@ public class DataSetSplitter {
 		        System.out.println("Processing the file: " + file.getName());
 		        String fullFileName = file.getAbsolutePath();
 		        String fileWithoutExt = fullFileName.substring(0, fullFileName.indexOf("."));
-		        String trainFileName = fileWithoutExt + ".gold";
-		        String goldenFileName = fileWithoutExt + ".test";
+		        String goldFileName = fileWithoutExt + ".gold";
+		        String testFileName = fileWithoutExt + ".test";
 		        
 		        try {
 					lines = Files.readAllLines(Paths.get(fullFileName), StandardCharsets.UTF_8);
 					numOfLines = lines.size();
 					String line = "";
 					
-					PrintWriter outTrain = new PrintWriter(new File(trainFileName), "UTF-8");
-					PrintWriter outGold = new PrintWriter(new File(goldenFileName), "UTF-8");
+					PrintWriter outTrain = new PrintWriter(new File(goldFileName), "UTF-8");
+					PrintWriter outGold = new PrintWriter(new File(testFileName), "UTF-8");
 					
-					System.out.println("Creating the TRAIN file \"" + trainFileName + "\"");
-					System.out.println("Creating the GOLD file \"" + goldenFileName + "\"");
+					System.out.println("Creating the TRAIN file \"" + goldFileName + "\"");
+					System.out.println("Creating the GOLD file \"" + testFileName + "\"");
 
 					// Now split the whole data set into two files
 					while (linesCounter < numOfLines * splitRatio)
