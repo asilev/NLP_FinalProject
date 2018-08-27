@@ -27,18 +27,10 @@ public class FeatureMarkerModel {
 					bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
 				}*/
 				
-				for (FeatureMarker fm : fml)
-				{
-					// Traverse the list of features, for each call the feature implementation/test function
-					// For now - just one feature of "num_of_morphemes"
-					FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
-					String sOriginalTweet = "";
-					for (MorphemeRecord morpheme : tweet) {
-						sOriginalTweet += morpheme.originalWord + " ";
-					}
-					numOfMorphemes.put(fm.getName() + ": [" + sOriginalTweet + "]", (double)tweet.size());
-					usersTweetsVector.add(new TaggedFeatureVector<>(numOfMorphemes, user.getKey()));
-				}
+				// For now - just one feature of "num_of_morphemes"
+				FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+				numOfMorphemes.put("numOfMorphemes", (double)tweet.size());
+				usersTweetsVector.add(new TaggedFeatureVector<>(numOfMorphemes, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
