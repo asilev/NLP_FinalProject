@@ -20,28 +20,42 @@ public class FeatureMarkerModel {
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
 				
-				/*
-				FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-				for (MorphemeRecord morpheme : tweet) {
-					bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
-				}*/
-				
-				// For now - just one feature of "num_of_morphemes"
-				FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
-				numOfMorphemes.put("numOfMorphemes", (double)tweet.size());
+				FeatureVector<String> numOfMorphemes = getTweetsSize(ZERO_INDEX, tweet);
 				usersTweetsVector.add(new TaggedFeatureVector<>(numOfMorphemes, user.getKey()));
+				
+				FeatureVector<String> averageWordSize = getAverageWordSize(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(averageWordSize, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
 	}
-	
-	public static void main (String[] args) throws Exception
-	{
-		// Simple test function to test "buildFeatureMarkerTweetSize"
-		
-		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
-		System.out.println("Building FeatureMarker");
-		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
-		trainingData = buildFeatureMarker(data, ZERO_INDEX);
+
+	private static FeatureVector<String> getAverageWordSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		// TODO Auto-generated method stub
+		// Run over the list of morphemes, sum the size of each morpheme, and divide by the tweet size (num of morphemes)
+		return null;
 	}
+
+	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		/*
+		FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
+		for (MorphemeRecord morpheme : tweet) {
+			bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
+		}*/
+		
+		// For now - just one feature of "num_of_morphemes"
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+		numOfMorphemes.put("numOfMorphemes", (double)tweet.size());
+		return numOfMorphemes;
+	}
+	
+//	public static void buildFeatureMarker(String[] args) throws Exception
+//	{
+//		// Simple test function to test "buildFeatureMarkerTweetSize"
+//		
+//		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
+//		System.out.println("Building FeatureMarker");
+//		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
+//		trainingData = buildFeatureMarker(data, ZERO_INDEX);
+//	}
 }
