@@ -6,7 +6,9 @@ public class FeatureVector<K> extends HashMap<K, Double> {
 	private static final long serialVersionUID = 1L;
 	public FeatureVector(K zeroIndex) {
 		super();
-		this.put(zeroIndex, 1.0);
+		if (zeroIndex!=null) {
+			this.put(zeroIndex, 1.0);
+		}
 	}
 	
 	@Override

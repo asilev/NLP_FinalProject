@@ -14,7 +14,6 @@ import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 public class FeatureMarkerModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
 	private static String ZERO_INDEX;
-	private static ArrayList<FeatureMarker> fml;	// A list of FeatureMarkers
 	
 	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
@@ -42,9 +41,7 @@ public class FeatureMarkerModel {
 		
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		System.out.println("Building FeatureMarker");
-		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData();
-		fml = new ArrayList<FeatureMarker>();
-		fml.add(new FeatureMarker("num_of_morphemes"));
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
 		trainingData = buildFeatureMarker(data, ZERO_INDEX);
 	}
 }

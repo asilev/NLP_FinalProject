@@ -38,6 +38,9 @@ public class AttributeList<K> {
 		Collections.sort(ret);
 		return ret;
 	}
+	public void setKeyMapper(KeyMapper<K> keyMapper) {
+		this.keyMapper = keyMapper;
+	}
 	
 	public KeyMapper<K> getKeyMapper() {
 		return keyMapper;
