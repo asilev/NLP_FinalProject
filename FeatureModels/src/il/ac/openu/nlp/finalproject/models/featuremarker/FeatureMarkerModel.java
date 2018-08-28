@@ -33,16 +33,20 @@ public class FeatureMarkerModel {
 	private static FeatureVector<String> getAverageWordSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		// TODO Auto-generated method stub
 		// Run over the list of morphemes, sum the size of each morpheme, and divide by the tweet size (num of morphemes)
-		return null;
+		
+		double accSize = 0;
+		double numOfWords = 0;
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+		
+		for (MorphemeRecord morpheme : tweet) {
+			accSize += morpheme.originalWord.length();
+			numOfWords++;
+		}
+		numOfMorphemes.put("avgWordSize", accSize/numOfWords);
+		return numOfMorphemes;
 	}
 
 	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
-		/*
-		FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-		for (MorphemeRecord morpheme : tweet) {
-			bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
-		}*/
-		
 		// For now - just one feature of "num_of_morphemes"
 		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
 		numOfMorphemes.put("numOfMorphemes", (double)tweet.size());
