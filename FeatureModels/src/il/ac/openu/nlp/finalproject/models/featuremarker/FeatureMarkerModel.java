@@ -32,7 +32,7 @@ public class FeatureMarkerModel {
 
 	private static FeatureVector<String> getAverageWordSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		// TODO Auto-generated method stub
-		// Run over the list of morphemes, sum the size of each morpheme, and divide by the tweet size (num of morphemes)
+		// Run over the list of morphemes, sum the size of each morpheme, and divide by the number of words in the tweet (number of morphemes)
 		
 		double accSize = 0;
 		double numOfWords = 0;
