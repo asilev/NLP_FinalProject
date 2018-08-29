@@ -25,6 +25,9 @@ public class FeatureMarkerModel {
 				
 				FeatureVector<String> averageWordSize = getAverageWordSize(ZERO_INDEX, tweet);
 				usersTweetsVector.add(new TaggedFeatureVector<>(averageWordSize, user.getKey()));
+				
+				FeatureVector<String> numOfPunctMarks = getNumOfPunctuationMarks(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(numOfPunctMarks, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
@@ -46,6 +49,21 @@ public class FeatureMarkerModel {
 		return numOfMorphemes;
 	}
 
+	private static FeatureVector<String> getNumOfPunctuationMarks(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		// TODO Auto-generated method stub
+		// Run over the list of morphemes, sum the size of each morpheme, and divide by the number of words in the tweet (number of morphemes)
+		
+		double numOfPunctMarks = 0;
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+		
+		for (MorphemeRecord morpheme : tweet) {
+			if (morpheme.isPunctuationMark == true)
+				numOfPunctMarks++;
+		}
+		numOfMorphemes.put("numOfPunctuationMarks", numOfPunctMarks);
+		return numOfMorphemes;
+	}
+	
 	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		// For now - just one feature of "num_of_morphemes"
 		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
