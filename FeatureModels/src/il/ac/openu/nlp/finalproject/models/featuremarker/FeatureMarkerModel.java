@@ -2,6 +2,7 @@ package il.ac.openu.nlp.finalproject.models.featuremarker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,9 @@ public class FeatureMarkerModel {
 				
 				FeatureVector<String> avgNumOfPunctMarks = getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet);
 				usersTweetsVector.add(new TaggedFeatureVector<>(avgNumOfPunctMarks, user.getKey()));
+				
+				FeatureVector<String> posTagging = getPosTagging(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(posTagging, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
@@ -74,6 +78,29 @@ public class FeatureMarkerModel {
 		}
 		numOfMorphemes.put("averageNumOfPunctuationMarks", numOfPunctMarks/tweet.size());
 		return numOfMorphemes;
+	}
+	
+	private static FeatureVector<String> getPosTagging(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		// The frequency of each tag within a tweet is a feature
+		
+		FeatureVector<String> posTagging = new FeatureVector<String>(ZERO_INDEX);
+		Map<String, Integer> posCount = new HashMap<String, Integer>();
+		
+		for (MorphemeRecord morpheme : tweet) {
+			String sPos = morpheme.partOfSpeech;
+			Integer count = posCount.get(sPos);
+			if (count == null)
+				posCount.put(sPos, 1);
+			else
+				posCount.put(sPos, count + 1);
+		}
+		
+		for (Map.Entry<String, Integer> entry: posCount.entrySet())
+		{
+			posTagging.put("posCount: " + entry.getKey(), (double)entry.getValue());
+		}
+		
+		return posTagging;
 	}
 	
 	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
