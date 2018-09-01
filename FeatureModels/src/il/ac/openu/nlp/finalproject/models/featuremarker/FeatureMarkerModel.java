@@ -2,6 +2,7 @@ package il.ac.openu.nlp.finalproject.models.featuremarker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,15 @@ public class FeatureMarkerModel {
 				
 				FeatureVector<String> averageWordSize = getAverageWordSize(ZERO_INDEX, tweet);
 				usersTweetsVector.add(new TaggedFeatureVector<>(averageWordSize, user.getKey()));
+				
+				FeatureVector<String> numOfPunctMarks = getNumOfPunctuationMarks(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(numOfPunctMarks, user.getKey()));
+				
+				FeatureVector<String> avgNumOfPunctMarks = getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(avgNumOfPunctMarks, user.getKey()));
+				
+				FeatureVector<String> posTagging = getPosTagging(ZERO_INDEX, tweet);
+				usersTweetsVector.add(new TaggedFeatureVector<>(posTagging, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
@@ -32,18 +42,68 @@ public class FeatureMarkerModel {
 
 	private static FeatureVector<String> getAverageWordSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		// TODO Auto-generated method stub
-		// Run over the list of morphemes, sum the size of each morpheme, and divide by the tweet size (num of morphemes)
-		return null;
+		// Run over the list of morphemes, sum the size of each morpheme, and divide by the number of words in the tweet (number of morphemes)
+		
+		double accSize = 0;
+		double numOfWords = 0;
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+		
+		for (MorphemeRecord morpheme : tweet) {
+			accSize += morpheme.originalWord.length();
+			numOfWords++;
+		}
+		numOfMorphemes.put("avgWordSize", accSize/numOfWords);
+		return numOfMorphemes;
 	}
 
-	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
-		/*
-		FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-		for (MorphemeRecord morpheme : tweet) {
-			bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme)+1);
-		}*/
+	private static FeatureVector<String> getNumOfPunctuationMarks(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		double numOfPunctMarks = 0;
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
 		
-		// For now - just one feature of "num_of_morphemes"
+		for (MorphemeRecord morpheme : tweet) {
+			if (morpheme.isPunctuationMark == true)
+				numOfPunctMarks++;
+		}
+		numOfMorphemes.put("numOfPunctuationMarks", numOfPunctMarks);
+		return numOfMorphemes;
+	}
+	
+	private static FeatureVector<String> getAverageNumOfPunctuationMarks(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		double numOfPunctMarks = 0;
+		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
+		
+		for (MorphemeRecord morpheme : tweet) {
+			if (morpheme.isPunctuationMark == true)
+				numOfPunctMarks++;
+		}
+		numOfMorphemes.put("averageNumOfPunctuationMarks", numOfPunctMarks/tweet.size());
+		return numOfMorphemes;
+	}
+	
+	private static FeatureVector<String> getPosTagging(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		// The frequency of each tag within a tweet is a feature
+		
+		FeatureVector<String> posTagging = new FeatureVector<String>(ZERO_INDEX);
+		Map<String, Integer> posCount = new HashMap<String, Integer>();
+		
+		for (MorphemeRecord morpheme : tweet) {
+			String sPos = morpheme.partOfSpeech;
+			Integer count = posCount.get(sPos);
+			if (count == null)
+				posCount.put(sPos, 1);
+			else
+				posCount.put(sPos, count + 1);
+		}
+		
+		for (Map.Entry<String, Integer> entry: posCount.entrySet())
+		{
+			posTagging.put("posCount: " + entry.getKey(), (double)entry.getValue());
+		}
+		
+		return posTagging;
+	}
+	
+	private static FeatureVector<String> getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		FeatureVector<String> numOfMorphemes = new FeatureVector<String>(ZERO_INDEX);
 		numOfMorphemes.put("numOfMorphemes", (double)tweet.size());
 		return numOfMorphemes;
