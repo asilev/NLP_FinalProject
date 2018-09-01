@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
+import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
 
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
@@ -97,40 +99,48 @@ public class LogisticRegressionModel {
 	
 	public static void main(String[] args) throws Exception {
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
-		System.out.println("Building bag of words");
+//		System.out.println("Building bag of words");
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
-		trainingData = BagOfWordsModel.buildAuthorBagOfWords(data, ZERO_INDEX);
+//		trainingData = BagOfWordsModel.buildAuthorBagOfWords(data, ZERO_INDEX);
+		trainingData = FeatureMarkerModel.buildFeatureMarker(data, ZERO_INDEX);
 		
 		System.out.println("Building initial thetas");
-		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
+//		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
 		Map<String, Double> thetas = new HashMap<>();
 		thetas.put(ZERO_INDEX, 1.0);
 		// TODO: getListOfUniqueWords must be called after training. Should be fixed 
-		for (String word : dataReader.getListOfUniqueWords()) {
-			thetas.put(word, 1.0);
+//		for (String word : dataReader.getListOfUniqueWords()) {
+		for (String feature: trainingData.get(0).getFeatureVector().keySet()) {
+//			thetas.put(word, 1.0);
+			thetas.put(feature, 1.0);
 		}
-		System.out.println("Training Thetas for bencaspit");
-		String label = "bencaspit";
-		thetas = trainParameters(thetas, label);
+		HashSet<String> labelSet = new HashSet<>();
+		for (TaggedFeatureVector<String> featureVector : trainingData) {
+			labelSet.add(featureVector.getTag());
+		}
+		for (String label : labelSet) {
+			System.out.println("Training Thetas for "+label);
+			thetas = trainParameters(thetas, label);
 		
-		saveToFile("outputBenCaspitParameters.pars", thetas);
-		
-		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
-		f.put("a", 1.0);
-		f.put("b", 1.0);
-		f.put("e", 1.0);
-		
-		double p1 = h(thetas,trainingData.get(0).getFeatureVector());
-		System.out.println("p1="+p1);
-		
-		double p2 = h(thetas,trainingData.get(1).getFeatureVector());
-		System.out.println("p2="+p2);
-		
-		double p3 = h(thetas,trainingData.get(2).getFeatureVector());
-		System.out.println("p3="+p3);
-		
-		double pf = h(thetas,f);
-		System.out.println("pf="+pf);
+			saveToFile("output"+label+"Parameters.pars", thetas);
+
+		}
+//		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
+//		f.put("a", 1.0);
+//		f.put("b", 1.0);
+//		f.put("e", 1.0);
+//		
+//		double p1 = h(thetas,trainingData.get(0).getFeatureVector());
+//		System.out.println("p1="+p1);
+//		
+//		double p2 = h(thetas,trainingData.get(1).getFeatureVector());
+//		System.out.println("p2="+p2);
+//		
+//		double p3 = h(thetas,trainingData.get(2).getFeatureVector());
+//		System.out.println("p3="+p3);
+//		
+//		double pf = h(thetas,f);
+//		System.out.println("pf="+pf);
 	}
 
 	private static void saveToFile(String thetasFilename, Map<String, Double> thetas) throws IOException {
