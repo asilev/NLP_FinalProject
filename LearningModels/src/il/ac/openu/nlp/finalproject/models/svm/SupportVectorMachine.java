@@ -133,7 +133,7 @@ public class SupportVectorMachine {
 	public static void main(String[] args) throws IOException {
 //		prepareSvmInputsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "training", "wordsMapper");
 //		prepareSvmEvaluationsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "evaluation", "wordsMapper");
-		prepareSvmInputsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "training", "wordsMapper");
-		prepareSvmEvaluationsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "evaluation", "wordsMapper");
+		prepareSvmInputsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap\\", "UTF8", null, "training", "wordsMapper");
+		prepareSvmEvaluationsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap\\", "UTF8", null, "evaluation", "wordsMapper");
 	}
 }
