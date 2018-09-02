@@ -17,9 +17,10 @@ import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
 
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
-	private static double ALPHA = 1;
-	private static int numOfIterations = 50;
-	private static String ZERO_INDEX; 
+	private static List<TaggedFeatureVector<String>> testData;
+	private static double ALPHA = 0.01;
+	private static int numOfIterations = 1000;
+	private static String ZERO_INDEX = "ZERO"; 
 	
 	public LogisticRegressionModel(List<TaggedFeatureVector<String>> data, String ZERO_INDEX) {
 		LogisticRegressionModel.trainingData = data;
@@ -103,28 +104,52 @@ public class LogisticRegressionModel {
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
 //		trainingData = BagOfWordsModel.buildAuthorBagOfWords(data, ZERO_INDEX);
 		trainingData = FeatureMarkerModel.buildFeatureMarker(data, ZERO_INDEX);
+		data = dataReader.readStructuredData("test");
+		testData = FeatureMarkerModel.buildFeatureMarker(data, ZERO_INDEX);
 		
-		System.out.println("Building initial thetas");
-//		System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
-		Map<String, Double> thetas = new HashMap<>();
-		thetas.put(ZERO_INDEX, 1.0);
-		// TODO: getListOfUniqueWords must be called after training. Should be fixed 
-//		for (String word : dataReader.getListOfUniqueWords()) {
-		for (String feature: trainingData.get(0).getFeatureVector().keySet()) {
-//			thetas.put(word, 1.0);
-			thetas.put(feature, 1.0);
-		}
 		HashSet<String> labelSet = new HashSet<>();
 		for (TaggedFeatureVector<String> featureVector : trainingData) {
 			labelSet.add(featureVector.getTag());
 		}
+		Map<String, Map<String, Double>> thetas = new HashMap<>();
 		for (String label : labelSet) {
+			System.out.println("Building initial thetas");
+//			System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
+//			Map<String, Double> thetas = new HashMap<>();
+			thetas.put(label, new HashMap<>());
+			thetas.get(label).put(ZERO_INDEX, 1.0);
+			// TODO: getListOfUniqueWords must be called after training. Should be fixed 
+//			for (String word : dataReader.getListOfUniqueWords()) {
+			for (String feature: trainingData.get(0).getFeatureVector().keySet()) {
+//				thetas.put(word, 1.0);
+				thetas.get(label).put(feature, 1.0);
+			}
 			System.out.println("Training Thetas for "+label);
-			thetas = trainParameters(thetas, label);
+			thetas.put(label, trainParameters(thetas.get(label), label));
 		
-			saveToFile("output"+label+"Parameters.pars", thetas);
-
+			saveToFile("output"+label+"Parameters.pars", thetas.get(label));
 		}
+		Double success = 0.0;
+		for (TaggedFeatureVector<String> featureVector : testData) {
+			System.out.println("Actual Tweeter: "+featureVector.getTag());
+			Double bestP = 0.0;
+			String bestAuthor = null;
+			for (String label : labelSet) {
+				Double p = h(thetas.get(label),featureVector.getFeatureVector());
+				System.out.println("Prediction for "+label+": "+p);
+				if (p>bestP) {
+					bestP = p;
+					bestAuthor = label;
+				}
+			}
+			if (bestAuthor.equals(featureVector.getTag())) {
+				success++;
+			}
+		}
+		success = success / testData.size();
+		System.out.println("Success Ration: "+success);
+		
+		
 //		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
 //		f.put("a", 1.0);
 //		f.put("b", 1.0);
