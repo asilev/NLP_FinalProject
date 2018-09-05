@@ -19,7 +19,7 @@ public class StructuredDataReader {
 	
 	// Hash from author to a list of sentences. Each sentence is a list of morphemes.
 //	private Map<String, List<MorphemeRecord>> userTweets;
-	private boolean bPunctDetected = false;
+//	private boolean bPunctDetected = false;
 	private File[] listOfFiles = null;
 //	private List<TaggedFeatureVector<String>> usersTweets;
 	private String encoding;
@@ -41,7 +41,7 @@ public class StructuredDataReader {
 		        System.out.println("Processing the file: " + file.getName());
 		        String sName = file.getName();
 		        String[] tokens = sName.split("_");
-		        String currUserName = tokens[1];
+		        String currUserName = tokens[0];
 		        List<MorphemeRecord> tweet = new ArrayList<>();
 		        BufferedReader in;
 				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
@@ -54,14 +54,18 @@ public class StructuredDataReader {
 		        	{
 		        		MorphemeRecord morpheme = new MorphemeRecord();
 			        	tokens = str.split("\t");
-			        	String sWord = "";
+//			        	String sWord = "";
 			        	morpheme.originalWord = tokens[2];
 			        	morpheme.stemmedWord = tokens[3];
-				        listOfUniqueWords.add(sWord);
+			        	morpheme.partOfSpeech = tokens[4];
+			        	if (tokens[4].startsWith("yy")) {
+			        		morpheme.isPunctuationMark = true;
+			        	}
+//				        listOfUniqueWords.add(sWord);
 			        	// Check if the token is a punctuation mark
-			        	m = p.matcher(sWord);
-			        	bPunctDetected = m.matches();
-		        		morpheme.isPunctuationMark = bPunctDetected;
+//			        	m = p.matcher(sWord);
+//			        	bPunctDetected = m.matches();
+//		        		morpheme.isPunctuationMark = bPunctDetected;
 		        		// The word exists in the master word map 
 //		        		if (bFilterPunctEnabled == false || (bFilterPunctEnabled == true && bPunctDetected == false))
 //		        		{

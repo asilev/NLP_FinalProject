@@ -36,6 +36,8 @@ public class FeatureMarkerModel {
 					
 					features.put("posTaggingCd", getPosTagging(ZERO_INDEX, tweet, "CD"));
 					
+					features.put("averageSentenceSize", getSentenceAvrageSize(ZERO_INDEX, tweet));
+					
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
 			}
@@ -84,5 +86,30 @@ public class FeatureMarkerModel {
 	
 	private static Double getTweetsSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
 		return (double)tweet.size();
+	}
+	
+	private static Double getSentenceAvrageSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		int sentenceSize = 0;
+		int totalSentencesSize = 0;
+		int numOfSentences = 0;
+		boolean isLastPosDot = false;
+		for (MorphemeRecord morpheme : tweet) {
+			
+			if (!morpheme.partOfSpeech.equals("yyDOT")) {
+				sentenceSize++;
+				isLastPosDot = false;
+			}
+			else {
+				totalSentencesSize += sentenceSize;
+				sentenceSize = 0;
+				numOfSentences++;
+				isLastPosDot = true;
+			}
+		}
+		if (!isLastPosDot) {
+			numOfSentences++;
+			totalSentencesSize += sentenceSize;
+		}
+		return ((double) totalSentencesSize / numOfSentences);
 	}
 }

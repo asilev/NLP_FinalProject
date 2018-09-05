@@ -25,7 +25,7 @@ public class SupportVectorMachine {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
-			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+			bw.write(taggedFeatureVector.getTag());
 			
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
@@ -63,7 +63,7 @@ public class SupportVectorMachine {
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		for (TaggedFeatureVector<String> taggedFeatureVector: evaluationData) {
-			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+			bw.write(taggedFeatureVector.getTag());
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
 			}
@@ -80,7 +80,8 @@ public class SupportVectorMachine {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
-			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+			bw.write(taggedFeatureVector.getTag());
 			
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
@@ -119,7 +120,8 @@ public class SupportVectorMachine {
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		for (TaggedFeatureVector<String> taggedFeatureVector: evaluationData) {
-			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+			bw.write(taggedFeatureVector.getTag());
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
 			}
@@ -131,9 +133,9 @@ public class SupportVectorMachine {
 	}
 	
 	public static void main(String[] args) throws IOException {
-//		prepareSvmInputsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "training", "wordsMapper");
-//		prepareSvmEvaluationsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "evaluation", "wordsMapper");
-		prepareSvmInputsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "training", "wordsMapper");
-		prepareSvmEvaluationsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K\\", "UTF8", null, "evaluation", "wordsMapper");
+		prepareSvmInputsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper");
+		prepareSvmEvaluationsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper");
+//		prepareSvmInputsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper");
+//		prepareSvmEvaluationsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper");
 	}
 }
