@@ -24,7 +24,17 @@ public class FeatureMarkerModel {
 									
 					features.put("avgNumOfPunctMarks", getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet));
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "VB"));
+					
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "NN"));
+					
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "JJ"));
+					
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "PRP"));
+					
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
+					
+					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "CD"));
 					
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
@@ -61,11 +71,11 @@ public class FeatureMarkerModel {
 		return numOfPunctMarks / tweet.size();
 	}
 	
-	private static Double getPosTagging(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+	private static Double getPosTagging(String ZERO_INDEX, List<MorphemeRecord> tweet, String pos) {
 		Integer posCount = 0;
 		for (MorphemeRecord morpheme : tweet) {
 			String sPos = morpheme.partOfSpeech;
-			if (sPos != null && sPos.equals("VB")) {
+			if (sPos != null && sPos.equals(pos)) {
 				posCount++;
 			}
 		}
