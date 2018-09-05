@@ -24,17 +24,17 @@ public class FeatureMarkerModel {
 									
 					features.put("avgNumOfPunctMarks", getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "VB"));
+					features.put("posTaggingVb", getPosTagging(ZERO_INDEX, tweet, "VB"));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "NN"));
+					features.put("posTaggingNn", getPosTagging(ZERO_INDEX, tweet, "NN"));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "JJ"));
+					features.put("posTaggingJj", getPosTagging(ZERO_INDEX, tweet, "JJ"));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "PRP"));
+					features.put("posTaggingPrp", getPosTagging(ZERO_INDEX, tweet, "PRP"));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
+					features.put("posTaggingIntj", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
 					
-					features.put("posTagging", getPosTagging(ZERO_INDEX, tweet, "CD"));
+					features.put("posTaggingCd", getPosTagging(ZERO_INDEX, tweet, "CD"));
 					
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
