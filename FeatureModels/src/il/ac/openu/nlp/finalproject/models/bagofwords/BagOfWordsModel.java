@@ -14,11 +14,13 @@ public class BagOfWordsModel {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
-				FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
-				for (MorphemeRecord morpheme : tweet) {
-					bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme.originalWord)+1);
+				if (tweet.size()>0) {
+					FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
+					for (MorphemeRecord morpheme : tweet) {
+						bagOfWords.put(morpheme.originalWord, bagOfWords.get(morpheme.originalWord)+1);
+					}
+					usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, user.getKey()));
 				}
-				usersTweetsVector.add(new TaggedFeatureVector<>(bagOfWords, user.getKey()));
 			}
 		}
 		return usersTweetsVector;
