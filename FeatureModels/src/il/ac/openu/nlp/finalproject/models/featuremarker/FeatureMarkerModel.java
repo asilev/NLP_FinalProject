@@ -17,26 +17,21 @@ public class FeatureMarkerModel {
 				if (tweet.size()>0) {
 					FeatureVector<String> features = new FeatureVector<>(ZERO_INDEX);
 					features.put("numOfMorphemes", getTweetsSize(ZERO_INDEX, tweet));
-					
 					features.put("averageWordSize", getAverageWordSize(ZERO_INDEX, tweet));
-					
 					features.put("numOfPuctMarks", getNumOfPunctuationMarks(ZERO_INDEX, tweet));
-									
 					features.put("avgNumOfPunctMarks", getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet));
-					
 					features.put("posTaggingVb", getPosTagging(ZERO_INDEX, tweet, "VB"));
-					
 					features.put("posTaggingNn", getPosTagging(ZERO_INDEX, tweet, "NN"));
-					
 					features.put("posTaggingJj", getPosTagging(ZERO_INDEX, tweet, "JJ"));
-					
 					features.put("posTaggingPrp", getPosTagging(ZERO_INDEX, tweet, "PRP"));
-					
 					features.put("posTaggingIntj", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
-					
 					features.put("posTaggingCd", getPosTagging(ZERO_INDEX, tweet, "CD"));
-					
 					features.put("averageSentenceSize", getSentenceAvrageSize(ZERO_INDEX, tweet));
+					features.put("numOfLongWords3", getNumOfLongWords(ZERO_INDEX, tweet, 3));
+					features.put("numOfLongWords5", getNumOfLongWords(ZERO_INDEX, tweet, 5));
+					features.put("numOfLongWords7", getNumOfLongWords(ZERO_INDEX, tweet, 7));
+					features.put("numOfLongWords9", getNumOfLongWords(ZERO_INDEX, tweet, 9));
+					features.put("numOfLongWords11", getNumOfLongWords(ZERO_INDEX, tweet, 11));
 					
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
@@ -111,5 +106,15 @@ public class FeatureMarkerModel {
 			totalSentencesSize += sentenceSize;
 		}
 		return ((double) totalSentencesSize / numOfSentences);
+	}
+	
+	private static Double getNumOfLongWords(String ZERO_INDEX, List<MorphemeRecord> tweet, int threshold) {
+		double numOfLongWords = 0.0;
+		for (MorphemeRecord morpheme : tweet) {
+			if (morpheme.originalWord.length() > threshold) {
+				++numOfLongWords;
+			}
+		}
+		return numOfLongWords;
 	}
 }
