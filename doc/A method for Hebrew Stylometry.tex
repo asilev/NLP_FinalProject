@@ -13,51 +13,71 @@
 \date{}
 \begin{document}
 \maketitle
-\begin{center}
+%\begin{center}
 \begin{abstract}
-@asi
-This is the abstract
+\textbf{@asi}\\
+Given a set of short text messages in Hebrew, we attempt to classify each sentence to it respective author, according to its style of writing.
+We use Tweeter as our data set, and we've checked X users with approximately X tweets per user to train our model.
+We then use X tweets per user in order to evaluate our model's accuracy.
+% Continue with abstract results
 \end{abstract}
-\end{center}
+%\end{center}
 \section{Introduction}
-@asi
-This is the introduction
+\textbf{@asi}\\
+Stylometry is the practice being used to identify an author based on his style of writing.
+While stylometry has been used historically to identify authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts.
+Recently, more novel approaches were suggested for stylometry that utilize algorithms in machine learning and deep learning, to improve accuracy of stylometry on short texts.
+These works rely on several learning models, such as Bayesian statistics \emph{(INSERT CITATION)}, Support Vector Machine \emph{(INSERT CITATION)}, Neural Networks \emph{(INSERT CITATION)}, and others.
+These works also suggest different approaches to features selection. The study of feature selection may not be suitable to any language, as different languages may hold different features that may be suitable to a more accurate system.
+In this work we started an initial research and benchmarking on the influence of different learning models and features, in order to learn more about which of these models and features influence on the accuracy of a possible stylometry system for short messages in Hebrew.
 \section{Article Structure}
-@asi
-Optionally
+\textbf{@asi}\\
+\emph{Optionally
 Describe the structure of this document according to sections
 Check formal name for this section
-
+}
+This document is arrange according to the following order:
+We begin by describing related work this article relies on in section \ref{Related Work}.
+We then proceed by describing the architecture of our utility, that implements a framework for model benchmarking in section \ref{Architecture}.
+After that, we describe our approach of research and benchmarking in section \ref{Approach}.
+We then describe our results in section \ref{Results}.
+Further work is suggested in section \ref{Further Work}.
+Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
-@ronen
+\label{Related Work} 
+\textbf{@ronen}\\
 \section{Architecture}
-@asi
+\label{Architecture}
+\textbf{@asi}\\
 \section{Approach}
-@asi
+\label{Approach}
+\textbf{@asi}\\
 Describe our approach on step by step, and describe what each step is
 \subsection{Data Acquisition}
-@ronen
+\textbf{@ronen}\\
 \subsection{Data Exploration}
-@ronen
+\textbf{@ronen}\\
 \subsection{Data Preparation}
-@ronen
+\textbf{@ronen}\\
 
 Focus on Hebrew such as morphemes separation
 Comment: credit as required by forum
 \subsection{Feature Selection and Benchmarking}
-@?
+\textbf{@?}\\
 BOW vs. Ngrams vs. Stemmed etc.
 Style markers, which markers are more important (try running 1 by 1)
 Combinations
 
 \subsection{Model Selection and Benchmarking}
-@asi
+\textbf{@asi}\\
 LR vs. SVM
 Include discussion of scaling
 Including hyper parameters
 \section{Results}
+\label{Results}
 \section{Further Work}
+\label{Further Work}
 possible under discussion, if more subsections required
 \section{Conclusion}
-
+\label{Conclusion}
 \end{document}
