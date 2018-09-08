@@ -1,5 +1,5 @@
-\documentclass[a4paper,twocolumn]{article}
-
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
 \author{Lev, Asi\\
 	\texttt{ID 039833900}\\
 	\texttt{email: asi.lev@gmail.com}
@@ -44,33 +44,71 @@ We then describe our results in section \ref{Results}.
 Further work is suggested in section \ref{Further Work}.
 Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
-\label{Related Work} 
+\label{Related Work}
 \textbf{@ronen}\\
 \section{Architecture}
 \label{Architecture}
 \textbf{@asi}\\
+\begin{figure}
+	\includegraphics[width=1\textwidth]{"architecture/NLP Author Classification Architecture"}
+	\caption{Platform Architecture.}
+		\label{fig:architecture}
+\end{figure}
+Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.
+We use "Data Source" as the abstract utility to pull text from short messages source, and save the messages with the correct tagged author for each short message in a well formed structure.
+In here we've implemented the "Data Source" with a "Tweeter Data source", that pulls information according to parameters such as time period and a list of users from tweeter.
+This data is then being processed by "Data Normalization" utility, that reads this data, filters unwanted cases (as will be described in section \ref{Approach}), and transforms the data to a structure that can be used by YAP \emph{CITE}.
+We then use YAP to provide initial parsing for our data, and provide more information about it, such as morphological segmentation, stemming, POS tagging, etc.\
+Then, we choose our features according to some model. This component takes the list of sentences, and builds for each sentence a list of features, where each feature is assigned with a value that describes that feature for the particular sentence.
+We create two lists of sentences: one for the training (gold list) and one for the evaluation (test list).
+Then, we use some learning model to train on the gold list, and produce the parameters that will be used for the encoder.
+Lastly, we use the encoder on the test list, and compare its results with the actual authors from the test list using the evaluation component, to test the system's accuracy (hit rate).
 \section{Approach}
 \label{Approach}
 \textbf{@asi}\\
-Describe our approach on step by step, and describe what each step is
+We now describe the benchmarking approach step by step, and describe how each step is implemented in our work.
 \subsection{Data Acquisition}
 \textbf{@ronen}\\
 \subsection{Data Exploration}
 \textbf{@ronen}\\
 \subsection{Data Preparation}
 \textbf{@ronen}\\
-
 Focus on Hebrew such as morphemes separation
 Comment: credit as required by forum
 \subsection{Feature Selection and Benchmarking}
 \textbf{@?}\\
-BOW vs. Ngrams vs. Stemmed etc.
-Style markers, which markers are more important (try running 1 by 1)
-Combinations
+There are several approaches to features selection. In \cite{rachel} two approaches, namely bag of words vs.\ style markers.
+In bag of words, each feature is a word, and the associated value is the number of time this word appears on the sentence.
+In Style Marker, each feature is a selected feature of the sentence. It's value can be any numeric classifier for the feature, such as exist (1) or non exist (0), number of occurrences, or probability (percentage of occurrences).
+While testing each of these approaches ourselves, we suggest a more generalized approach that also tests combinations of these approaches, by using some features as words from bag of words model, and some \emph{additional} features as style markers.
+We also tested different approaches, such as N-Grams and POS analysis. The list features we used is:
+\begin{itemize}
+\item \textbf{\emph{Simple Word (Bag of Words)}}: Each feature is a word, and the value is the number of times the word appears in the sentence.
+\item \textbf{\emph{Stemmed Word}}: Each feature is the stem analysis of a word, and the value is the number of times the stemmed word appears in the sentence.
+\item \textbf{\emph{Bigram}}: Each feature is a sequence of two words, and the value is the number of times this pair of words appears in the sentence. We can further generalize this feature to any N-gram, but for a small corpus, this is proven as ineffective even for a bigram, since specific pair are very unlikely to reappear.
+\item \textbf{\emph{POS Analysis}}: Each feature is a word, combined with its proper POS tag. This helps separate different words that may be written the same way, but used for different meanings.
+\item \textbf{\emph{Number of Morphemes}}: A single feature, describing the number of morphemes the sentence holds.
+\item \textbf{\emph{Average Word Size}}: A single feature, describing the average size of a word in the sentence.
+\item \textbf{\emph{Number of Characters}}: A single feature, describing the number of characters in the sentence.
+\item \textbf{\emph{Number of Punctuation Marks}}: a single value, describing the number of punctuation marks used in the sentence.
+\item \textbf{\emph{Average Number of Punctuation Marks}}: A single value, describing the number of morphemes that represent punctuation marks, relative to the total number of morphemes in the sentence.
+\item \textbf{\emph{POS Usage}}: Each feature is a POS, and the value is the number of times the POS appears in the sentence.
+\item \textbf{\emph{Average Sentence Size}}: If the given sentence is divided to more than one actual sentence using a dot, this feature holds the average number of morphemes in each actual sentence in the complete given sentence.
+\item \textbf{\emph{Number of Long Words}}: Each feature represents the number of words in the sentences, that are longer than a given threshold.
+\end{itemize}
+Since using many features slows down any learning model, and some of the features approaches are inherently large (such as BOW, N-Grams, etc.), we started by testing each feature approach separately to see its strength individually. We then tried combination of strong feature approaches and tested the contribution of the new features to the list of already decided features.
+\emph{Here we need to describe each step, and show some results}
 
 \subsection{Model Selection and Benchmarking}
 \textbf{@asi}\\
-LR vs. SVM
+In this work we used two well known machine learning models: Logistic Regression and Support Vector Machine.
+Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
+We've seen the the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were quite poor.
+Our work did not test Neural Networks model, and the more novel Convolutional Neural Networks / Recurrent Neural Networks, which might provide better results, as shown in \emph{CITE}.
+While we see our features can be highly unscaled, we've seen that scaling our features always produces a significant degradation in accuracy.
+We therefore decided not to scale features before training the model.
+
+
 Include discussion of scaling
 Including hyper parameters
 \section{Results}
@@ -80,4 +118,11 @@ Including hyper parameters
 possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
+
+\begin{thebibliography}{9}
+
+\bibitem{rachel}
+	Rachel M. Green, John W. Sheppard
+	\textit{Comparing Frequency and Style based Features for Twitter Author Identification}.
+\end{thebibliography}
 \end{document}
