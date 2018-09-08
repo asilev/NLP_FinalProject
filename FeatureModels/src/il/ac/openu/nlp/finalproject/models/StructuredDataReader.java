@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class StructuredDataReader {
 	// This class handles the YAP output files
@@ -45,9 +43,6 @@ public class StructuredDataReader {
 		        List<MorphemeRecord> tweet = new ArrayList<>();
 		        BufferedReader in;
 				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
-				Pattern p = Pattern.compile("\\p{Punct}");
-			    Matcher m = null;
-					
 				String str;
 		        while ((str = in.readLine()) != null) {
 		        	if (str.equals("") == false)

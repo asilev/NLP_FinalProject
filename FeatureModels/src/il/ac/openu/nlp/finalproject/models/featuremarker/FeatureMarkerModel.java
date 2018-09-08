@@ -1,6 +1,5 @@
 package il.ac.openu.nlp.finalproject.models.featuremarker;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,7 @@ import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class FeatureMarkerModel {
-	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -32,12 +31,21 @@ public class FeatureMarkerModel {
 					features.put("_numOfLongWords7", getNumOfLongWords(ZERO_INDEX, tweet, 7));
 					features.put("_numOfLongWords9", getNumOfLongWords(ZERO_INDEX, tweet, 9));
 					features.put("_numOfLongWords11", getNumOfLongWords(ZERO_INDEX, tweet, 11));
+					features.put("_numOfCharecters", getNumOfCharecters(ZERO_INDEX, tweet));
 					
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
 			}
 		}
 		return usersTweetsVector;
+	}
+
+	private static Double getNumOfCharecters(String ZERO_INDEX, List<MorphemeRecord> tweet) {
+		Double numOfCharacters = 0.0;
+		for (MorphemeRecord morpheme : tweet) {
+			numOfCharacters += morpheme.originalWord.length();
+		}
+		return numOfCharacters;
 	}
 
 	private static Double getAverageWordSize(String ZERO_INDEX, List<MorphemeRecord> tweet) {

@@ -47,8 +47,8 @@ public class TwitterDataSourceReader {
 											 "usegal", "kereneubach", "amsterdamski2", "roysharon11", "akivanovick",
 											 "sefiova", "YoazHendel1", "Danmargalit", "SivanRahav", "zionnenko"};
 											 */
-	private static String sCWD = "";
-	private static String sOutputDir = "";
+//	private static String sCWD = "";
+//	private static String sOutputDir = "";
 	private static int mNumOfTweetsToGet = 10000;
 
 	public static void main(String[] args) {
@@ -60,8 +60,8 @@ public class TwitterDataSourceReader {
 			sOutputPath = args[1];
 	    }
 		
-		sCWD = System.getProperty("user.dir");
-		sOutputDir = sCWD + "\\data";
+//		sCWD = System.getProperty("user.dir");
+//		sOutputDir = sCWD + "\\data";
 		
 		getUserTimeline();
 		

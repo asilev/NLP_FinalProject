@@ -1,6 +1,5 @@
 package il.ac.openu.nlp.finalproject.models.bagofwords;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,7 @@ import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class BagOfWordsModel {
-	public static List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -26,7 +25,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public static List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfStemmedWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -40,7 +39,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 	
-	public static List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOf2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
@@ -60,7 +59,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public static List<TaggedFeatureVector<String>> buildAuthorGlobalBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorGlobalBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
@@ -74,7 +73,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public static List<TaggedFeatureVector<String>> buildAuthorGlobalStemmedBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorGlobalStemmedBagOfWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);
@@ -88,7 +87,7 @@ public class BagOfWordsModel {
 		return usersTweetsVector;
 	}
 
-	public static List<TaggedFeatureVector<String>> buildAuthorBagOfGlobal2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) throws IOException {
+	public static List<TaggedFeatureVector<String>> buildAuthorBagOfGlobal2GramsWords(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			FeatureVector<String> bagOfWords = new FeatureVector<String>(ZERO_INDEX);

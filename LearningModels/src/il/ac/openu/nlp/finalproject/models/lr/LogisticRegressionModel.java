@@ -12,7 +12,6 @@ import il.ac.openu.nlp.finalproject.models.FeatureVector;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
-import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
 
 public class LogisticRegressionModel {
