@@ -6,7 +6,7 @@
 \and
 	Jashek, Ronen\\
 	\texttt{ID 025340993}\\
-	\texttt{email: ronenjashek@gmail.com}	
+	\texttt{email: ronen.jashek@gmail.com}	
 }
 
 \title{A Method for Hebrew Stylometry, based on Short Messages}
@@ -36,7 +36,7 @@ In this work we started an initial research and benchmarking on the influence of
 Describe the structure of this document according to sections
 Check formal name for this section
 }
-This document is arrange according to the following order:
+This document is arranged according to the following order:
 We begin by describing related work this article relies on in section \ref{Related Work}.
 We then proceed by describing the architecture of our utility, that implements a framework for model benchmarking in section \ref{Architecture}.
 After that, we describe our approach of research and benchmarking in section \ref{Approach}.
@@ -46,15 +46,27 @@ Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
 \label{Related Work}
 \textbf{@ronen}\\
+There has been significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
+On longer texts, usually satisfactory-high results were achieved. Qian, He and Zhang [2017, \cite{qian}] showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved an verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
+However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. Green and Sheppard \cite{rachel} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
+Schwartz, Tsur, Rappoport and Koppel \cite{schwartz} experimented (among other criteria) with varying training set sizes and number of authors. They demonstrated an improvement in accuracy from 49.5\% (50 tweets per 50 authors) to 69.7\% (larger amount of tweets per 50 authors), but with a large number of authors (1000) showed 30.3\% accuracy (using 200 tweets/author), which correlates to the trend shown in other works as well. Albeit, 30.3\% is still  distinguishably better than the random baseline of 0.1\%.
+This trend is further validated in the work of Brocardo, Traore, Saad and Woungang \cite{brocardo}, albeit their work was founded on emails from the Enron data-set (200K emails from 150 users, average number of words per email is 200). Their techniques were based on a combination of supervised learning and n-gram analysis. Even after applying a few pre-processing operations on the text (e.g. e-mails were combined to produce a single long message per individual, and then divided into smaller blocks used for authorship verification), their experiments yielded an EER (an Equal Error Rate metric used by the authors which corresponds to the operating point where False Acceptance and False Rejection rates have the same value) of 14.35\% for 87 users for relatively small block sizes.\\
+It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by Rabab’ah, Al-Ayyoub, Jararweh and Aldwairi \cite{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authros, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
+An excellent and comprehensive overview of modern authorship attribution methods can be found in \cite{stamatatos}.
+
+
+
 \section{Architecture}
 \label{Architecture}
 \textbf{@asi}\\
-\begin{figure}
+
+Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.\\
+\begin{figure}[hb]
 	\includegraphics[width=1\textwidth]{"architecture/NLP Author Classification Architecture"}
-	\caption{Platform Architecture.}
+	\caption{Platform Architecture}
 		\label{fig:architecture}
-\end{figure}
-Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.
+\end{figure}\\
+
 We use "Data Source" as the abstract utility to pull text from short messages source, and save the messages with the correct tagged author for each short message in a well formed structure.
 In here we've implemented the "Data Source" with a "Tweeter Data source", that pulls information according to parameters such as time period and a list of users from tweeter.
 This data is then being processed by "Data Normalization" utility, that reads this data, filters unwanted cases (as will be described in section \ref{Approach}), and transforms the data to a structure that can be used by YAP \emph{CITE}.
@@ -63,6 +75,7 @@ Then, we choose our features according to some model. This component takes the l
 We create two lists of sentences: one for the training (gold list) and one for the evaluation (test list).
 Then, we use some learning model to train on the gold list, and produce the parameters that will be used for the encoder.
 Lastly, we use the encoder on the test list, and compare its results with the actual authors from the test list using the evaluation component, to test the system's accuracy (hit rate).
+
 \section{Approach}
 \label{Approach}
 \textbf{@asi}\\
@@ -115,11 +128,32 @@ Hyper parameters where chosen using a grid search with logarithmic scale.
 possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
+\section{Acknowledgments}
+\label{Acknowledgments}
+\textbf{@ronen}\\
+Most probably this is the section to cite and thank YAP, SVM, etc.
+
 
 \begin{thebibliography}{9}
 
 \bibitem{rachel}
 	Rachel M. Green, John W. Sheppard
-	\textit{Comparing Frequency and Style based Features for Twitter Author Identification}.
+	\textit{Comparing Frequency and Style based Features for Twitter Author Identification}
+\bibitem{qian}
+	Chen Qian, Tianchang He, Rao Zhang
+	\textit{Deep Learning based Authorship Identification}
+\bibitem{schwartz}
+	Roy Schwartz, Oren Tsur, Ari Rappoport, Moshe Koppel
+	\textit{Authorship Attribution of Micro-Messages}
+\bibitem{brocardo}
+	Marcelo Luiz Brocardo, Issa Traore, Sherif Saad, Isaac Woungang
+	\textit{Authorship Verification for Short Messages using Stylometry}
+\bibitem{rabab}
+	Abdullateef Rabab’ah, Mahmoud Al-Ayyoub, Yaser Jararweh, Monther Aldwairi
+	\textit{Authorship Attribution of Arabic Tweets}
+\bibitem{stamatatos}
+	Efstathios Stamatatos
+	\textit{A Survey of Modern Author ship Attribution Methods}
+	
 \end{thebibliography}
 \end{document}
