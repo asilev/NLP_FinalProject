@@ -12,6 +12,7 @@ import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.AttributeList;
 import il.ac.openu.nlp.finalproject.models.FeatureModel;
+import il.ac.openu.nlp.finalproject.models.FeatureSelector;
 import il.ac.openu.nlp.finalproject.models.KeyMapper;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
@@ -22,9 +23,9 @@ import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
 
 public class SupportVectorMachine {
-	public static void prepareSvmInputsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
+	public static void prepareSvmInputsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold", numOfAuthors);
 		List<TaggedFeatureVector<String>> trainingData = BagOfWordsModel.buildAuthorBagOfWords(structuredData, ZERO_INDEX);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
@@ -46,9 +47,9 @@ public class SupportVectorMachine {
 		bw.close();
 	}
 	
-	public static void prepareSvmEvaluationsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
+	public static void prepareSvmEvaluationsFromBagOfWords(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test", numOfAuthors);
 		List<TaggedFeatureVector<String>> evaluationData = BagOfWordsModel.buildAuthorBagOfWords(structuredData, ZERO_INDEX);
 		Map<String, Integer> mapper = new HashMap<>();
 		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
@@ -77,16 +78,15 @@ public class SupportVectorMachine {
 		bw.close();
 	}
 	
-	public static void prepareSvmInputsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
+	public static void prepareSvmInputsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold", numOfAuthors);
 		FeatureModel model = new FeatureModel();
 		model.features.addAll(Arrays.asList(FeatureType.values()));
 		List<TaggedFeatureVector<String>> trainingData = FeatureMarkerModel.buildFeatureMarker(structuredData, null, model);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
-//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
 			bw.write(taggedFeatureVector.getTag());
 			
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
@@ -104,14 +104,13 @@ public class SupportVectorMachine {
 		bw.close();
 	}
 
-	public static void prepareSvmInputsFromAllFeatures(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws Exception {
+	public static void prepareSvmInputsFromAllFeatures(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws Exception {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold", numOfAuthors);
 		List<TaggedFeatureVector<String>> trainingData = AllFeaturesModel.buildAllFeatures(structuredData, null);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
-//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
 			bw.write(taggedFeatureVector.getTag());
 			
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
@@ -129,11 +128,11 @@ public class SupportVectorMachine {
 		bw.close();
 	}
 	
-	public static void prepareSvmEvaluationsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
+	public static void prepareSvmEvaluationsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws IOException {
 		FeatureModel model = new FeatureModel();
 		model.features.addAll(Arrays.asList(FeatureType.values()));
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test", numOfAuthors);
 		List<TaggedFeatureVector<String>> evaluationData = FeatureMarkerModel.buildFeatureMarker(structuredData, null, model);
 		Map<String, Integer> mapper = new HashMap<>();
 		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
@@ -152,7 +151,6 @@ public class SupportVectorMachine {
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		for (TaggedFeatureVector<String> taggedFeatureVector: evaluationData) {
-//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
 			bw.write(taggedFeatureVector.getTag());
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
@@ -164,10 +162,10 @@ public class SupportVectorMachine {
 		
 	}
 	
-	public static void prepareSvmEvaluationsFromAllFeatures(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws Exception {
+	public static void prepareSvmEvaluationsFromAllFeatures(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, int numOfAuthors) throws Exception {
 		
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
-		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test");
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test", numOfAuthors);
 		List<TaggedFeatureVector<String>> evaluationData = AllFeaturesModel.buildAllFeatures(structuredData, null);
 		Map<String, Integer> mapper = new HashMap<>();
 		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
@@ -186,7 +184,62 @@ public class SupportVectorMachine {
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		for (TaggedFeatureVector<String> taggedFeatureVector: evaluationData) {
-//			bw.write(((Integer)taggedFeatureVector.getTag().hashCode()).toString());
+			bw.write(taggedFeatureVector.getTag());
+			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
+				bw.write(" "+a.getKey()+":"+a.getValue());
+			}
+			bw.write("\n");
+			bw.flush();
+		}
+		bw.close();
+		
+	}
+
+	public static void prepareSvmInputsFromFeaturesSelector(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, FeatureModel model, int numOfAuthors) throws Exception {
+		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold", numOfAuthors);
+		List<TaggedFeatureVector<String>> trainingData = FeatureSelector.buildFeaturesVector(structuredData, null, model);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
+		AttributeList<String> attributes = new AttributeList<>();
+		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
+			bw.write(taggedFeatureVector.getTag());
+			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
+				bw.write(" "+a.getKey()+":"+a.getValue());
+			}
+			bw.write("\n");
+		}
+		bw.close();
+		
+		bw = new BufferedWriter(new FileWriter(wordsMapperFilename));
+		Map<String, Integer> keyMapper = attributes.getKeyMapper().getMapper();
+		for (Map.Entry<String, Integer> e : keyMapper.entrySet()) {
+			bw.write(e.getKey()+"\t"+e.getValue()+"\n");
+		}
+		bw.close();
+	}
+
+	public static void prepareSvmEvaluationsFromFeaturesSelector(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename, FeatureModel model, int numOfAuthors) throws Exception {
+		
+		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
+		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test", numOfAuthors);
+		List<TaggedFeatureVector<String>> evaluationData = FeatureSelector.buildFeaturesVector(structuredData, null, model);
+		Map<String, Integer> mapper = new HashMap<>();
+		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
+		String line;
+		while ((line = br.readLine())!=null) {
+			String[] entry = line.split("\t");
+				if (entry.length==2) {
+					mapper.put(entry[0], Integer.parseInt(entry[1]));
+			}
+		}
+		br.close();
+		AttributeList<String> attributes = new AttributeList<>();
+		KeyMapper<String> keyMapper = new KeyMapper<>();
+		keyMapper.setMapper(mapper);
+		attributes.setKeyMapper(keyMapper);
+		
+		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
+		for (TaggedFeatureVector<String> taggedFeatureVector: evaluationData) {
 			bw.write(taggedFeatureVector.getTag());
 			for (AttributeList<String>.Attribute a : attributes.getSortedList(taggedFeatureVector.getFeatureVector())) {
 				bw.write(" "+a.getKey()+":"+a.getValue());
@@ -199,12 +252,12 @@ public class SupportVectorMachine {
 	}
 	
 	public static void main(String[] args) throws Exception {
-//		prepareSvmInputsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper");
-//		prepareSvmEvaluationsFromBagOfWords("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper");
-//		prepareSvmInputsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper");
-//		prepareSvmEvaluationsFromFeatureMarker("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper");
-		prepareSvmInputsFromAllFeatures("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper");
-		prepareSvmEvaluationsFromAllFeatures("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper");
+		FeatureModel featureModel = new FeatureModel();
+		featureModel.features.add(FeatureType.BagOfWords);
+		featureModel.features.add(FeatureType.NumberOfMorphemes);
+		int numOfAuthors = 3;
+		prepareSvmInputsFromFeaturesSelector("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper", featureModel, numOfAuthors);
+		prepareSvmEvaluationsFromFeaturesSelector("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper", featureModel, numOfAuthors);
 		
 	}
 }

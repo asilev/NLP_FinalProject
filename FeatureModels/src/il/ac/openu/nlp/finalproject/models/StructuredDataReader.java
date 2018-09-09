@@ -31,15 +31,18 @@ public class StructuredDataReader {
 	}
 	
 	// Return value is map from author to a list of sentences (tweets). Each sentence is a list of morphemes.
-	public Map<String, List<List<MorphemeRecord>>> readStructuredData(String extention) throws IOException
+	public Map<String, List<List<MorphemeRecord>>> readStructuredData(String extention, int numOfAuthors) throws IOException
 	{
 		Map<String, List<List<MorphemeRecord>>> userTweets = new HashMap<>();
 		for (File file : listOfFiles) {
 		    if (file.isFile() && file.getName().endsWith("."+extention)) {
-		        System.out.println("Processing the file: " + file.getName());
 		        String sName = file.getName();
 		        String[] tokens = sName.split("_");
 		        String currUserName = tokens[0];
+		        if (Integer.parseInt(currUserName)>=numOfAuthors) {
+		        	return userTweets;
+		        }
+		        System.out.println("Processing the file: " + file.getName());
 		        List<MorphemeRecord> tweet = new ArrayList<>();
 		        BufferedReader in;
 				in = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));

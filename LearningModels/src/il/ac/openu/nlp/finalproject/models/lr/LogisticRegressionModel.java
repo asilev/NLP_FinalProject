@@ -19,8 +19,9 @@ import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
 	private static List<TaggedFeatureVector<String>> testData;
-	private static double ALPHA = 0.01;
-	private static int numOfIterations = 1000;
+	private static double ALPHA = 0.03;
+	private static int numOfIterations = 2000;
+	private static double diffThreshold = 0.0001;
 	private static String ZERO_INDEX = "ZERO";
 	private static FeatureModel model = new FeatureModel();
 	
@@ -91,8 +92,18 @@ public class LogisticRegressionModel {
 	
 	// Training theta parameters
 	public static Map<String, Double> trainParameters(Map<String, Double>initialparameters, String targetClass) throws Exception {
-		for (int i=0;i<numOfIterations;++i) {
-			System.out.println("cost "+i+": "+j(initialparameters, targetClass));
+		Double lastCost = Double.POSITIVE_INFINITY;
+		Double nextCost = Double.POSITIVE_INFINITY;
+		Double cost = Double.POSITIVE_INFINITY;
+//		for (int i=0;i<numOfIterations;++i) {
+		while (lastCost == Double.POSITIVE_INFINITY || lastCost - cost > diffThreshold) {
+			lastCost = nextCost;
+			cost = j(initialparameters, targetClass);
+			if (cost > lastCost) {
+				throw new Exception("Cost is getting higher. Use lower alpha value");
+			}
+			nextCost = cost;
+			System.out.println("cost "/*+i*/+": "+cost);
 			// Optional debug print, but takes a long time to calcualte
 //			System.out.println("probability: "+h(initialparameters,trainingData.get(0).getFeatureVector()));
 			initialparameters = minJ(initialparameters, targetClass);
@@ -103,10 +114,10 @@ public class LogisticRegressionModel {
 	public static void main(String[] args) throws Exception {
 		// Usage: LogisticRegression <input folder> <encoding>
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
-		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
-		model.features.add(FeatureType.BagOfWords);
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold", 10);
+		model.features.add(FeatureType.NumberOfMorphemes);
 		trainingData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
-		data = dataReader.readStructuredData("test");
+		data = dataReader.readStructuredData("test", 10);
 		testData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
 		
 		HashSet<String> labelSet = new HashSet<>();
