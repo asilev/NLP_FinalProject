@@ -2,9 +2,11 @@ package il.ac.openu.nlp.finalproject.models.svm;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -252,12 +254,66 @@ public class SupportVectorMachine {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		/*
+		 * Usage: SupportVectorMachine 
+		 * [-p input_path] 
+		 * [-e encoding=UTF8] 
+		 * [-t training_filename=training] 
+		 * [-v evalutation_filename=evaluation] 
+		 * [-f feature_mapper_filename=featureMapper] 
+		 * [-m model_filename] 
+		 * [-n number_of_authors=10]
+		 */
+		String path = "C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\";
+		String encoding = "UTF8";
+		String trainingFilename = "training";
+		String evalutationFilename = "evaluation";
+		String featuresMapperFilename = "featuresMapper";
+		int numOfAuthors = 10;
 		FeatureModel featureModel = new FeatureModel();
 		featureModel.features.add(FeatureType.BagOfWords);
-		featureModel.features.add(FeatureType.NumberOfMorphemes);
-		int numOfAuthors = 3;
-		prepareSvmInputsFromFeaturesSelector("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "training", "wordsMapper", featureModel, numOfAuthors);
-		prepareSvmEvaluationsFromFeaturesSelector("C:\\Users\\asil\\Workspaces\\FinalProject\\TwitterReader\\OutputFromYap_10K_10A\\", "UTF8", null, "evaluation", "wordsMapper", featureModel, numOfAuthors);
+		for (int i = 0; i < args.length;i+=2) {
+			if (args[i].equals("-p")) {
+				path = args[i+1];
+			}
+			else if (args[i].equals("-e")) {
+				encoding = args[i+1];
+			}
+			else if (args[i].equals("-t")) {
+				trainingFilename = args[i+1];
+			}
+			else if (args[i].equals("-v")) {
+				evalutationFilename = args[i+1];
+			}
+			else if (args[i].equals("-f")) {
+				featuresMapperFilename = args[i+1];
+			}
+			else if (args[i].equals("-n")) {
+				numOfAuthors = Integer.parseInt(args[i+1]);
+			}
+			else if (args[i].equals("-m")) {
+				featureModel = createModel(args[i+1], encoding);
+			}
+		}
+		prepareSvmInputsFromFeaturesSelector(path, encoding, null, trainingFilename, featuresMapperFilename, featureModel, numOfAuthors);
+		prepareSvmEvaluationsFromFeaturesSelector(path, encoding, null, evalutationFilename, featuresMapperFilename, featureModel, numOfAuthors);
 		
 	}
+
+	private static FeatureModel createModel(String featuresFilename, String encoding) throws IOException {
+		FeatureModel featureModel = new FeatureModel();
+        BufferedReader in;
+		in = new BufferedReader(new InputStreamReader(new FileInputStream(featuresFilename), encoding));
+		String str;
+        while ((str = in.readLine()) != null) {
+        	if (str.equals("") == false)
+        	{
+        		if (!str.startsWith("%")) {
+        			featureModel.features.add(FeatureType.valueOf(str));
+        		}
+        	}
+        }
+        in.close();
+        return featureModel;
+    }
 }
