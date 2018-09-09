@@ -8,18 +8,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.openu.nlp.finalproject.models.FeatureModel;
+import il.ac.openu.nlp.finalproject.models.FeatureModel.FeatureType;
+import il.ac.openu.nlp.finalproject.models.FeatureSelector;
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
-import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
 
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
 	private static List<TaggedFeatureVector<String>> testData;
 	private static double ALPHA = 0.01;
 	private static int numOfIterations = 1000;
-	private static String ZERO_INDEX = "ZERO"; 
+	private static String ZERO_INDEX = "ZERO";
+	private static FeatureModel model = new FeatureModel();
 	
 	public LogisticRegressionModel(List<TaggedFeatureVector<String>> data, String ZERO_INDEX) {
 		LogisticRegressionModel.trainingData = data;
@@ -90,21 +93,21 @@ public class LogisticRegressionModel {
 	public static Map<String, Double> trainParameters(Map<String, Double>initialparameters, String targetClass) throws Exception {
 		for (int i=0;i<numOfIterations;++i) {
 			System.out.println("cost "+i+": "+j(initialparameters, targetClass));
+			// Optional debug print, but takes a long time to calcualte
 //			System.out.println("probability: "+h(initialparameters,trainingData.get(0).getFeatureVector()));
 			initialparameters = minJ(initialparameters, targetClass);
-//			saveToFile("output/"+targetClass+"Parameters.pars", initialparameters);
 		}
 		return initialparameters;
 	}
 	
 	public static void main(String[] args) throws Exception {
+		// Usage: LogisticRegression <input folder> <encoding>
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
-//		System.out.println("Building bag of words");
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold");
-//		trainingData = BagOfWordsModel.buildAuthorBagOfWords(data, ZERO_INDEX);
-		trainingData = FeatureMarkerModel.buildFeatureMarker(data, ZERO_INDEX);
+		model.features.add(FeatureType.BagOfWords);
+		trainingData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
 		data = dataReader.readStructuredData("test");
-		testData = FeatureMarkerModel.buildFeatureMarker(data, ZERO_INDEX);
+		testData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
 		
 		HashSet<String> labelSet = new HashSet<>();
 		for (TaggedFeatureVector<String> featureVector : trainingData) {
@@ -113,15 +116,12 @@ public class LogisticRegressionModel {
 		Map<String, Map<String, Double>> thetas = new HashMap<>();
 		for (String label : labelSet) {
 			System.out.println("Building initial thetas");
-//			System.out.println("Total number of unique words: "+dataReader.getListOfUniqueWords().size());
-//			Map<String, Double> thetas = new HashMap<>();
 			thetas.put(label, new HashMap<>());
 			thetas.get(label).put(ZERO_INDEX, 1.0);
-			// TODO: getListOfUniqueWords must be called after training. Should be fixed 
-//			for (String word : dataReader.getListOfUniqueWords()) {
-			for (String feature: trainingData.get(0).getFeatureVector().keySet()) {
-//				thetas.put(word, 1.0);
-				thetas.get(label).put(feature, 1.0);
+			for (int i=0; i<trainingData.size();++i) {
+				for (String feature: trainingData.get(i).getFeatureVector().keySet()) {
+					thetas.get(label).put(feature, 1.0);
+				}
 			}
 			System.out.println("Training Thetas for "+label);
 			thetas.put(label, trainParameters(thetas.get(label), label));
@@ -147,24 +147,6 @@ public class LogisticRegressionModel {
 		}
 		success = success / testData.size();
 		System.out.println("Success Ration: "+success);
-		
-		
-//		FeatureVector<String> f = new FeatureVector<>(ZERO_INDEX);
-//		f.put("a", 1.0);
-//		f.put("b", 1.0);
-//		f.put("e", 1.0);
-//		
-//		double p1 = h(thetas,trainingData.get(0).getFeatureVector());
-//		System.out.println("p1="+p1);
-//		
-//		double p2 = h(thetas,trainingData.get(1).getFeatureVector());
-//		System.out.println("p2="+p2);
-//		
-//		double p3 = h(thetas,trainingData.get(2).getFeatureVector());
-//		System.out.println("p3="+p3);
-//		
-//		double pf = h(thetas,f);
-//		System.out.println("pf="+pf);
 	}
 
 	private static void saveToFile(String thetasFilename, Map<String, Double> thetas) throws IOException {

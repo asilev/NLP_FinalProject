@@ -5,15 +5,18 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import il.ac.openu.nlp.finalproject.models.AttributeList;
+import il.ac.openu.nlp.finalproject.models.FeatureModel;
 import il.ac.openu.nlp.finalproject.models.KeyMapper;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.StructuredDataReader;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
+import il.ac.openu.nlp.finalproject.models.FeatureModel.FeatureType;
 import il.ac.openu.nlp.finalproject.models.all_features.AllFeaturesModel;
 import il.ac.openu.nlp.finalproject.models.bagofwords.BagOfWordsModel;
 import il.ac.openu.nlp.finalproject.models.featuremarker.FeatureMarkerModel;
@@ -77,7 +80,9 @@ public class SupportVectorMachine {
 	public static void prepareSvmInputsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
 		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("gold");
-		List<TaggedFeatureVector<String>> trainingData = FeatureMarkerModel.buildFeatureMarker(structuredData, null);
+		FeatureModel model = new FeatureModel();
+		model.features.addAll(Arrays.asList(FeatureType.values()));
+		List<TaggedFeatureVector<String>> trainingData = FeatureMarkerModel.buildFeatureMarker(structuredData, null, model);
 		BufferedWriter bw = new BufferedWriter(new FileWriter(svmInputFilename));
 		AttributeList<String> attributes = new AttributeList<>();
 		for (TaggedFeatureVector<String> taggedFeatureVector: trainingData) {
@@ -125,10 +130,11 @@ public class SupportVectorMachine {
 	}
 	
 	public static void prepareSvmEvaluationsFromFeatureMarker(String structuredDataPath, String encoding, String ZERO_INDEX, String svmInputFilename, String wordsMapperFilename) throws IOException {
-		
+		FeatureModel model = new FeatureModel();
+		model.features.addAll(Arrays.asList(FeatureType.values()));
 		StructuredDataReader dataReader = new StructuredDataReader(structuredDataPath, encoding);
 		Map<String, List<List<MorphemeRecord>>> structuredData = dataReader.readStructuredData("test");
-		List<TaggedFeatureVector<String>> evaluationData = FeatureMarkerModel.buildFeatureMarker(structuredData, null);
+		List<TaggedFeatureVector<String>> evaluationData = FeatureMarkerModel.buildFeatureMarker(structuredData, null, model);
 		Map<String, Integer> mapper = new HashMap<>();
 		BufferedReader br = new BufferedReader(new FileReader(wordsMapperFilename));
 		String line;

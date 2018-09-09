@@ -4,35 +4,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.openu.nlp.finalproject.models.FeatureModel;
+import il.ac.openu.nlp.finalproject.models.FeatureModel.FeatureType;
 import il.ac.openu.nlp.finalproject.models.FeatureVector;
 import il.ac.openu.nlp.finalproject.models.MorphemeRecord;
 import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 
 public class FeatureMarkerModel {
-	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX) {
+	public static List<TaggedFeatureVector<String>> buildFeatureMarker(Map<String, List<List<MorphemeRecord>>> userTweets, String ZERO_INDEX, FeatureModel model) {
 		List<TaggedFeatureVector<String>> usersTweetsVector = new ArrayList<>();
 		for (Map.Entry<String, List<List<MorphemeRecord>>> user : userTweets.entrySet()) {
 			for (List<MorphemeRecord> tweet : user.getValue()) {
 				if (tweet.size()>0) {
 					FeatureVector<String> features = new FeatureVector<>(ZERO_INDEX);
-					features.put("_numOfMorphemes", getTweetsSize(ZERO_INDEX, tweet));
-					features.put("_averageWordSize", getAverageWordSize(ZERO_INDEX, tweet));
-					features.put("_numOfPuctMarks", getNumOfPunctuationMarks(ZERO_INDEX, tweet));
-					features.put("_avgNumOfPunctMarks", getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet));
-					features.put("_posTaggingVb", getPosTagging(ZERO_INDEX, tweet, "VB"));
-					features.put("_posTaggingNn", getPosTagging(ZERO_INDEX, tweet, "NN"));
-					features.put("_posTaggingJj", getPosTagging(ZERO_INDEX, tweet, "JJ"));
-					features.put("_posTaggingPrp", getPosTagging(ZERO_INDEX, tweet, "PRP"));
-					features.put("_posTaggingIntj", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
-					features.put("_posTaggingCd", getPosTagging(ZERO_INDEX, tweet, "CD"));
-					features.put("_averageSentenceSize", getSentenceAvrageSize(ZERO_INDEX, tweet));
-					features.put("_numOfLongWords3", getNumOfLongWords(ZERO_INDEX, tweet, 3));
-					features.put("_numOfLongWords5", getNumOfLongWords(ZERO_INDEX, tweet, 5));
-					features.put("_numOfLongWords7", getNumOfLongWords(ZERO_INDEX, tweet, 7));
-					features.put("_numOfLongWords9", getNumOfLongWords(ZERO_INDEX, tweet, 9));
-					features.put("_numOfLongWords11", getNumOfLongWords(ZERO_INDEX, tweet, 11));
-					features.put("_numOfCharecters", getNumOfCharecters(ZERO_INDEX, tweet));
-					
+					if (model.features.contains(FeatureType.NumberOfMorphemes)) {
+						features.put("_numOfMorphemes", getTweetsSize(ZERO_INDEX, tweet));
+					}
+					if (model.features.contains(FeatureType.AverageWordSize)) {
+						features.put("_averageWordSize", getAverageWordSize(ZERO_INDEX, tweet));
+					}
+					if (model.features.contains(FeatureType.NumberOfPucntuationMarks)) {
+						features.put("_numOfPuctMarks", getNumOfPunctuationMarks(ZERO_INDEX, tweet));
+					}
+					if (model.features.contains(FeatureType.AverageNumberOfPunctuationMarks)) {
+						features.put("_avgNumOfPunctMarks", getAverageNumOfPunctuationMarks(ZERO_INDEX, tweet));
+					}
+					if (model.features.contains(FeatureType.PosUsage)) {
+						features.put("_posTaggingVb", getPosTagging(ZERO_INDEX, tweet, "VB"));
+						features.put("_posTaggingNn", getPosTagging(ZERO_INDEX, tweet, "NN"));
+						features.put("_posTaggingJj", getPosTagging(ZERO_INDEX, tweet, "JJ"));
+						features.put("_posTaggingPrp", getPosTagging(ZERO_INDEX, tweet, "PRP"));
+						features.put("_posTaggingIntj", getPosTagging(ZERO_INDEX, tweet, "INTJ"));
+						features.put("_posTaggingCd", getPosTagging(ZERO_INDEX, tweet, "CD"));
+					}
+					if (model.features.contains(FeatureType.AverageSentenceSize)) {
+						features.put("_averageSentenceSize", getSentenceAvrageSize(ZERO_INDEX, tweet));
+					}
+					if (model.features.contains(FeatureType.NumOfLongWords)) {
+						features.put("_numOfLongWords3", getNumOfLongWords(ZERO_INDEX, tweet, 3));
+						features.put("_numOfLongWords5", getNumOfLongWords(ZERO_INDEX, tweet, 5));
+						features.put("_numOfLongWords7", getNumOfLongWords(ZERO_INDEX, tweet, 7));
+						features.put("_numOfLongWords9", getNumOfLongWords(ZERO_INDEX, tweet, 9));
+						features.put("_numOfLongWords11", getNumOfLongWords(ZERO_INDEX, tweet, 11));
+					}
+					if (model.features.contains(FeatureType.NumberOfCharacters)) {
+						features.put("_numOfCharecters", getNumOfCharecters(ZERO_INDEX, tweet));
+					}
 					usersTweetsVector.add(new TaggedFeatureVector<>(features, user.getKey()));
 				}
 			}
