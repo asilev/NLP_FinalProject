@@ -101,9 +101,12 @@ Since using many features slows down any learning model, and some of the feature
 
 \subsection{Model Selection and Benchmarking}
 \textbf{@asi}\\
-In this work we used two well known machine learning models: Logistic Regression and Support Vector Machine.
-Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
-We've seen the the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were quite poor.
+In this work we used two machine learning models: Logistic Regression and Support Vector Machine.
+In our platform, Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
+Comparing Logistic Regression and SVM for single feature at a time and carefully searching for optimal hyper parameters for both models provided similar results, but with much slower training time for Logistic Regression.
+Adding more features to the model further slows down Logistic Regression more extremely than SVM.
+Since we've seen the the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were not improved comparing to SVM, we chose to use SVM as the model for further investigations.
+
 Our work did not test Neural Networks model, and the more novel Convolutional Neural Networks / Recurrent Neural Networks, which might provide better results, as shown in \emph{CITE}.
 While we see our features can be highly unscaled, we've seen that scaling our features always produces a significant degradation in accuracy.
 We therefore decided not to scale features before training the model.
