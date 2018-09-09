@@ -19,7 +19,7 @@ public class FeatureSelector {
 			featureVectors.add(BagOfWordsModel.buildAuthorBagOf2GramsWords(userTweets, ZERO_INDEX));
 		}
 		if (featureModel.features.contains(FeatureType.PosBagOfWords)) {
-//			featureVectors.add(BagOfWordsModel.buildAuthorBagOfPosWords(userTweets, ZERO_INDES));
+			featureVectors.add(BagOfWordsModel.buildAuthorBagOfPosWords(userTweets, ZERO_INDEX));
 		}
 		if (featureModel.features.contains(FeatureType.StemmedBagOfWords)) {
 			featureVectors.add(BagOfWordsModel.buildAuthorBagOfStemmedWords(userTweets, ZERO_INDEX));
