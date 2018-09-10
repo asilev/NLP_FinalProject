@@ -17,16 +17,14 @@
 %\begin{center}
 \begin{abstract}
 \textbf{@asi}\\
-
 Given a set of short text messages in Hebrew, we attempt to classify each sentence to it respective author, according to its style of writing.
-We use Tweeter as our data set, and we've checked 10 users with approximately several thousands of tweets per user to train our model.
-We then use a different set of several hundreds of tweets per user in order to evaluate our model's accuracy.
+We use Tweeter as our data set, and we've checked X users with approximately X tweets per user to train our model.
+We then use X tweets per user in order to evaluate our model's accuracy.
 % Continue with abstract results
 \end{abstract}
 %\end{center}
 \section{Introduction}
 \textbf{@asi}\\
-
 Stylometry is the practice being used to identify an author based on his style of writing.
 While stylometry has been used historically to identify authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts.
 Recently, more novel approaches were suggested for stylometry that utilize algorithms in machine learning and deep learning, to improve accuracy of stylometry on short texts.
@@ -35,7 +33,10 @@ These works also suggest different approaches to features selection. The study o
 In this work we started an initial research and benchmarking on the influence of different learning models and features, in order to learn more about which of these models and features influence on the accuracy of a possible stylometry system for short messages in Hebrew.
 \section{Article Structure}
 \textbf{@asi}\\
-
+\emph{Optionally
+Describe the structure of this document according to sections
+Check formal name for this section
+}
 This document is arranged according to the following order:
 We begin by describing related work this article relies on in section \ref{Related Work}.
 We then proceed by describing the architecture of our utility, that implements a framework for model benchmarking in section \ref{Architecture}.
@@ -46,14 +47,15 @@ Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
 \label{Related Work}
 \textbf{@ronen}\\
-
 There has been significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
-On longer texts, usually satisfactory-high results were achieved. Qian, He and Zhang [2017, \cite{qian}] showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved a verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
+On longer texts, usually satisfactory-high results were achieved. Qian, He and Zhang [2017, \cite{qian}] showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved an verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
 However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. Green and Sheppard \cite{rachel} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
 Schwartz, Tsur, Rappoport and Koppel \cite{schwartz} experimented (among other criteria) with varying training set sizes and number of authors. They demonstrated an improvement in accuracy from 49.5\% (50 tweets per 50 authors) to 69.7\% (larger amount of tweets per 50 authors), but with a large number of authors (1000) showed 30.3\% accuracy (using 200 tweets/author), which correlates to the trend shown in other works as well. Albeit, 30.3\% is still  distinguishably better than the random baseline of 0.1\%.
 This trend is further validated in the work of Brocardo, Traore, Saad and Woungang \cite{brocardo}, albeit their work was founded on emails from the Enron data-set (200K emails from 150 users, average number of words per email is 200). Their techniques were based on a combination of supervised learning and n-gram analysis. Even after applying a few pre-processing operations on the text (e.g. e-mails were combined to produce a single long message per individual, and then divided into smaller blocks used for authorship verification), their experiments yielded an EER (an Equal Error Rate metric used by the authors which corresponds to the operating point where False Acceptance and False Rejection rates have the same value) of 14.35\% for 87 users for relatively small block sizes.\\
-It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by Rabab’ah, Al-Ayyoub, Jararweh and Aldwairi \cite{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authors, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
+It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by Rabab’ah, Al-Ayyoub, Jararweh and Aldwairi \cite{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authros, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
 An excellent and comprehensive overview of modern authorship attribution methods can be found in \cite{stamatatos}.
+
+
 
 \section{Architecture}
 \label{Architecture}
@@ -78,11 +80,10 @@ Lastly, we use the encoder on the test list, and compare its results with the ac
 \section{Approach}
 \label{Approach}
 \textbf{@asi}\\
-
 We now describe the benchmarking approach step by step, and describe how each step is implemented in our work.
 \subsection{Data Acquisition}
 \textbf{@ronen}\\
-We used the Twitter4j library (see section \ref{Acknowledgments}) in order to extract the tweets for our 20 authors. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the "getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See figure \ref{fig:data_stats} for more details.
+We used the Twitter4j library (see section \ref{Acknowledgments}) in order to extract the tweets for our 20 authors. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the "getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See table \ref{tab:datastats} for more details.
 \subsection{Data Exploration}
 \textbf{@ronen}\\
 In order to conduct our experiments we could not use the data we extracted via the Twitter API "as-is". The tweets we extracted directly from the Twitter API were in JSON format containing an abundance of information (content and meta-data) such as creation date, links, re-tweets, mentions, etc. This format not only includes more information than needed for the task at hand, but is also impossible to be processed by a morphological analyzer (such as YAP, see section \ref{Acknowledgments}). As such, we needed to apply a series of operations (i.e. "normalize", see next section) on the raw data in order to be able to run YAP on it and get the suitable output we needed to continue with the other steps in the model (see \ref{fig:architecture}).
@@ -107,17 +108,41 @@ The above steps generated a "normalized" input file, per author, ready to be pro
 \end{itemize}
 
 Figure \ref{fig:data_stats} summarizes the statistics of the data we used in our experiments after which being run through the steps depicted above, covering the authors (name and user ID), their area of work, the number of tweets we got using the Twitter4j API, and the number of tweets we ended up with after pre-processing (preparing the tweets in the format that YAP requires) and applying the YAP tool:\\
-\begin{figure}[h!]
-	\includegraphics[width=1\textwidth]{"stats/DataStats"}
-	\caption{Data Statistics}
-		\label{fig:data_stats}
-\end{figure}\\
-
+% Table generated by Excel2LaTeX from sheet 'Sheet1'
+\begin{table}[htbp]
+  \centering
+  \caption{Data Statistics}
+    \begin{tabular}{lcp{5.715em}cc}
+    \textbf{User Name} & \multicolumn{1}{p{7.57em}}{\textbf{User ID}} & \textbf{Area of Work} & \multicolumn{1}{p{5.57em}}{\textbf{Number of Tweets}} & \multicolumn{1}{p{12.855em}}{\textbf{Number of Tweets after Pre-Processing and YAP}} \\
+    Ben Caspit & \multicolumn{1}{p{7.57em}}{bencaspit} & Political journalist & 4136  & 2912 \\
+    Nadav Eyal & \multicolumn{1}{p{7.57em}}{NadavEyalDesk} & Political journalist & 4391  & 2971 \\
+    Amit Segal & \multicolumn{1}{p{7.57em}}{amit\_segal} & Political journalist & 3552  & 3160 \\
+    Ayala Hasson & \multicolumn{1}{p{7.57em}}{AyallaHasson} & Political journalist & 3143  & 2569 \\
+    Guy Rolnik & \multicolumn{1}{p{7.57em}}{grolnik} & Financial Journalist & 4639  & 3032 \\
+    Tal Schneider & \multicolumn{1}{p{7.57em}}{talschneider} & Political Commentator & 4141  & 2700 \\
+    Alon Ben-David & \multicolumn{1}{p{7.57em}}{alonbd} & Military Journalist & 3568  & 3024 \\
+    Rino Zror & \multicolumn{1}{p{7.57em}}{RinoZror} & Political journalist & 3824  & 3173 \\
+    Or Heller & \multicolumn{1}{p{7.57em}}{OrHeller} & Political journalist & 3693  & 3128 \\
+    Baruch Kra & \multicolumn{1}{p{7.57em}}{baruchikra} & \multicolumn{1}{r}{} & 2540  & 2374 \\
+    Udi Segal & \multicolumn{1}{p{7.57em}}{usegal} & Political journalist & 8406  & 2498 \\
+    Keren Neubach & \multicolumn{1}{p{7.57em}}{kereneubach} & Reporter & 4158  & 3132 \\
+    Shaul Amsterdamski & \multicolumn{1}{p{7.57em}}{amsterdamski2} & Financial Journalist & 10523 & 3002 \\
+    Roy Sharon & \multicolumn{1}{p{7.57em}}{roysharon} & Military Journalist & 3782  & 3192 \\
+    Akiva Novick & \multicolumn{1}{p{7.57em}}{akivanovick} & Parliamentary journalist & 3886  & 3196 \\
+    Sefi Ovadia & \multicolumn{1}{p{7.57em}}{sefiova} & Political journalist & 1745  & 1410 \\
+    Yoaz Hendel & \multicolumn{1}{p{7.57em}}{YoazHendel1} & Political Advisor and Commentator & 4633  & 3201 \\
+    Dan Margalit & \multicolumn{1}{p{7.57em}}{Danmargalit} & Journalist and Commentator & 3310  & 3218 \\
+    Sivan Rahav-Meir & \multicolumn{1}{p{7.57em}}{SivanRahav} & Political journalist & 3854  & 3232 \\
+    Zion Nanous & \multicolumn{1}{p{7.57em}}{zionnenko} & News journalist & 3945  & 3209 \\
+    \textbf{Total} & \textbf{20} & \textbf{N/A} & \textbf{85869} & \textbf{58333} \\
+    \end{tabular}%
+  \label{tab:datastats}%
+\end{table}%
 Focus on Hebrew such as morphemes separation
 Comment: credit as required by forum
+\newpage
 \subsection{Feature Selection and Benchmarking}
 \textbf{@?}\\
-
 There are several approaches to features selection. In \cite{rachel} two approaches, namely bag of words vs.\ style markers.
 In bag of words, each feature is a word, and the associated value is the number of time this word appears on the sentence.
 In Style Marker, each feature is a selected feature of the sentence. It's value can be any numeric classifier for the feature, such as exist (1) or non exist (0), number of occurrences, or probability (percentage of occurrences).
@@ -142,7 +167,6 @@ Since using many features slows down any learning model, and some of the feature
 
 \subsection{Model Selection and Benchmarking}
 \textbf{@asi}\\
-
 In this work we used two machine learning models: Logistic Regression and Support Vector Machine.
 In our platform, Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
 Comparing Logistic Regression and SVM for single feature at a time and carefully searching for optimal hyper parameters for both models provided similar results, but with much slower training time for Logistic Regression.
@@ -160,17 +184,26 @@ Hyper parameters where chosen using a grid search with logarithmic scale.
 possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
-\section{Acknowledgements}
-\label{Acknowledgements}
+\section{Acknowledgments}
+\label{Acknowledgments}
 \textbf{@ronen}\\
-
 we would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
 1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
 	\href{http://twitter4j.org/en/index.html}{Twitter4j site}\\
-2. YAP: Yet Another Parser is a parser written in Go, developed by \emph{CITE NAME} and is publicly available for research purposes. We used the major two functions of YAP - Pipeline Morphological Analysis and Disambiguation. For more information: 
+2. YAP: Yet Another Parser is a parser written in Go, developed by \emph{Amir More and Reut Tsarfaty} and is publicly available for research purposes. We used the major two functions of YAP - Pipeline Morphological Analysis and Disambiguation. For more information: 
 		\href{https://github.com/habeanf/yap}{YAP on GitHub site}\\
+Full citation (TODO: need to further process the 'InProceedings' field):\\
+@InProceedings{moretsarfatycoling2016,
+  author = {Amir More and Reut Tsarfaty},
+  title = {Data-Driven Morphological Analysis and Disambiguation for Morphologically Rich Languages and Universal Dependencies},
+  booktitle = {Proceedings of COLING 2016},
+  year = {2016},
+  month = {december},
+  location = {Osaka}
+}\\
 3. SVM\\
 4. Others?\\ 
+
 
 \begin{thebibliography}{9}
 
