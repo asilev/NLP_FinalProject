@@ -1,5 +1,6 @@
 \documentclass[a4paper]{article}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \author{Lev, Asi\\
 	\texttt{ID 039833900}\\
 	\texttt{email: asi.lev@gmail.com}
@@ -88,7 +89,7 @@ We used the Twitter4j library (see section \ref{Acknowledgments}) in order to ex
 \newpage
 \subsection{Data Preparation}
 \textbf{@ronen}\\
-The following figure summarizes the statistics of the data we used in our experiments - covering the authors (name and user ID), their area of work, the number of tweets we got from the Twitter4j API, and the number of tweets we ended up with after pre-processing (preapring the tweets in the format that YAP requires) and applying the YAP tool:\\
+Figure \ref{fig:data_stats} summarizes the statistics of the data we used in our experiments, covering the authors (name and user ID), their area of work, the number of tweets we got using the Twitter4j API, and the number of tweets we ended up with after pre-processing (preparing the tweets in the format that YAP requires) and applying the YAP tool:\\
 \begin{figure}[h!]
 	\includegraphics[width=1\textwidth]{"stats/DataStats"}
 	\caption{Data Statistics}
@@ -143,11 +144,12 @@ possible under discussion, if more subsections required
 \section{Acknowledgments}
 \label{Acknowledgments}
 \textbf{@ronen}\\
-Most probably this is the section to cite and thank the following:
-1. Twitter4j
-2. YAP
-3. SVM
-4. Others?
+we would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
+1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
+	\href{http://twitter4j.org/en/index.html}{Twitter4j Site}\\
+2. YAP\\
+3. SVM\\
+4. Others?\\
 
 
 \begin{thebibliography}{9}
