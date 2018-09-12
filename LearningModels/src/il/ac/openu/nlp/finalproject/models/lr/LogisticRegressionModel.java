@@ -19,9 +19,9 @@ import il.ac.openu.nlp.finalproject.models.TaggedFeatureVector;
 public class LogisticRegressionModel {
 	private static List<TaggedFeatureVector<String>> trainingData;
 	private static List<TaggedFeatureVector<String>> testData;
-	private static double ALPHA = 0.01;
+	private static double ALPHA = 0.005;
 	private static int numOfIterations = 2000;
-	private static double diffThreshold = 0.00005;
+	private static double diffThreshold = 0.001;
 	private static String ZERO_INDEX = "ZERO";
 	private static FeatureModel model = new FeatureModel();
 	
@@ -115,14 +115,15 @@ public class LogisticRegressionModel {
 		// Usage: LogisticRegression <input folder> <encoding>
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
 		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold", 10);
-		model.features.add(FeatureType.NumberOfMorphemes);
-		model.features.add(FeatureType.AverageNumberOfPunctuationMarks);
-		model.features.add(FeatureType.AverageSentenceSize);
-		model.features.add(FeatureType.AverageWordSize);
-		model.features.add(FeatureType.NumberOfCharacters);
-		model.features.add(FeatureType.NumberOfPucntuationMarks);
-		model.features.add(FeatureType.NumOfLongWords);
-		model.features.add(FeatureType.PosUsage);
+//		model.features.add(FeatureType.NumberOfMorphemes);
+//		model.features.add(FeatureType.AverageNumberOfPunctuationMarks);
+//		model.features.add(FeatureType.AverageSentenceSize);
+//		model.features.add(FeatureType.AverageWordSize);
+//		model.features.add(FeatureType.NumberOfCharacters);
+//		model.features.add(FeatureType.NumberOfPucntuationMarks);
+//		model.features.add(FeatureType.NumOfLongWords);
+//		model.features.add(FeatureType.PosUsage);
+		model.features.add(FeatureType.BagOfWords);
 		trainingData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
 		data = dataReader.readStructuredData("test", 10);
 		testData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);

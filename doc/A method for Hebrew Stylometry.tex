@@ -10,7 +10,7 @@
 	\texttt{email: ronen.jashek@gmail.com}	
 }
 
-\title{A Method for Hebrew Stylometry, based on Short Messages}
+\title{A Method for Hebrew Stylometry, Based on Short Messages}
 \date{}
 \begin{document}
 \maketitle
@@ -167,16 +167,32 @@ Since using many features slows down any learning model, and some of the feature
 
 \subsection{Model Selection and Benchmarking}
 \textbf{@asi}\\
-In this work we used two machine learning models: Logistic Regression and Support Vector Machine.
+In this work we've compared two machine learning models: Logistic Regression and Support Vector Machine.
 In our platform, Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
-Comparing Logistic Regression and SVM for single feature at a time and carefully searching for optimal hyper parameters for both models provided similar results, but with much slower training time for Logistic Regression.
-Adding more features to the model further slows down Logistic Regression more extremely than SVM.
-Since we've seen the the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were not improved comparing to SVM, we chose to use SVM as the model for further investigations.
-Our work did not test Neural Networks model, and the more novel Convolutional Neural Networks / Recurrent Neural Networks, which might provide better results, as shown in \emph{CITE}. This, together with more in depth research on other models, may be a good further work on the subject.
+We've compared Logistic Regression and SVM for a feature model that contains all style marker features combined.
+In both models, features were unscaled.
+We tested each model for 2-10 authors.
+For logistic regression, we've used the following hyper parameters selection method:
+$\alpha$ was chosen by searching for the highest $\alpha$ that does not increase the value of the model's cost function. The value we've found ranges from 0.003 to 0.005, depends on the number of authors.
+The number of iterations was dynamically chosen, as the number of calculation that stabilizes the cost function on a change of \textless 0.0001 per iteration.
 
-While we see our features can be highly unscaled, we've seen that scaling our features always produces a significant degradation in accuracy.
-We therefore decided not to scale features before training the model.
-Hyper parameters where chosen using a grid search with logarithmic scale.
+For SVM, we've used the following grid search for hyper parameters C and $\gamma$, and we chose a polynomial kernel with 1 degree, as these hyper parameters were proven ideal for small cases we ran.
+We've used the following values for $\gamma$: (0.00003, 0.0001, 0.0005, 0.002, 0.008, 0.03125, 0.125, 0.5, 2, 8, 32, 128), and the following values for C: (0.03125, 0.125, 0.5, 2, 32, 8, 128, 512, 2048, 8192, 32768).
+For this test, we've seen that SVM provides slightly better results, as we can see in the following graph:
+INSERT GRAPH
+
+Since we've seen that the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were less optimal comparing to SVM, we chose to use SVM as our model for further investigations.
+Our work did not test Neural Networks model, and the more novel Convolutional Neural Networks / Recurrent Neural Networks, which might provide better results, as shown in \emph{CITE}. This, together with more in depth research on other models, may be a good further work on the subject.
+We now check if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
+For Style marker, scaling features provided an accuracy of 21.81%, while no scaling provided a slightly better results of 22.42%.
+We now test SVM with simple Bag of Words feature set.
+Non scaled simple Bag of Words provided accuracy of 43.89%, and scaled simple Bag of Words provided TBD.
+Next, we turn to test other feature sets that resemble bag of words. These models were all tested with SVM, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
+\begin{itemize}
+\item \textbf{\emph{Bag of Stemmed Words}}: Instead of using the original morphemes, we've used the stemmed version.
+\item \textbf{\emph{Bag of Bigrams}}: Each feature is a pair of subsequent words. Start of sentence and End of sentence symbols added to each sentence.
+\item \textbf{\emph{Bag of POS-Words}}: Each feature is a morpheme, along with its Part of Speech.
+\end{itemize}
 \section{Results}
 \label{Results}
 \section{Further Work}
