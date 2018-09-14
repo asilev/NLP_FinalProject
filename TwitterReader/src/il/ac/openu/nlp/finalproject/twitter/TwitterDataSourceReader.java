@@ -40,13 +40,11 @@ public class TwitterDataSourceReader {
 	// The transliterate table
 	static HashMap<String, String> hmTransLiterate = new HashMap<String, String>();
 	
-	private static String[] sTwitterUsers = {"Danmargalit", "SivanRahav", "zionnenko"};
-	/*
+	//private static String[] sTwitterUsers = {"Danmargalit", "SivanRahav", "zionnenko"};
 	private static String[] sTwitterUsers = {"BenCaspit", "NadavEyalDesk", "amit_segal", "AyalaHasson", "grolnik", 
 											 "talschneider", "alonbd", "RinoZror", "OrHeller", "baruchikra",
 											 "usegal", "kereneubach", "amsterdamski2", "roysharon11", "akivanovick",
 											 "sefiova", "YoazHendel1", "Danmargalit", "SivanRahav", "zionnenko"};
-											 */
 //	private static String sCWD = "";
 //	private static String sOutputDir = "";
 	private static int mNumOfTweetsToGet = 10000;
@@ -54,14 +52,10 @@ public class TwitterDataSourceReader {
 	public static void main(String[] args) {
 		
 		// Check if we have args
-	    if (args.length >=2)
+	    if (args.length >=1)
 	    {
-	    	sInputPath = args[0];
-			sOutputPath = args[1];
+			sOutputPath = args[0];
 	    }
-		
-//		sCWD = System.getProperty("user.dir");
-//		sOutputDir = sCWD + "\\data";
 		
 		getUserTimeline();
 		
@@ -77,7 +71,6 @@ public class TwitterDataSourceReader {
         	
         	File inputFile = new File(sInputPath);
         	File outputFile = new File(sOutputPath);
-
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), sEncoding));
 			//BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), sEncoding));
