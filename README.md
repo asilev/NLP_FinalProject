@@ -6,11 +6,22 @@ The goal is to study the features required for such identification, when working
 the code of this project is arrange according to the architecture shown in https://github.com/asilev/NLP_FinalProject/blob/master/doc/architecture/NLP%20Author%20Classification%20Architecture.png.
 
 The files in TwitterReader are used to retrieve data sets from Twitter, using the twitter4j framework.
-This folder is meant to be compiled and run as a standalone executable with its own main method.
+The Twitter4j framework provides a pre-compiled JAR library, twitter4j-core-4.0.4.jar, which is imported into the project and then allows the access and extraction of data.
 Running it requires two parameters: The inpus path (this is unused, and can be anything) and the output path (where to put the tweets from tweeter).
+After initialization of the Twitter4j framework (accoridng to the Twitter API), the main API call we use is the "getUserTimeline" which accepts two parameters - user name and page ID.
+Paging is needed since the Twitter API does not allow getting a stream of data, but rather getting the data sporadically (e.g. in pages).
+After reading the raw data, our code "normalizes" (or re-fromats) the data received in order to prepare it for processing by the YAP library.
+In this process, two sets of files are generated - for each user, the raw data file named "ID_username.txt" (ID is a serial number starting with 00) and a normalized file named the same, with the suffix "-normalized".
 
-**_Ronen_: please expand this explanation of how to use the twitter reader, and fix/refactor the tweeterReader if needed.
-Alsom resources should be moved the a dedicated folder for resouces (YAP outputs, twetter outputs, etc.).**
+The files with the "-normalized" suffix are then fed, one by one, manually, to the YAP tool. YAP (and GO) were downlaoded from GitHub (and https://golang.org/), respectively.
+After built into an executable tool, we used YAP with two commands:
+"yap hebma -raw input.raw -out lattices.conll": This command runs YAP as a morphological analyzer. The ouptut file "lattices.conll" is then fed to the second command - 
+"yap md -in lattices.conll -om output.conll": This command runs YAP disambiguation function and outputs the file "output.conll" which provides, for each tweet, its morphological analysis, allowing us to continue with the simulations.
+ 
+
+** TODO: Also, resources should be moved the a dedicated folder for resouces (YAP outputs, twetter outputs, etc.).**
+
+The 
 
 The files in Feature model are helper classes that help arrange the output data from YAP according to different types of feature sets:
 **AllFeaturesModel** creates a vector with all the features from other models.
