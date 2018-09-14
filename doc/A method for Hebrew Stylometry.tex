@@ -1,6 +1,7 @@
-\documentclass[a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
+%\usepackage{enumitem}
 \author{Lev, Asi\\
 	\texttt{ID 039833900}\\
 	\texttt{email: asi.lev@gmail.com}
@@ -14,26 +15,22 @@
 \date{}
 \begin{document}
 \maketitle
-%\begin{center}
 \begin{abstract}
-\textbf{@asi}\\
 
-Given a set of short text messages in Hebrew, we attempt to classify each sentence to it respective author, according to its style of writing.
+Given a set of short text messages in Hebrew, we attempt to classify each message\footnote{We use the term ``Message" to a single datum in our data set, as opposed to ``Sentence", since in many cases, a single datum contains more than one syntactic ``sentence".} to it respective author, according to its style of writing.
 We use Tweeter as our data set, and we've checked 10 users with approximately several thousands of tweets per user to train our model.
 We then use a different set of several hundreds of tweets per user in order to evaluate our model's accuracy.
-% Continue with abstract results
+We've noticed that Support Vector Machine provides a slightly better accuracy for author identification, and using 17 style marker features is worse than simple bag of words model. Trying to use more sophisticated models such as stemming and 2-grams, did not improve the accuracy. We've also tested what single feature would best improve bag of words accuracy, and found that the amount of characters was slightly better than any other style marker.
 \end{abstract}
-%\end{center}
 \section{Introduction}
-\textbf{@asi}\\
+
 Stylometry is the practice being used to identify an author based on his style of writing.
-While stylometry has been used historically to identify authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts.
+While stylometry has been used historically to identify authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts such as Facebook, Twitter, etc. \cite{rachel}
 Recently, more novel approaches were suggested for stylometry that utilize algorithms in machine learning and deep learning, to improve accuracy of stylometry on short texts.
-These works rely on several learning models, such as Bayesian statistics \emph{(INSERT CITATION)}, Support Vector Machine \emph{(INSERT CITATION)}, Neural Networks \emph{(INSERT CITATION)}, and others.
+These works rely on several learning models, such as Support Vector Machine \cite{rachel}, \cite{schwartz}.
 These works also suggest different approaches to features selection. The study of feature selection may not be suitable to any language, as different languages may hold different features that may be suitable to a more accurate system.
-In this work we started an initial research and benchmarking on the influence of different learning models and features, in order to learn more about which of these models and features influence on the accuracy of a possible stylometry system for short messages in Hebrew.
-\section{Article Structure}
-\textbf{@asi}\\
+In this work we started an initial research and benchmarking on the influence of different learning models and feature-sets, in order to learn more about which of these models and features influence on the accuracy of a possible stylometry system for short messages \emph{in Hebrew}.
+Code and resource used for this work can be found on our github repository: \url{https://github.com/asilev/NLP\_FinalProject} and on libsvm's site: \url{https://www.csie.ntu.edu.tw/~cjlin/libsvm/} \cite{chang}
 
 This document is arranged according to the following order:
 We begin by describing related work this article relies on in section \ref{Related Work}.
@@ -44,7 +41,7 @@ Further work is suggested in section \ref{Further Work}.
 Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
 \label{Related Work}
-\textbf{@ronen}\\
+
 There has been significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
 On longer texts, usually satisfactory-high results were achieved. Qian, He and Zhang [2017, \cite{qian}] showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved a verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
 However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. Green and Sheppard \cite{rachel} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
@@ -53,65 +50,46 @@ This trend is further validated in the work of Brocardo, Traore, Saad and Wounga
 It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by Rabab’ah, Al-Ayyoub, Jararweh and Aldwairi \cite{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authors, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
 An excellent and comprehensive overview of modern authorship attribution methods can be found in \cite{stamatatos}.
 
-
-
 \section{Architecture}
 \label{Architecture}
-\textbf{@asi}\\
 
 Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.\\
 \begin{figure}[hb]
-	\includegraphics[width=1\textwidth]{"architecture/NLP Author Classification Architecture"}
+	\centering
+	\includegraphics[width=.7\textwidth]{"architecture/NLP Author Classification Architecture"}
 	\caption{Platform Architecture}
 		\label{fig:architecture}
 \end{figure}\\
 
-We use "Data Source" as the abstract utility to pull text from short messages source, and save the messages with the correct tagged author for each short message in a well formed structure.
-In here we've implemented the "Data Source" with a "Tweeter Data source", that pulls information according to parameters such as time period and a list of users from tweeter.
-This data is then being processed by "Data Normalization" utility, that reads this data, filters unwanted cases (as will be described in section \ref{Approach}), and transforms the data to a structure that can be used by YAP \emph{CITE}.
-We then use YAP to provide initial parsing for our data, and provide more information about it, such as morphological segmentation, stemming, POS tagging, etc.\
-Then, we choose our features according to some model. This component takes the list of sentences, and builds for each sentence a list of features, where each feature is assigned with a value that describes that feature for the particular sentence.
-We create two lists of sentences: one for the training (gold list) and one for the evaluation (test list).
-Then, we use some learning model to train on the gold list, and produce the parameters that will be used for the encoder.
-Lastly, we use the encoder on the test list, and compare its results with the actual authors from the test list using the evaluation component, to test the system's accuracy (hit rate).
+We use ``Data Source" as the abstract utility to pull text from short messages source, and save the messages with the correct tagged author for each short message in a well formed structure.
+In here we've implemented the ``Data Source" with a ``Tweeter Data Source", that pulls information according to parameters such as time period and a list of users from tweeter.
+This data is then being processed by ``Data Normalization" utility, that reads this data, filters unwanted cases (as will be described in section \ref{Approach}), and transforms the data to a structure that can be used by YAP\footnote{Yet Another (Natural Language) Parser} \cite{moretsarfatycoling2016}.
+We then use YAP to provide initial parsing for our data, and provide more information about it, such as morphological segmentation, stemming, POS \footnote{Part of Speech} tagging, etc.\
+Then, for each test, we choose our features for the test. The ``Feature Model" takes a list of messages, and builds for each message a vector of features, where each feature is assigned with a value that describes that feature for the particular message.
+We create two lists of messages: one for the training (gold list) and one for the evaluation (test list). We've split our data set to two disjoint sets of messages, with 70\% for training and 30\% for evaluation.
+Then, for each run, we use a choice of ``Learning Model" to train on the gold list, and produce the parameters that will be used for the encoder.
+Lastly, we use the encoder on the test list, and compare its results with the actual authors from the test list using the evaluation component, to test the system's accuracy.
+We use the fraction of correctly identified authors as the evaluation metric.
 
 \section{Approach}
 \label{Approach}
-\textbf{@asi}\\
+
 We now describe the benchmarking approach step by step, and describe how each step is implemented in our work.
 \subsection{Data Acquisition}
-\textbf{@ronen}\\
-We used the Twitter4j library (see section \ref{Acknowledgements}) in order to extract the tweets for our 20 authors. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the "getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See table \ref{tab:datastats} for more details.
+
+We used the Twitter4j library (see section \ref{Acknowledgements}) in order to extract the tweets for 10 authors. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the ``getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See table \ref{tab:datastats} for more details.
 \subsection{Data Exploration}
-\textbf{@ronen}\\
-In order to conduct our experiments we could not use the data we extracted via the Twitter API "as-is". The tweets we extracted directly from the Twitter API were in JSON format containing an abundance of information (content and meta-data) such as creation date, links, re-tweets, mentions, etc. This format not only includes more information than needed for the task at hand, but is also impossible to be processed by a morphological analyzer (such as YAP, see section \ref{Acknowledgements}). As such, we needed to apply a series of operations (i.e. "normalize", see next section) on the raw data in order to be able to run YAP on it and get the suitable output we needed to continue with the other steps in the model (see figure \ref{fig:architecture}).
 
-\subsection{Data Preparation}
-\textbf{@ronen}\\
-We performed the following operations on the raw tweet data in order to prepare it for YAP morphological analysis:\\
-A) Strip any meta-data information\\
-B) Ignore/omit any re-tweets: As we're interested in the style of only the particular author, text from other authors can only impede the analysis\\
-C) Remove English words and characters\\
-D) Leave punctuation marks\\
-E) Formatting: For each tweet (i.e. in YAP's "eyes" this is a sentence) format it such that each word (or punctuation mark) is in its own line, and tweets are separated from one to another by an empty line.\\
-The above steps generated a "normalized" input file, per author, ready to be processed by YAP. We then executed two YAP commands - morphological analysis and dis-ambiguity. The output from these operations was a file (per author) containing all the tweets after analysis, resulting in the following information for each tweet:\\
-\begin{itemize}
-\item \textbf{OriginalWord}
-\item \textbf{StemmedWord}
-\item \textbf{OriginalWord POS}
-\item \textbf{StemmedWord POS}
-\item \textbf{Gender}
-\item \textbf{Single or Plural}
-\item \textbf{Person Attribute (first, second, etc.)}
-\end{itemize}
-
+For this research, we've downloaded initially 85,869 tweets, from 20 different authors. Since we've seen that working with 20 authors is extremely slow to train and results are quite poor (also in other related works), we've downsized our data set to a more manageable size of 10 authors with 37,627 tweets.
+The average number of tweets per user is 3,763, and the standard deviation is 616.
+Going through parts of the data set, we've encountered some criteria that we consider not suitable to our research. The criteria is usage of languages other than Hebrew (at least one word is not in Hebrew), and retweets.
+After eliminating those cases, we've remained with 29,043 tweets. The average number of tweets per user is 2,904 and the standard deviation is 270.
 Figure \ref{tab:datastats} summarizes the statistics of the data we used in our experiments after which being run through the steps depicted above, covering the authors (name and user ID), their area of work, the number of tweets we got using the Twitter4j API, and the number of tweets we ended up with after pre-processing (preparing the tweets in the format that YAP requires) and applying the YAP tool:\\
 % Table generated by Excel2LaTeX from sheet 'Sheet1'
 \begin{table}[htbp]
   \centering
-  \caption{Data Statistics}
     \begin{tabular}{lcp{5.715em}cc}
-    \textbf{User Name} & \multicolumn{1}{p{7.57em}}{\textbf{User ID}} & \textbf{Area of Work} & \multicolumn{1}{p{5.57em}}{\textbf{Number of Tweets}} & \multicolumn{1}{p{12.855em}}{\textbf{Number of Tweets after Pre-Processing and YAP}} \\
+    \textbf{User Name} & \multicolumn{1}{p{7.57em}}{\textbf{User ID}} & \textbf{Area of Work} & \multicolumn{1}{p{5.57em}}{\textbf{Number of Tweets}} & 		\multicolumn{1}{p{12.855em}}{\textbf{Number of Tweets after Pre-Processing and YAP}} \\
     Ben Caspit & \multicolumn{1}{p{7.57em}}{bencaspit} & Political journalist & 4136  & 2912 \\
     Nadav Eyal & \multicolumn{1}{p{7.57em}}{NadavEyalDesk} & Political journalist & 4391  & 2971 \\
     Amit Segal & \multicolumn{1}{p{7.57em}}{amit\_segal} & Political journalist & 3552  & 3160 \\
@@ -122,85 +100,124 @@ Figure \ref{tab:datastats} summarizes the statistics of the data we used in our 
     Rino Zror & \multicolumn{1}{p{7.57em}}{RinoZror} & Political journalist & 3824  & 3173 \\
     Or Heller & \multicolumn{1}{p{7.57em}}{OrHeller} & Political journalist & 3693  & 3128 \\
     Baruch Kra & \multicolumn{1}{p{7.57em}}{baruchikra} & \multicolumn{1}{r}{} & 2540  & 2374 \\
-    Udi Segal & \multicolumn{1}{p{7.57em}}{usegal} & Political journalist & 8406  & 2498 \\
-    Keren Neubach & \multicolumn{1}{p{7.57em}}{kereneubach} & Reporter & 4158  & 3132 \\
-    Shaul Amsterdamski & \multicolumn{1}{p{7.57em}}{amsterdamski2} & Financial Journalist & 10523 & 3002 \\
-    Roy Sharon & \multicolumn{1}{p{7.57em}}{roysharon} & Military Journalist & 3782  & 3192 \\
-    Akiva Novick & \multicolumn{1}{p{7.57em}}{akivanovick} & Parliamentary journalist & 3886  & 3196 \\
-    Sefi Ovadia & \multicolumn{1}{p{7.57em}}{sefiova} & Political journalist & 1745  & 1410 \\
-    Yoaz Hendel & \multicolumn{1}{p{7.57em}}{YoazHendel1} & Political Advisor and Commentator & 4633  & 3201 \\
-    Dan Margalit & \multicolumn{1}{p{7.57em}}{Danmargalit} & Journalist and Commentator & 3310  & 3218 \\
-    Sivan Rahav-Meir & \multicolumn{1}{p{7.57em}}{SivanRahav} & Political journalist & 3854  & 3232 \\
-    Zion Nanous & \multicolumn{1}{p{7.57em}}{zionnenko} & News journalist & 3945  & 3209 \\
-    \textbf{Total} & \textbf{20} & \textbf{N/A} & \textbf{85869} & \textbf{58333} \\
+%    Udi Segal & \multicolumn{1}{p{7.57em}}{usegal} & Political journalist & 8406  & 2498 \\
+%    Keren Neubach & \multicolumn{1}{p{7.57em}}{kereneubach} & Reporter & 4158  & 3132 \\
+%    Shaul Amsterdamski & \multicolumn{1}{p{7.57em}}{amsterdamski2} & Financial Journalist & 10523 & 3002 \\
+%    Roy Sharon & \multicolumn{1}{p{7.57em}}{roysharon} & Military Journalist & 3782  & 3192 \\
+%    Akiva Novick & \multicolumn{1}{p{7.57em}}{akivanovick} & Parliamentary journalist & 3886  & 3196 \\
+%    Sefi Ovadia & \multicolumn{1}{p{7.57em}}{sefiova} & Political journalist & 1745  & 1410 \\
+%    Yoaz Hendel & \multicolumn{1}{p{7.57em}}{YoazHendel1} & Political Advisor and Commentator & 4633  & 3201 \\
+%    Dan Margalit & \multicolumn{1}{p{7.57em}}{Danmargalit} & Journalist and Commentator & 3310  & 3218 \\
+%    Sivan Rahav-Meir & \multicolumn{1}{p{7.57em}}{SivanRahav} & Political journalist & 3854  & 3232 \\
+%    Zion Nanous & \multicolumn{1}{p{7.57em}}{zionnenko} & News journalist & 3945  & 3209 \\
+%    \textbf{Total} & \textbf{20} & \textbf{N/A} & \textbf{85869} & \textbf{58333} \\
+    \textbf{Total} & \textbf{10} & \textbf{N/A} & \textbf{37,627} & \textbf{29,043} \\
     \end{tabular}%
+  \caption{Data Statistics}
   \label{tab:datastats}%
 \end{table}%
-Focus on Hebrew such as morphemes separation
-Comment: credit as required by forum
-\pagebreak
+
+\subsection{Data Preparation}
+
+In order to conduct our experiments we could not use the data we extracted via the Twitter API ``as-is". The tweets we extracted directly from the Twitter API were in JSON format containing an abundance of information (content and meta-data) such as creation date, links, re-tweets, mentions, etc. This format not only includes more information than needed for the task at hand, but is also impossible to be processed by a morphological analyser (such as YAP). As such, we needed to apply a series of normalization operations on the raw data, in order to be able to run YAP on it, and get the suitable output we needed to continue with the other steps in the model (see figure \ref{fig:architecture}).
+We performed the following operations on the raw tweet data in order to prepare it for YAP morphological analysis:\\
+\begin{enumerate}
+	\item Strip any meta-data information
+	\item Ignore/omit any re-tweets: As we're interested in the style of only the particular author, text from other authors can only impede the analysis
+	\item Remove English words and characters
+	\item Leave punctuation marks
+	\item Formatting: For each message, format it such that each word (or punctuation mark) is in its own line, and tweets are separated from one to another by an empty line.
+\end{enumerate}
+The above steps generated a ``normalized" input file, per author, ready to be processed by YAP. We then executed two YAP commands - morphological analysis and dis-ambiguity. The output from these operations was a file (per author) containing all the tweets after analysis, resulting in the following information for each tweet:\\
+\begin{itemize}
+\item \textbf{Original Word}
+\item \textbf{Stemmed Word}
+\item \textbf{Original Word POS}
+\item \textbf{Stemmed Word POS}
+\item \textbf{Gender}
+\item \textbf{Single or Plural}
+\item \textbf{Person Attribute (first, second, etc.)}
+\end{itemize}
+
 \subsection{Feature Selection and Benchmarking}
-\textbf{@?}\\
-There are several approaches to features selection. In \cite{rachel} two approaches, namely bag of words vs.\ style markers.
-In bag of words, each feature is a word, and the associated value is the number of time this word appears on the sentence.
-In Style Marker, each feature is a selected feature of the sentence. It's value can be any numeric classifier for the feature, such as exist (1) or non exist (0), number of occurrences, or probability (percentage of occurrences).
+
+There are several approaches to features selection. For example, Green and Sheppard\cite{rachel} compared two approaches, namely bag of words vs.\ style markers.
 While testing each of these approaches ourselves, we suggest a more generalized approach that also tests combinations of these approaches, by using some features as words from bag of words model, and some \emph{additional} features as style markers.
-We also tested different approaches, such as N-Grams and POS analysis. The list features we used is:
+We also tested other approaches, such as N-Grams and POS analysis. The list features we used is:
 \begin{itemize}
 \item \textbf{\emph{Simple Word (Bag of Words)}}: Each feature is a word, and the value is the number of times the word appears in the sentence.
 \item \textbf{\emph{Stemmed Word}}: Each feature is the stem analysis of a word, and the value is the number of times the stemmed word appears in the sentence.
-\item \textbf{\emph{Bigram}}: Each feature is a sequence of two words, and the value is the number of times this pair of words appears in the sentence. We can further generalize this feature to any N-gram, but for a small corpus, this is proven as ineffective even for a bigram, since specific pair are very unlikely to reappear.
+\item \textbf{\emph{Bigram}}: Each feature is a sequence of two words, and the value is the number of times this pair of words appears in the sentence. We can further generalize this feature to any N-gram, but for a small corpus, this is proven as ineffective even for a bigram, since specific pair are very unlikely to reappear. On a larger training data-set, it is suggested to try testing with several N-gram models.
 \item \textbf{\emph{POS Analysis}}: Each feature is a word, combined with its proper POS tag. This helps separate different words that may be written the same way, but used for different meanings.
-\item \textbf{\emph{Number of Morphemes}}: A single feature, describing the number of morphemes the sentence holds.
-\item \textbf{\emph{Average Word Size}}: A single feature, describing the average size of a word in the sentence.
-\item \textbf{\emph{Number of Characters}}: A single feature, describing the number of characters in the sentence.
-\item \textbf{\emph{Number of Punctuation Marks}}: a single value, describing the number of punctuation marks used in the sentence.
-\item \textbf{\emph{Average Number of Punctuation Marks}}: A single value, describing the number of morphemes that represent punctuation marks, relative to the total number of morphemes in the sentence.
-\item \textbf{\emph{POS Usage}}: Each feature is a POS, and the value is the number of times the POS appears in the sentence.
-\item \textbf{\emph{Average Sentence Size}}: If the given sentence is divided to more than one actual sentence using a dot, this feature holds the average number of morphemes in each actual sentence in the complete given sentence.
-\item \textbf{\emph{Number of Long Words}}: Each feature represents the number of words in the sentences, that are longer than a given threshold.
+\item \textbf{\emph{Number of Morphemes}}: A single feature, describing the number of morphemes the message holds.
+\item \textbf{\emph{Average Word Size}}: A single feature, describing the average size of a word in the message.
+\item \textbf{\emph{Number of Characters}}: A single feature, describing the number of characters in the message.
+\item \textbf{\emph{Number of Punctuation Marks}}: a single feature, describing the number of punctuation marks used in the message.
+\item \textbf{\emph{Average Number of Punctuation Marks}}: A single feature, describing the number of morphemes that represent punctuation marks, relative to the total number of morphemes in the message.
+\item \textbf{\emph{POS Usage}}: Each feature is a distinct POS, and the value is the number of times the POS appears in the sentence. We've only used the most common POS's, namely VB, NN, JJ, PRP, INTJ and CD.
+\item \textbf{\emph{Average Sentence Size}}: If the given message is divided to more than one actual sentence (using a dot, identified as full stop by YAP), this feature holds the average number of morphemes in each actual sentence in the complete given message.
+\item \textbf{\emph{Number of Long Words}}: Each feature represents the number of words in the sentences, that are longer than a given threshold. We've used the following thresholds: 3, 5, 7, 9.
 \end{itemize}
-Since using many features slows down any learning model, and some of the features approaches are inherently large (such as BOW, N-Grams, etc.), we started by testing each feature approach separately to see its strength individually. We then tried combination of strong feature approaches and tested the contribution of the new features to the list of already decided features.
-\emph{Here we need to describe each step, and show some results}
 
 \subsection{Model Selection and Benchmarking}
-\textbf{@asi}\\
-In this work we've compared two machine learning models: Logistic Regression and Support Vector Machine.
-In our platform, Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used \emph{CITE}.
+
+In this work we've compared two machine learning models, namely ``Logistic Regression" and ``Support Vector Machine".
+In our platform, Logistic Regression model was implemented from scratch, as it is a very basic model, and for SVM we've used libSVM\cite{chang}.
 We've compared Logistic Regression and SVM for a feature model that contains all style marker features combined.
-In both models, features were unscaled.
-We tested each model for 2-10 authors.
-For logistic regression, we've used the following hyper parameters selection method:
+Initially, features were tested without ``feature scaling".
+We tested each learning model for 2-10 authors.
+In logistic regression, we've used the following hyper parameters selection method:
 $\alpha$ was chosen by searching for the highest $\alpha$ that does not increase the value of the model's cost function. The value we've found ranges from 0.003 to 0.005, depends on the number of authors.
 The number of iterations was dynamically chosen, as the number of calculation that stabilizes the cost function on a change of \textless 0.0001 per iteration.
-
 For SVM, we've used the following grid search for hyper parameters C and $\gamma$, and we chose a polynomial kernel with 1 degree, as these hyper parameters were proven ideal for small cases we ran.
-We've used the following values for $\gamma$: (0.00003, 0.0001, 0.0005, 0.002, 0.008, 0.03125, 0.125, 0.5, 2, 8, 32, 128), and the following values for C: (0.03125, 0.125, 0.5, 2, 32, 8, 128, 512, 2048, 8192, 32768).
-For this test, we've seen that SVM provides slightly better results, as we can see in the following graph:
-INSERT GRAPH
-
-Since we've seen that the Logistic Regression model (at least our implementation of it) was extremely slow to train, and results were less optimal comparing to SVM, we chose to use SVM as our model for further investigations.
-Our work did not test Neural Networks model, and the more novel Convolutional Neural Networks / Recurrent Neural Networks, which might provide better results, as shown in \emph{CITE}. This, together with more in depth research on other models, may be a good further work on the subject.
+We've used the following values for $\gamma$: (0.00003, 0.0001, 0.0005, 0.002, 0.008, 0.03125, 0.125, 0.5, 2, 8, 32, 128), and the following values for C: (0.03125, 0.125, 0.5, 2, 32, 8, 128, 512, 2048, 8192).
+For this test, we've seen that SVM provides slightly better results than Logistic Regression, and both models provide better results from a na\"ive guessing baseline. We can see the results in the following graph:
+Figure \ref{fig:LR vs. SVM} illustrates accuracy evaluations of logistic regression, SVM, and na\"ive baseline.
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\textwidth]{"figures/lrvssvm"}
+	\caption{Logistic Regression, SVM, and baseline}
+		\label{fig:LR vs. SVM}
+\end{figure}
+Since we've seen that results were less accurate comparing to SVM, we chose to use SVM as our model for further research.
 We now check if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
-For Style marker, scaling features provided an accuracy of 21.81%, while no scaling provided a slightly better results of 22.42%.
+For Style marker, scaling features provided an accuracy of 21.81\%, while not scaling features provided a slightly better results of 22.42\%.
 We now test SVM with simple Bag of Words feature set.
-Non scaled simple Bag of Words provided accuracy of 43.89%, and scaled simple Bag of Words provided TBD.
-Next, we turn to test other feature sets that resemble bag of words. These models were all tested with SVM, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
+Non scaled simple Bag of Words provided accuracy of 43.89\%, and scaled simple Bag of Words provided ****TBD****.
+Next, we turn to test other feature sets. These models were all tested with SVM, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
 \begin{itemize}
-\item \textbf{\emph{Bag of Stemmed Words}}: Instead of using the original morphemes, we've used the stemmed version.
-\item \textbf{\emph{Bag of Bigrams}}: Each feature is a pair of subsequent words. Start of sentence and End of sentence symbols added to each sentence.
-\item \textbf{\emph{Bag of POS-Words}}: Each feature is a morpheme, along with its Part of Speech.
+\item \textbf{\emph{Bag of Stemmed Words (BOSW)}}: Instead of using the original morphemes, we've used the stemmed version.
+\item \textbf{\emph{Bag of Bigrams (BOBW)}}: Each feature is a pair of subsequent words. Start of sentence and End of sentence symbols added to each sentence.
+\item \textbf{\emph{Bag of POS-Words (BOPW)}}: Each feature is a morpheme, along with its Part of Speech.
 \end{itemize}
+This comparison showed that the most simple bag of words provides the most accurate results, as can be seen in figure \ref{fig:feature comparison}
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\textwidth]{"figures/feature_comparison"}
+	\caption{Feature Comparison}
+	\label{fig:feature comparison}
+\end{figure}
+Lastly, we consider the question what would be the best (single) style marker set that most contribute as an addition to bag of words in our model.
+We've tested each style marker feature set combined with the bag of words feature set, and concluded that the number of characters is most likely to contribute to the accuracy of bag of words, as illustrated in figure \ref{fig:contribute}
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\textwidth]{"figures/contribute"}
+	\caption{Single Feature-set Contribution with Bag of Words}
+	\label{fig:feature comparison}
+\end{figure}
+
 \section{Results}
 \label{Results}
+
 \section{Further Work}
 \label{Further Work}
+
 possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
+
 \section{Acknowledgements}
 \label{Acknowledgements}
-\textbf{@ronen}\\
 We would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
 1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
 	\href{http://twitter4j.org/en/index.html}{Twitter4j site}\\
@@ -215,15 +232,16 @@ Full citation (TODO: need to further process the 'InProceedings' field):\\
   month = {december},
   location = {Osaka}
 }\\
-3. SVM\\
-4. Others?\\ 
+3. libSVM\\
 
 
 \begin{thebibliography}{9}
-
 \bibitem{rachel}
 	Rachel M. Green, John W. Sheppard
 	\textit{Comparing Frequency and Style based Features for Twitter Author Identification}
+\bibitem{chang}
+	Chih-Chung Chang and Chih-Jen Lin
+	\textit{LIBSVM : a library for support vector machines. ACM Transactions on Intelligent Systems and Technology, 2:27:1--27:27, 2011. Software available at http://www.csie.ntu.edu.tw/~cjlin/libsvm}
 \bibitem{qian}
 	Chen Qian, Tianchang He, Rao Zhang
 	\textit{Deep Learning based Authorship Identification}
@@ -239,6 +257,8 @@ Full citation (TODO: need to further process the 'InProceedings' field):\\
 \bibitem{stamatatos}
 	Efstathios Stamatatos
 	\textit{A Survey of Modern Author ship Attribution Methods}
-	
+\bibitem{moretsarfatycoling2016}
+	Amir More and Reut Tsarfaty,
+	\textit{Data-Driven Morphological Analysis and Disambiguation for Morphologically Rich Languages and Universal Dependencies, Proceedings of COLING, 2016}
 \end{thebibliography}
 \end{document}

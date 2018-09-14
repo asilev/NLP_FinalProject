@@ -113,8 +113,9 @@ public class LogisticRegressionModel {
 	
 	public static void main(String[] args) throws Exception {
 		// Usage: LogisticRegression <input folder> <encoding>
+		int numOfAuthors = 10;
 		StructuredDataReader dataReader = new StructuredDataReader(args[0], args[1]);
-		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold", 10);
+		Map<String, List<List<MorphemeRecord>>> data = dataReader.readStructuredData("gold", numOfAuthors);
 //		model.features.add(FeatureType.NumberOfMorphemes);
 //		model.features.add(FeatureType.AverageNumberOfPunctuationMarks);
 //		model.features.add(FeatureType.AverageSentenceSize);
@@ -125,7 +126,7 @@ public class LogisticRegressionModel {
 //		model.features.add(FeatureType.PosUsage);
 		model.features.add(FeatureType.BagOfWords);
 		trainingData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
-		data = dataReader.readStructuredData("test", 10);
+		data = dataReader.readStructuredData("test", numOfAuthors);
 		testData = FeatureSelector.buildFeaturesVector(data, ZERO_INDEX, model);
 		
 		HashSet<String> labelSet = new HashSet<>();
@@ -165,7 +166,7 @@ public class LogisticRegressionModel {
 			}
 		}
 		success = success / testData.size();
-		System.out.println("Success Ration: "+success);
+		System.out.println("Success Ratio: "+success);
 	}
 
 	private static void saveToFile(String thetasFilename, Map<String, Double> thetas) throws IOException {
