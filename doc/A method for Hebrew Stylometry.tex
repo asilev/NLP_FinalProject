@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[a4paper]{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
 %\usepackage{enumitem}
@@ -17,7 +17,7 @@
 \maketitle
 \begin{abstract}
 
-Given a set of short text messages in Hebrew, we attempt to classify each message\footnote{We use the term ``Message" to a single datum in our data set, as opposed to ``Sentence", since in many cases, a single datum contains more than one syntactic ``sentence".} to it respective author, according to its style of writing.
+Given a set of short text messages in Hebrew, we attempt to classify each message\footnote{We use the term ``Message" to a single datum in our data set, as opposed to ``Sentence", since in many cases, a single datum contains more than one syntactic ``sentence".} to its respective author, according to its style of writing.
 We use Tweeter as our data set, and we've checked 10 users with approximately several thousands of tweets per user to train our model.
 We then use a different set of several hundreds of tweets per user in order to evaluate our model's accuracy.
 We've noticed that Support Vector Machine provides a slightly better accuracy for author identification, and using 17 style marker features is worse than simple bag of words model. Trying to use more sophisticated models such as stemming and 2-grams, did not improve the accuracy. We've also tested what single feature would best improve bag of words accuracy, and found that the amount of characters was slightly better than any other style marker.
