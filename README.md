@@ -7,7 +7,7 @@ the code of this project is arrange according to the architecture shown in https
 
 The files in TwitterReader are used to retrieve data sets from Twitter, using the twitter4j framework.
 This folder is meant to be compiled and run as a standalone executable with its own main method (Twitter4j is provided in a pre-compiled JAR library, twitter4j-core-4.0.4.jar, imported into the project).
-Running it requires one parameter, which is the output path (where to put the tweets from tweeter, in two formats - rawa and normalized).
+Running it requires one parameter, which is the output path (where to put the tweets from tweeter, in two formats - raw and normalized).
 After reading the raw data, our code "normalizes" (or re-fromats) the data received in order to prepare it for processing by the YAP library.
 In this process, two sets of files are generated - for each user, the raw data file named "ID_username.txt" (ID is a serial number starting with 00) and a normalized file named the same, with the suffix "-normalized".
 
