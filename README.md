@@ -55,3 +55,5 @@ We used the windows executable version of svmlib, in the following manner:
 * running svm-predict.txt <name of evaluation / scaled evaluation input file> <name of training / scaked training model file> eval
 * The output of the svm-predict was saved as the accuracy of the model.
 Examples of python scripts that we used for this process can be found in resources folder.
+
+The last class we've used is the "ConfusionMatrixBuilder", that takes a tagged evaluation file and an actual evaluation from libSVM, and creates the confusion matrix for these parameters. This currently assumes 10 authors exactly.
