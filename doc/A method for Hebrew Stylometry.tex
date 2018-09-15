@@ -28,8 +28,8 @@ We've noticed that Support Vector Machine provides a slightly better accuracy fo
 \end{abstract}
 \section{Introduction}
 
-Stylometry is the practice being used to identify an author based on his style of writing. In today's vastly popular social media, establishing identify of writers can be useful in several ways – identifying anonymous talkback writers, identifying anonymous internet trolls, locating a person using collection of text messages (SMS) in given area, identify frauds of chatbots and more.
-While stylometry has been used historically to identity authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts such as Facebook, Twitter, etc. \citep{green}
+Stylometry is the practice being used to identify an author based on his style of writing. In today's vastly popular social media, establishing identity of writers can be useful in several ways -– identifying anonymous talkback writers, identifying anonymous internet trolls, locating a person using collection of SMSs \footnote{Short Message Service} in given area, identify frauds of chatbots and more.
+While stylometry has been used historically to identity authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS and social media posts such as Facebook, Twitter, etc. \citep{green}
 Recently, more novel approaches were suggested for stylometry that utilize algorithms in machine learning and deep learning, to improve accuracy of stylometry on short texts.
 These works rely on several learning models, such as Support Vector Machine \citep{green}, \citep{schwartz}.
 These works also suggest different approaches to features selection. The study of feature selection may not be suitable to any language, as different languages may hold different features that may be suitable to a more accurate system.
@@ -48,7 +48,7 @@ Finally, we conclude our work in section \ref{Conclusion}.
 
 There has been significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
 On longer texts, usually satisfactory-high results were achieved. \citep{qian} showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved a verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
-However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. \citep{rachel} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
+However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. \citep{green} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
 \citep{schwartz} experimented (among other criteria) with varying training set sizes and number of authors. They demonstrated an improvement in accuracy from 49.5\% (50 tweets per 50 authors) to 69.7\% (larger amount of tweets per 50 authors), but with a large number of authors (1000) showed 30.3\% accuracy (using 200 tweets/author), which correlates to the trend shown in other works as well. Albeit, 30.3\% is still  distinguishably better than the random baseline of 0.1\%.
 This trend is further validated in the work of \citep{brocardo}, albeit their work was founded on emails from the Enron data-set (200K emails from 150 users, average number of words per email is 200). Their techniques were based on a combination of supervised learning and n-gram analysis. Even after applying a few pre-processing operations on the text (e.g. e-mails were combined to produce a single long message per individual, and then divided into smaller blocks used for authorship verification), their experiments yielded an EER (an Equal Error Rate metric used by the authors which corresponds to the operating point where False Acceptance and False Rejection rates have the same value) of 14.35\% for 87 users for relatively small block sizes.\\
 It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by \citep{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authors, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
@@ -115,7 +115,7 @@ The process itself is not particularly language specific, but since writing styl
 
 \subsection{Feature Selection and Benchmarking}
 
-There are several approaches to features selection. For example, \citep{rachel} compared two approaches, namely bag of words vs.\ style markers.
+There are several approaches to features selection. For example, \citep{green} compared two approaches, namely bag of words vs.\ style markers.
 While testing each of these approaches ourselves, we suggest a more generalized approach that also tests combinations of these approaches, by using some features as words from bag of words model, and some \emph{additional} features as style markers.
 We also tested other approaches, such as N-Grams and POS analysis. The list features we used is:
 \begin{itemize}
@@ -190,6 +190,10 @@ This may show that style is hard to identify, and it is better to use a model th
 Scaling the features before training and evaluating was proven useless.
 When it comes to type of feature sets, a simple bag of words model was proven better than many more sophisticated models. We assume that the low number of tested features in the feature style model is the reason this approach was not accurate enough. A combination of bag of words with a single style marker feature showed only limited improvement, and the full case of style marker features was not tested.
 Trying to figure the most helpful single style feature that can contribute to the Bag of Words model again resulted with a non sophisticated number of characters result. This shows us that the number of characters is a good distinguisher of identity, and that it is loosely dependent on the choice of words.
+Appendix \ref{apx:confusion matrix} shows the confusion matrix of our best model (Bag of Words with Number of Characters).
+We can see that according to the matrix, all authors had more hits for themselves than for any other author.
+We also see that some authors in our data set are much more distinguishable than others. For example, Guy Rolnik was correctly identified as himself 71.48\% of the time, While Tal Schneider was identified was correctly identified as herself only 28.38\% of the time.
+
 
 \section{Further Work}
 \label{Further Work}
@@ -204,11 +208,7 @@ Also, this research used small data sets, where it is easy to gain much more dat
 Specifically, it can be interesting to check on more areas of work of the tested users.
 Hebrew has some unique style based features that can be used as basis for identification, such as letter repetitions, deliberated typos and slang usage. Since our corpus was taken from the tweets of journalists, these unique style based features was not seen.
 We could use for journalism a sentiment analysis approach, and we suppose that this approach can help achieve good improvement, and can also be good idea for further research.
-
-%(@asi - not sure this is the right place to put the following paragraph, but I wanted to relate to one of the points in the submission guidelines)
-%One of the things that made our task difficult is the extensive time it took for training in relation to the number of authors examined. We noticed that this time duration grew almost exponentially; running a small number of authors (2-5) could take from a few minutes to a few hours. As the number of authors grew, the execution time increased to day(s), which given the time-frame at hand impeded our ability to explore further.
-% asi: I think we should not criticise YAP...
-%Another challenge we noticed is the performance of the YAP parser - after running its disambiguation command, we noticed a non-trivial amount of errors in its parsing. We did not have time to explore other parsers, and it's unclear as to how these errors affected the authorship detection, but this is an issue we would have loved to explore further.
+Lastly, Using the confusion matrix, we can further investigate what makes our model better, and what makes it fail.
 
 \section{Conclusion}
 \label{Conclusion}
@@ -216,90 +216,55 @@ We could use for journalism a sentiment analysis approach, and we suppose that t
 Our attempt to research the capabilities of machine learning with NLP methods for Hebrew stylometry with Hebrew driven methods such as morphological analysis and disambiguation POS analysis provided results similar to those of works on the English language, without those Hebrew driven methods.
 Still, our model's accuracy was quite the same as those of work performed on English based models, and we assume that with better models and more training our model can provide even better accuracy.
 
-%\section{Acknowledgments}
-%\label{Acknowledgements}
-%
-%We would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
-%1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
-%	\href{http://twitter4j.org/en/index.html}{Twitter4j site}\\
-%2. YAP: Yet Another Parser is a parser written in Go, developed by \emph{Amir More and Reut Tsarfaty} and is publicly available for research purposes. We used the major two functions of YAP - Pipeline Morphological Analysis and Disambiguation. For more information: 
-%		\href{https://github.com/habeanf/yap}{YAP on GitHub site}\\
-%Full citation (TODO: need to further process the 'InProceedings' field):\\
-%@InProceedings{moretsarfatycoling2016,
-%  author = {Amir More and Reut Tsarfaty},
-%  title = {Data-Driven Morphological Analysis and Disambiguation for Morphologically Rich Languages and Universal Dependencies},
-%  booktitle = {Proceedings of COLING 2016},
-%  year = {2016},
-%  month = {december},
-%  location = {Osaka}
-%}\\
-%3. libSVM\\
-
 \bibliography{citation-287188044}
 \bibliographystyle{plainnat}
 
-
-%\begin{thebibliography}{9}
-%\bibitem[Rachel M. Green and John W. Sheppard(2013)]{rachel}
-%	Rachel M. Green, John W. Sheppard
-%	\textit{Comparing Frequency and Style based Features for Twitter Author Identification}
-%\bibitem{chang}
-%	Chih-Chung Chang and Chih-Jen Lin
-%	\textit{LIBSVM : a library for support vector machines. ACM Transactions on Intelligent Systems and Technology, 2:27:1--27:27, 2011. Software available at http://www.csie.ntu.edu.tw/~cjlin/libsvm}
-%\bibitem{qian}
-%	Chen Qian, Tianchang He, Rao Zhang
-%	\textit{Deep Learning based Authorship Identification}
-%\bibitem{schwartz}
-%	Roy Schwartz, Oren Tsur, Ari Rappoport, Moshe Koppel
-%	\textit{Authorship Attribution of Micro-Messages}
-%\bibitem{brocardo}
-%	Marcelo Luiz Brocardo, Issa Traore, Sherif Saad, Isaac Woungang
-%	\textit{Authorship Verification for Short Messages using Stylometry}
-%\bibitem{rabab}
-%	Abdullateef Rabab’ah, Mahmoud Al-Ayyoub, Yaser Jararweh, Monther Aldwairi
-%	\textit{Authorship Attribution of Arabic Tweets}
-%\bibitem{stamatatos}
-%	Efstathios Stamatatos
-%	\textit{A Survey of Modern Author ship Attribution Methods}
-%\bibitem{moretsarfatycoling2016}
-%	Amir More and Reut Tsarfaty,
-%	\textit{Data-Driven Morphological Analysis and Disambiguation for Morphologically Rich Languages and Universal Dependencies, Proceedings of COLING, 2016}
-%\end{thebibliography}
-
+\clearpage
+\onecolumn
 \begin{appendices}
 \section{Data Set}
 \label{apx:data set}
-% Table generated by Excel2LaTeX from sheet 'Sheet1'
-\begin{table}[htbp]
-  \centering
-    \begin{tabular}{lcp{5.715em}cc}
-    \textbf{User Name} & \multicolumn{1}{p{7.57em}}{\textbf{User ID}} & \textbf{Area of Work} & \multicolumn{1}{p{5.57em}}{\textbf{Number of Tweets}} & 		\multicolumn{1}{p{12.855em}}{\textbf{Number of Tweets after Pre-Processing and YAP}} \\
-    Ben Caspit & \multicolumn{1}{p{7.57em}}{bencaspit} & Political journalist & 4136  & 2912 \\
-    Nadav Eyal & \multicolumn{1}{p{7.57em}}{NadavEyalDesk} & Political journalist & 4391  & 2971 \\
-    Amit Segal & \multicolumn{1}{p{7.57em}}{amit\_segal} & Political journalist & 3552  & 3160 \\
-    Ayala Hasson & \multicolumn{1}{p{7.57em}}{AyallaHasson} & Political journalist & 3143  & 2569 \\
-    Guy Rolnik & \multicolumn{1}{p{7.57em}}{grolnik} & Financial Journalist & 4639  & 3032 \\
-    Tal Schneider & \multicolumn{1}{p{7.57em}}{talschneider} & Political Commentator & 4141  & 2700 \\
-    Alon Ben-David & \multicolumn{1}{p{7.57em}}{alonbd} & Military Journalist & 3568  & 3024 \\
-    Rino Zror & \multicolumn{1}{p{7.57em}}{RinoZror} & Political journalist & 3824  & 3173 \\
-    Or Heller & \multicolumn{1}{p{7.57em}}{OrHeller} & Political journalist & 3693  & 3128 \\
-    Baruch Kra & \multicolumn{1}{p{7.57em}}{baruchikra} & \multicolumn{1}{r}{} & 2540  & 2374 \\
-%    Udi Segal & \multicolumn{1}{p{7.57em}}{usegal} & Political journalist & 8406  & 2498 \\
-%    Keren Neubach & \multicolumn{1}{p{7.57em}}{kereneubach} & Reporter & 4158  & 3132 \\
-%    Shaul Amsterdamski & \multicolumn{1}{p{7.57em}}{amsterdamski2} & Financial Journalist & 10523 & 3002 \\
-%    Roy Sharon & \multicolumn{1}{p{7.57em}}{roysharon} & Military Journalist & 3782  & 3192 \\
-%    Akiva Novick & \multicolumn{1}{p{7.57em}}{akivanovick} & Parliamentary journalist & 3886  & 3196 \\
-%    Sefi Ovadia & \multicolumn{1}{p{7.57em}}{sefiova} & Political journalist & 1745  & 1410 \\
-%    Yoaz Hendel & \multicolumn{1}{p{7.57em}}{YoazHendel1} & Political Advisor and Commentator & 4633  & 3201 \\
-%    Dan Margalit & \multicolumn{1}{p{7.57em}}{Danmargalit} & Journalist and Commentator & 3310  & 3218 \\
-%    Sivan Rahav-Meir & \multicolumn{1}{p{7.57em}}{SivanRahav} & Political journalist & 3854  & 3232 \\
-%    Zion Nanous & \multicolumn{1}{p{7.57em}}{zionnenko} & News journalist & 3945  & 3209 \\
-%    \textbf{Total} & \textbf{20} & \textbf{N/A} & \textbf{85869} & \textbf{58333} \\
-    \textbf{Total} & \textbf{10} & \textbf{N/A} & \textbf{37,627} & \textbf{29,043} \\
-    \end{tabular}%
-  \caption{Data Statistics}
-  \label{tab:datastats}%
-\end{table}%
+\begin{table*}[htbp]
+	\centering
+		\begin{tabular}{| l | l | l | l | p{4cm} |}
+		\hline
+		\textbf{User Name} & \textbf{User ID} & \textbf{Area of Work} & \textbf{Number of Tweets} & \textbf{Number of Tweets after Pre-Processing and YAP} \\ \hline
+    Ben Caspit & bencaspit & Political journalist & 4136  & 2912 \\ \hline
+    Nadav Eyal & NadavEyalDesk & Political journalist & 4391  & 2971 \\ \hline
+    Amit Segal & amit\_segal & Political journalist & 3552  & 3160 \\ \hline
+    Ayala Hasson & AyallaHasson & Political journalist & 3143  & 2569 \\ \hline
+    Guy Rolnik & grolnik & Financial Journalist & 4639  & 3032 \\ \hline
+    Tal Schneider & talschneider & Political Commentator & 4141  & 2700 \\ \hline
+    Alon Ben-David & alonbd & Military Journalist & 3568  & 3024 \\ \hline
+    Rino Zror & RinoZror & Political journalist & 3824  & 3173 \\ \hline
+    Or Heller & OrHeller & Political journalist & 3693  & 3128 \\ \hline
+    Baruch Kra & baruchikra &  & 2540  & 2374 \\ \hline
+	\textbf{Total} & \textbf{10} & \textbf{N/A} & \textbf{37,627} & \textbf{29,043} \\ \hline
+\end{tabular}
+\caption{Data Statistics}
+\label{tab:datastats}%
+\end{table*}
+
+\section{Confusion Matrix}
+\label{apx:confusion matrix}
+
+\begin{table*}[htbp]
+	\centering
+		\begin{tabular}{|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|p{1.1cm}|}
+		\hline
+		& \textbf{Ben Caspit} & \textbf{Nadav Eyal} & \textbf{Amit Segal} & \textbf{Ayala Hasson} & \textbf{Guy Rolnik} & \textbf{Tal Schneider} & \textbf{Alon Ben-David} & \textbf{Rino Zror} & \textbf{Or Heller} & \textbf{Baruch Kra} \\ \hline
+		\textbf{Ben Caspit} & 44.82\% & 5.18\% & 8.08\% & 2.78\% & 3.66\% & 5.30\% & 3.41\% & 20.58\% & 1.89\% & 4.29\% \\ \hline
+		\textbf{Nadav Eyal} & 15.49\% & 32.75\% & 10.92\% & 4.93\% & 4.58\% & 5.75\% & 6.10\% & 11.74\% & 3.29\% & 4.46\%\\ \hline
+		\textbf{Amit Segal} & 9.56\% & 7.22\% & 43.78\% & 4.89\% & 10.22\% & 4.89\% & 2.78\% & 8.44\% & 2.00\% & 6.22\%\\ \hline
+		\textbf{Ayala Hasson} & 15.15\% & 4.97\% & 10.18\% & 41.70\% & 4.97\% & 3.15\% & 1.45\% & 13.58\% & 0.73\% & 4.12\%\\ \hline
+		\textbf{Guy Rolnik} & 5.77\% & 3.22\% & 5.88\% & 1.66\% & 71.48\% & 4.11\% & 1.55\% & 3.88\% & 0.89\% & 1.55\%\\ \hline
+		\textbf{Tal Schneider} & 12.64\% & 11.90\% & 12.02\% & 4.46\% & 4.96\% & 28.38\% & 3.72\% & 15.37\% & 2.35\% & 4.21\%\\ \hline
+		\textbf{Alon Ben-David} & 12.31\% & 4.71\% & 6.21\% & 5.46\% & 1.82\% & 2.03\% & 45.40\% & 7.82\% & 11.35\% & 2.89\%\\ \hline
+		\textbf{Rino Zror} & 19.20\% & 2.84\% & 4.80\% & 4.41\% & 3.72\% & 3.43\% & 0.88\% & 56.51\% & 1.96\% & 2.25\%\\ \hline
+		\textbf{Or Heller} & 10.49\% & 2.80\% & 4.90\% & 4.00\% & 5.09\% & 1.90\% & 16.58\% & 12.09\% & 39.16\% & 3.00\%\\ \hline
+		\textbf{Baruch Kra} & 13.91\% & 4.95\% & 12.67\% & 6.96\% & 9.27\% & 4.79\% & 2.01\% & 10.66\% & 2.63\% & 32.15\%\\ \hline		
+		\end{tabular}
+\end{table*}
 
 \end{appendices}
 \end{document}
