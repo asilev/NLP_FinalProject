@@ -24,7 +24,7 @@ We've noticed that Support Vector Machine provides a slightly better accuracy fo
 \end{abstract}
 \section{Introduction}
 
-Stylometry is the practice being used to identify an author based on his style of writing.
+Stylometry is the practice being used to identify an author based on his style of writing. In today's vastly popular social media, establishing identify of writers can be useful in several ways – identifying anonymous talkback writers, identifying anonymous internet trolls, locating a person using collection of text messages (SMS) in given area, identify frauds of chatbots and more.
 While stylometry has been used historically to identify authors of long texts such as novels and plays, legacy practices were proven inefficient when applied to short text messages such as SMS\footnote{Short Message Service} and social media posts such as Facebook, Twitter, etc. \cite{rachel}
 Recently, more novel approaches were suggested for stylometry that utilize algorithms in machine learning and deep learning, to improve accuracy of stylometry on short texts.
 These works rely on several learning models, such as Support Vector Machine \cite{rachel}, \cite{schwartz}.
@@ -119,13 +119,13 @@ Table \ref{tab:datastats} summarizes the statistics of the data we used in our e
 
 \subsection{Data Preparation}
 
-In order to conduct our experiments we could not use the data we extracted via the Twitter API ``as-is". The tweets we extracted directly from the Twitter API were in JSON format containing an abundance of information (content and meta-data) such as creation date, links, re-tweets, mentions, etc. This format not only includes more information than needed for the task at hand, but is also impossible to be processed by a morphological analyser (such as YAP). As such, we needed to apply a series of normalization operations on the raw data, in order to be able to run YAP on it, and get the suitable output we needed to continue with the other steps in the model (see figure \ref{fig:architecture}).
+In order to conduct our experiments we could not use the data we extracted via the Twitter API ``as-is". The tweets we extracted directly from the Twitter API were in JSON format containing an abundance of information (content and meta-data) such as creation date, links, re-tweets, mentions, etc. This format not only includes more information than needed for the task at hand, but is also impossible to be processed by a morphological analyzer (such as YAP). As such, we needed to apply a series of normalization operations on the raw data, in order to be able to run YAP on it, and get the suitable output we needed to continue with the other steps in the model (see figure \ref{fig:architecture}).
 We performed the following operations on the raw tweet data in order to prepare it for YAP morphological analysis:\\
 \begin{enumerate}
 	\item Strip any meta-data information
 	\item Ignore/omit any re-tweets: As we're interested in the style of only the particular author, text from other authors can only impede the analysis
 	\item Remove English words and characters
-	\item Leave punctuation marks
+	\item Leave punctuation marks and numbers
 	\item Formatting: For each message, format it such that each word (or punctuation mark) is in its own line, and tweets are separated from one to another by an empty line.
 \end{enumerate}
 The above steps generated a ``normalized" input file, per author, ready to be processed by YAP. We then executed two YAP commands - morphological analysis and dis-ambiguity. The output from these operations was a file (per author) containing all the tweets after analysis, resulting in the following information for each tweet:\\
@@ -138,6 +138,7 @@ The above steps generated a ``normalized" input file, per author, ready to be pr
 \item \textbf{Single or Plural}
 \item \textbf{Person Attribute (first, second, etc.)}
 \end{itemize}
+It's worth to notice that in general the process described herein is not language-specific, however the usage of YAP (and of course the steps of preparing the raw data to be ready for YAP processing) are the ones that link our work to Hebrew.
 
 \subsection{Feature Selection and Benchmarking}
 
@@ -211,12 +212,15 @@ We've tested each style marker feature set combined with the bag of words featur
 
 \section{Further Work}
 \label{Further Work}
+(@asi - not sure this is the right place to put the following paragraph, but I wanted to relate to one of the points in the submission guidelines)
+One of the things that made our task difficult is the extensive time it took for training in relation to the number of authors examined. We noticed that this time duration grew almost exponentially; running a small number of authors (2-5) could take from a few minutes to a few hours. As the number of authors grew, the execution time increased to day(s), which given the time-frame at hand impeded our ability to explore further.
+Another challenge we noticed is the performance of the YAP parser - after running its disambiguation command, we noticed a non-trivial amount of errors in its parsing. We did not have time to explore other parsers, and it's unclear as to how these errors affected the authorship detection, but this is an issue we would have loved to explore further.
 
 possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
 
-\section{Acknowledgements}
+\section{Acknowledgments}
 \label{Acknowledgements}
 We would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
 1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
