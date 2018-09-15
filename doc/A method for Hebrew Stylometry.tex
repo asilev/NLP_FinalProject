@@ -155,11 +155,12 @@ Figure \ref{fig:LR vs. SVM} illustrates accuracy evaluations of logistic regress
 \end{figure}
 Since we've seen that results were less accurate comparing to SVM, we chose to use SVM as our model for further research.
 We now check if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
+This check was conducted for a data set of 10 authors.
 For Style marker, scaling features provided an accuracy of 21.81\%, while not scaling features provided a slightly better results of 22.42\%.
 We also tested SVM feature scaling with simple Bag of Words feature set.
 Non scaled simple Bag of Words provided accuracy of 43.89\%, and scaled simple Bag of Words provided 43.59\%.
 We conclude that feature scaling is useless for both style markers and bag of words.
-Next, we turn to test other feature sets. These models were all tested with SVM, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
+Next, we turn to test other feature sets. These models were all tested with 10 authors data set, SVM model, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
 \begin{itemize}
 \item \textbf{\emph{Bag of Stemmed Words (BOSW)}}: Instead of using the original morphemes, we've used the stemmed version.
 \item \textbf{\emph{Bag of Bigrams (BOBW)}}: Each feature is a pair of subsequent words. Start of sentence and End of sentence symbols added to each sentence.
@@ -169,15 +170,15 @@ This comparison showed that the most simple bag of words provides the most accur
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.5\textwidth]{"figures/feature_comparison"}
-	\caption{Feature Comparison}
+	\caption{Feature Comparison for 10 authors}
 	\label{fig:feature comparison}
 \end{figure}
 Lastly, we consider the question what would be the best (single) style marker set that most contribute as an addition to bag of words in our model.
-We've tested each style marker feature set combined with the bag of words feature set, and concluded that the number of characters is most likely to contribute to the accuracy of bag of words, as illustrated in figure \ref{fig:contribute}.
+We've tested each style marker feature set combined with the bag of words feature set on our 10 authors data set, and concluded that the number of characters is most likely to contribute to the accuracy of bag of words, as illustrated in figure \ref{fig:contribute}.
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.5\textwidth]{"figures/contribute"}
-	\caption{Single Feature-set Contribution with Bag of Words}
+	\caption{Single Feature-set Contribution with Bag of Words for 10 authors}
 	\label{fig:contribute}
 \end{figure}
 
@@ -185,7 +186,7 @@ We've tested each style marker feature set combined with the bag of words featur
 \label{Results}
 
 Comparing Logistic Regression with Support Vector Machine learning models with style marker feature sets yields a slightly better results for SVM.
-This may show that style is hard to identify, and it is better 
+This may show that style is hard to identify, and it is better to use a model that separates the classes better.
 Scaling the features before training and evaluating was proven useless.
 When it comes to type of feature sets, a simple bag of words model was proven better than many more sophisticated models. We assume that the low number of tested features in the feature style model is the reason this approach was not accurate enough. A combination of bag of words with a single style marker feature showed only limited improvement, and the full case of style marker features was not tested.
 Trying to figure the most helpful single style feature that can contribute to the Bag of Words model again resulted with a non sophisticated number of characters result. This shows us that the number of characters is a good distinguisher of identity, and that it is loosely dependent on the choice of words.
