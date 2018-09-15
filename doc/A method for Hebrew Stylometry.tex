@@ -138,7 +138,7 @@ The above steps generated a ``normalized" input file, per author, ready to be pr
 \item \textbf{Single or Plural}
 \item \textbf{Person Attribute (first, second, etc.)}
 \end{itemize}
-It's worth to notice that in general the process described herein is not language-specific, however the usage of YAP (and of course the steps of preparing the raw data to be ready for YAP processing) are the ones that link our work to Hebrew.
+The process itself is not particularly language specific, but since writing style is a language specific feature, results may very compared to work on different languages. Also, in our work we are not checking specific words for identification, and instead we use morphemes as base units of a message, as Hebrew is rich with word internal morphemes.
 
 \subsection{Feature Selection and Benchmarking}
 
@@ -183,8 +183,9 @@ Figure \ref{fig:LR vs. SVM} illustrates accuracy evaluations of logistic regress
 Since we've seen that results were less accurate comparing to SVM, we chose to use SVM as our model for further research.
 We now check if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
 For Style marker, scaling features provided an accuracy of 21.81\%, while not scaling features provided a slightly better results of 22.42\%.
-We now test SVM with simple Bag of Words feature set.
-Non scaled simple Bag of Words provided accuracy of 43.89\%, and scaled simple Bag of Words provided ****TBD****.
+We also tested SVM feature scaling with simple Bag of Words feature set.
+Non scaled simple Bag of Words provided accuracy of 43.89\%, and scaled simple Bag of Words provided 43.59\%.
+We conclude that feature scaling is useless for both style markers and bag of words.
 Next, we turn to test other feature sets. These models were all tested with SVM, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
 \begin{itemize}
 \item \textbf{\emph{Bag of Stemmed Words (BOSW)}}: Instead of using the original morphemes, we've used the stemmed version.
@@ -212,9 +213,10 @@ We've tested each style marker feature set combined with the bag of words featur
 
 \section{Further Work}
 \label{Further Work}
-(@asi - not sure this is the right place to put the following paragraph, but I wanted to relate to one of the points in the submission guidelines)
+%(@asi - not sure this is the right place to put the following paragraph, but I wanted to relate to one of the points in the submission guidelines)
 One of the things that made our task difficult is the extensive time it took for training in relation to the number of authors examined. We noticed that this time duration grew almost exponentially; running a small number of authors (2-5) could take from a few minutes to a few hours. As the number of authors grew, the execution time increased to day(s), which given the time-frame at hand impeded our ability to explore further.
-Another challenge we noticed is the performance of the YAP parser - after running its disambiguation command, we noticed a non-trivial amount of errors in its parsing. We did not have time to explore other parsers, and it's unclear as to how these errors affected the authorship detection, but this is an issue we would have loved to explore further.
+% asi: I think we should not criticise YAP...
+%Another challenge we noticed is the performance of the YAP parser - after running its disambiguation command, we noticed a non-trivial amount of errors in its parsing. We did not have time to explore other parsers, and it's unclear as to how these errors affected the authorship detection, but this is an issue we would have loved to explore further.
 
 possible under discussion, if more subsections required
 \section{Conclusion}
