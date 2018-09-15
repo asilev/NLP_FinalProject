@@ -16,8 +16,6 @@ After built into an executable tool, we used YAP with two commands:
 "yap hebma -raw input.raw -out lattices.conll": This command runs YAP as a morphological analyzer. The ouptut file "lattices.conll" is then fed to the second command - 
 "yap md -in lattices.conll -om output.conll": This command runs YAP disambiguation function and outputs the file "output.conll" which provides, for each tweet, its morphological analysis, allowing us to continue with the simulations.
  
-** TODO: Also, resources should be moved the a dedicated folder for resouces (YAP outputs, twetter outputs, etc.).**
-
 The files in Feature model are helper classes that help arrange the output data from YAP according to different types of feature sets:
 **AllFeaturesModel** creates a vector with all the features from other models.
 **BagOfWordsModel** has several static methods that create different types of vectors, where each feature in the vector is a word or word-based feature (bi-gram, word with POS, stemmed word, etc.).
