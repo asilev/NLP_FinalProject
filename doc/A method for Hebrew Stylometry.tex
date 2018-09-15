@@ -21,10 +21,10 @@
 \maketitle
 \begin{abstract}
 
-Given a set of short text messages in Hebrew, we attempt to classify each message\footnote{We use the term ``Message" as a single datum in our data set, as opposed to ``Sentence", since in many cases, a single datum contains more than one syntactic ``sentence".} to its respective author, according to its style of writing.
+Given a set of short text messages in Hebrew, we attempt to classify each message\footnote{We use the term ``Message" as a single datum in our data set, as opposed to ``Sentence", since in many cases, a single datum contains more than one syntactic ``sentence".} to its respective author, according to its style of writing, using supervised machine learning technique.
 We use Tweeter as our data set, and we've checked 10 users with approximately several thousands of tweets per user to train our model.
 We then use a different set of several hundreds of tweets per user in order to evaluate our model's accuracy.
-We've noticed that Support Vector Machine provides a slightly better accuracy for author identification, and using 17 style marker features is worse than simple bag of words model. Trying to use more sophisticated models such as stemming and 2-grams, did not improve the accuracy either. We've also tested what single feature would best improve bag of words accuracy, and found that the amount of characters was slightly better than any other style marker.
+We've noticed that Support Vector Machine provides a slightly better accuracy for author identification than Logistic Regression, and using 17 style marker features was proved worse than a simple ``Bag of Words" model. Trying to use more sophisticated models such as stemming and 2-grams, did not improve the accuracy either. We've also tested what single feature would best improve bag of words accuracy, and found that the amount of characters was slightly better than any other style marker.
 \end{abstract}
 \section{Introduction}
 
@@ -34,7 +34,7 @@ Recently, more novel approaches were suggested for stylometry that utilize algor
 These works rely on several learning models, such as Support Vector Machine \citep{green}, \citep{schwartz}.
 These works also suggest different approaches to features selection. The study of feature selection may not be suitable to any language, as different languages may hold different features that may be suitable to a more accurate system.
 In this work we started an initial research and benchmarking on the influence of different learning models and feature-sets, in order to learn more about which of these models and features influence on the accuracy of a possible stylometry system for short messages \emph{in Hebrew}.
-Code and resource used for this work can be found on our github repository: \url{https://github.com/asilev/NLP\_FinalProject} and on libsvm's site: \url{https://www.csie.ntu.edu.tw/~cjlin/libsvm/} \citep{chang}
+Source code and resources used for this work can be found on our github repository: \url{https://github.com/asilev/NLP\_FinalProject} and on libsvm's site: \url{https://www.csie.ntu.edu.tw/~cjlin/libsvm/} \citep{chang}
 
 This document is arranged according to the following order:
 We begin by describing related work this article relies on in section \ref{Related Work}.
@@ -46,9 +46,9 @@ Finally, we conclude our work in section \ref{Conclusion}.
 \section{Related Work}
 \label{Related Work}
 
-There has been significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
+There has been a significant amount of work and progress achieved in the past 10-15 years in the field of author classification and identification based on their texts, initially ranging from a few paragraphs to complete books. As the usage of emails in general, and social media in particular, became increasingly popular, significant amounts of work were invested in shorter texts.
 On longer texts, usually satisfactory-high results were achieved. \citep{qian} showed that deep learning models on authorship identification and authorship verification can yield an accuracy of 69.1\% on Reuters\_50\_50 (Reuters data-set) and 89.2\% on Gutenberg data-set (a data-set established by the authors), while Siamese network achieved a verification accuracy of 99.8\% on both Reuters\_50\_50 and Gutenberg data-sets.\\
-However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. \citep{green} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs. 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
+However, despite the vast amount of work invested, it is still challenging to achieve reasonably-high detection results on messages derived from the aforementioned social media (Twitter, Facebook, etc.), emails and such, especially as the number of authors increases; for a small set of authors (sometimes as low as 2) good results can be achieved. \citep{green} experimented with both BOW and Style Markers, and showed that SM is superior (average classification accuracy of 92.3\% vs.\ 76.7\%). However, this high classification rate was achieved on 2 authors, whereas increasing from 2 to 5 authors dropped the accuracy quickly (around 55\%) up to the lowest accuracy of 40\% reached on 12 authors.
 \citep{schwartz} experimented (among other criteria) with varying training set sizes and number of authors. They demonstrated an improvement in accuracy from 49.5\% (50 tweets per 50 authors) to 69.7\% (larger amount of tweets per 50 authors), but with a large number of authors (1000) showed 30.3\% accuracy (using 200 tweets/author), which correlates to the trend shown in other works as well. Albeit, 30.3\% is still  distinguishably better than the random baseline of 0.1\%.
 This trend is further validated in the work of \citep{brocardo}, albeit their work was founded on emails from the Enron data-set (200K emails from 150 users, average number of words per email is 200). Their techniques were based on a combination of supervised learning and n-gram analysis. Even after applying a few pre-processing operations on the text (e.g. e-mails were combined to produce a single long message per individual, and then divided into smaller blocks used for authorship verification), their experiments yielded an EER (an Equal Error Rate metric used by the authors which corresponds to the operating point where False Acceptance and False Rejection rates have the same value) of 14.35\% for 87 users for relatively small block sizes.\\
 It is important to notice that thus far the related works described herein are mostly involved with messages in the English language. In an overall perspective, little work was done on Semitic languages such as Hebrew and Arabic. The work done by \citep{rabab} on tweets in Arabic showed the best accuracy when employing SVM technique on a unified collection of features (more than 900) using tweets from 12 authors, usually around 3000 tweets per author. The best accuracy achieved was 68.67\%.\\
@@ -57,13 +57,13 @@ An excellent and comprehensive overview of modern authorship attribution methods
 \section{Architecture}
 \label{Architecture}
 
-Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.\\
+Figure \ref{fig:architecture} illustrates the architecture of the benchmarking platform we've built for this work.
 \begin{figure}[hb]
 	\centering
 	\includegraphics[width=.5\textwidth]{"architecture/NLP Author Classification Architecture"}
 	\caption{Platform Architecture}
 		\label{fig:architecture}
-\end{figure}\\
+\end{figure}
 
 We use ``Data Source" as the abstract utility to pull text from short messages source, and save the messages with the correct tagged author for each short message in a well formed structure.
 In here we've implemented the ``Data Source" with a ``Tweeter Data Source", that pulls information according to parameters such as time period and a list of users from tweeter.
@@ -81,14 +81,14 @@ We use the fraction of correctly identified authors as the evaluation metric.
 We now describe the benchmarking approach step by step, and describe how each step is implemented in our work.
 \subsection{Data Acquisition}
 
-We used the Twitter4j library \footnote{ Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: \href{http://twitter4j.org/en/index.html}{Twitter4j site}} in order to extract the tweets for 10 authors. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the ``getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See table \ref{tab:datastats} for more details.
+We used the Twitter4j library \footnote{ Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: \url{http://twitter4j.org/en/index.html}} in order to extract the tweets from twitter. Twitter4j is an unofficial yet a very popular library for using the Twitter API. As we needed to get thousands of tweets per user, we used the ``getUserTimeline()" API using paging (as Twitter API limits the number of tweets one can get in a single API call). Overall we executed 50 user timeline page API calls, with 200 tweets for each page. For most users this ended up with about 3000-4500 tweets, but obviously some had fewer and one had significantly more (around 10.5K). See table \ref{tab:datastats} in appendix \ref{apx:data set} for more details about the data-set.
 \subsection{Data Exploration}
 
 For this research, we've downloaded initially 85,869 tweets, from 20 different authors. Since we've seen that working with 20 authors is extremely slow to train and results are quite poor (also in other related works), we've downsized our data set to a more manageable size of 10 authors with 37,627 tweets.
 The average number of tweets per user is 3,763, and the standard deviation is 616.
 Going through parts of the data set, we've encountered some criteria that we consider not suitable to our research. The criteria is usage of languages other than Hebrew (at least one word is not in Hebrew), and retweets.
 After eliminating those cases, we've remained with 29,043 tweets. The average number of tweets per user is 2,904 and the standard deviation is 270.
-Table \ref{tab:datastats} in appendix \ref{apx:data set} summarizes the statistics of the data we used in our experiments after which being run through the steps depicted above, covering the authors (name and user ID), their area of work, the number of tweets we got using the Twitter4j API, and the number of tweets we ended up with after pre-processing (preparing the tweets in the format that YAP requires) and applying the YAP tool.\\
+Table \ref{tab:datastats} in appendix \ref{apx:data set} summarizes the statistics of the data we've used in our experiments after which being run through the steps depicted above, covering the authors (name and user ID), their area of work, the number of tweets we got using the Twitter4j API, and the number of tweets we ended up with after pre-processing (preparing the tweets in the format that YAP requires) and applying the YAP tool.\\
 
 \subsection{Data Preparation}
 
@@ -143,7 +143,7 @@ We tested each learning model for 2-10 authors.
 In logistic regression, we've used the following hyper parameters selection method:
 $\alpha$ was chosen by searching for the highest $\alpha$ that does not increase the value of the model's cost function. The value we've found ranges from 0.003 to 0.005, depends on the number of authors.
 The number of iterations was dynamically chosen, as the number of calculation that stabilizes the cost function on a change of \textless 0.0001 per iteration.
-For SVM, we've used the following grid search for hyper parameters C and $\gamma$, and we chose a polynomial kernel with 1 degree, as these hyper parameters were proven ideal for small cases we ran.
+For SVM, we've chosen a polynomial kernel with 1 degree, as these hyper parameters were proven ideal for small cases we ran. For the C and $\gamma$ hyper parameters, we've performed a grid search and ran the test on all combinations of values from the following list:
 We've used the following values for $\gamma$: (0.00003, 0.0001, 0.0005, 0.002, 0.008, 0.03125, 0.125, 0.5, 2, 8, 32, 128), and the following values for C: (0.03125, 0.125, 0.5, 2, 32, 8, 128, 512, 2048, 8192).
 For this test, we've seen that SVM provides slightly better results than Logistic Regression, and both models provide better results from a na\"ive guessing baseline. We can see the results in the following graph:
 Figure \ref{fig:LR vs. SVM} illustrates accuracy evaluations of logistic regression, SVM, and na\"ive baseline.
@@ -153,17 +153,17 @@ Figure \ref{fig:LR vs. SVM} illustrates accuracy evaluations of logistic regress
 	\caption{Logistic Regression, SVM, and baseline}
 		\label{fig:LR vs. SVM}
 \end{figure}
-Since we've seen that results were less accurate comparing to SVM, we chose to use SVM as our model for further research.
-We now check if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
+Since we've seen that logistic regression provides results that were less accurate comparing to SVM, we chose to use SVM as our model for further research.
+We've now checked if scaling the features can improve our results for SVM, for Style Marker and for Bag of Words.
 This check was conducted for a data set of 10 authors.
 For Style marker, scaling features provided an accuracy of 21.81\%, while not scaling features provided a slightly better results of 22.42\%.
 We also tested SVM feature scaling with simple Bag of Words feature set.
 Non scaled simple Bag of Words provided accuracy of 43.89\%, and scaled simple Bag of Words provided 43.59\%.
 We conclude that feature scaling is useless for both style markers and bag of words.
-Next, we turn to test other feature sets. These models were all tested with 10 authors data set, SVM model, unscaled, and the same hyper parameters that were found to provide best accuracy in the regular Bag of Words model. We've checked the following feature sets:
+Next, we turn to test other feature sets. These models were all tested with 10 authors data set, SVM model, unscaled, and the hyper parameters that were found to provide best accuracy in the regular Bag of Words model: C=8 and $\gamma$=0.03125. We've checked the following feature sets:
 \begin{itemize}
 \item \textbf{\emph{Bag of Stemmed Words (BOSW)}}: Instead of using the original morphemes, we've used the stemmed version.
-\item \textbf{\emph{Bag of Bigrams (BOBW)}}: Each feature is a pair of subsequent words. Start of sentence and End of sentence symbols added to each sentence.
+\item \textbf{\emph{Bag of Bigrams (BOBW)}}: Each feature is a pair of subsequent words. Start of sentence and end of sentence symbols added to each sentence.
 \item \textbf{\emph{Bag of POS-Words (BOPW)}}: Each feature is a morpheme, along with its Part of Speech.
 \end{itemize}
 This comparison showed that the most simple bag of words provides the most accurate results, as can be seen in figure \ref{fig:feature comparison}.
@@ -188,7 +188,7 @@ We've tested each style marker feature set combined with the bag of words featur
 Comparing Logistic Regression with Support Vector Machine learning models with style marker feature sets yields a slightly better results for SVM.
 This may show that style is hard to identify, and it is better to use a model that separates the classes better.
 Scaling the features before training and evaluating was proven useless.
-When it comes to type of feature sets, a simple bag of words model was proven better than many more sophisticated models. We assume that the low number of tested features in the feature style model is the reason this approach was not accurate enough. A combination of bag of words with a single style marker feature showed only limited improvement, and the full case of style marker features was not tested.
+When it comes to type of feature sets, a simple bag of words model was proven better than more sophisticated models. We assume that the low number of tested features in the feature style model is the reason this approach was not accurate enough. A combination of bag of words with a single style marker feature showed only limited improvement, and the full case of style marker features was not tested.
 Trying to figure the most helpful single style feature that can contribute to the Bag of Words model again resulted with a non sophisticated number of characters result. This shows us that the number of characters is a good distinguisher of identity, and that it is loosely dependent on the choice of words.
 Table \ref{tab:confusion matrix} in Appendix \ref{apx:confusion matrix} shows the confusion matrix of our best model (Bag of Words with Number of Characters).
 We can see that according to the matrix, all authors had more hits for themselves than for any other author.
@@ -206,7 +206,14 @@ We haven't checked more sophisticated learning models, such as neural networks a
 It would be also interesting to check more feature rich combinations, and check the contribution of specific features to the overall accuracy. This requires training on CPU/GPU intensive machines, with perhaps more concurrency capabilities within the models.
 Also, this research used small data sets, where it is easy to gain much more data from publicly available social networks publications.
 Specifically, it can be interesting to check on more areas of work of the tested users.
-Hebrew has some unique style based features that can be used as basis for identification, such as letter repetitions, deliberated typos and slang usage. Since our corpus was taken from the tweets of journalists, these unique style based features was not seen.
+Looking at the relation between the number of messages a user has and the accuracy of the user's predictions, we see a sharp possible curve that may tell us that even by adding not too much data, we may improve accuracy greatly. This relation is illustrated in figure \ref{fig:tweets accuracy relation}.
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\textwidth]{"figures/tweets_accuracy_relation"}
+	\caption{Number of Tweets / Accuracy relation}
+	\label{fig:tweets accuracy relation}
+\end{figure}
+Hebrew has some unique style based features that can be used as basis for identification, such as letter repetitions, deliberated typos and slang usage. Since our corpus was taken from the tweets of journalists, these unique style based features were not seen.
 We could use for journalism a sentiment analysis approach, and we suppose that this approach can help achieve good improvement, and can also be good idea for further research.
 Lastly, Using the confusion matrix, we can further investigate what makes our model better, and what makes it fail.
 
@@ -214,7 +221,7 @@ Lastly, Using the confusion matrix, we can further investigate what makes our mo
 \label{Conclusion}
 
 Our attempt to research the capabilities of machine learning with NLP methods for Hebrew stylometry with Hebrew driven methods such as morphological analysis and disambiguation POS analysis provided results similar to those of works on the English language, without those Hebrew driven methods.
-Still, our model's accuracy was quite the same as those of work performed on English based models, and we assume that with better models and more training our model can provide even better accuracy.
+Still, our model's accuracy was quite the same as those of work performed on English based data-sets, and we assume that with better models and more training our model can provide even better accuracy.
 
 \bibliography{citation-287188044}
 \bibliographystyle{plainnat}
