@@ -1,0 +1,12 @@
+BagOfWords
+% StemmedBagOfWords
+% Bigrams
+% PosBagOfWords
+% NumberOfMorphemes
+AverageWordSize
+% NumberOfCharacters
+% NumberOfPucntuationMarks
+% AverageNumberOfPunctuationMarks
+% PosUsage
+% AverageSentenceSize
+% NumOfLongWords
