@@ -71,7 +71,7 @@ Then, for each run, we use a choice of ``Learning Model" to train on the gold li
 Lastly, we use the encoder on the test list, and compare its results with the actual authors from the test list using the evaluation component, to test the system's accuracy.
 We use the fraction of correctly identified authors as the evaluation metric.
 
-\section{Approach}
+\section{Benchmarking Approach}
 \label{Approach}
 
 We now describe the benchmarking approach step by step, and describe how each step is implemented in our work.
@@ -208,22 +208,43 @@ We've tested each style marker feature set combined with the bag of words featur
 	\label{fig:contribute}
 \end{figure}
 
-\section{Results}
+\section{Results and Discussion}
 \label{Results}
+
+Comparing Logistic Regression with Support Vector Machine learning models with style marker feature sets yields a slightly better results for SVM.
+This may show that style is hard to identify, and it is better 
+Scaling the features before training and evaluating was proven useless.
+When it comes to type of feature sets, a simple bag of words model was proven better than many more sophisticated models. We assume that the low number of tested features in the feature style model is the reason this approach was not accurate enough. A combination of bag of words with a single style marker feature showed only limited improvement, and the full case of style marker features was not tested.
+Trying to figure the most helpful single style feature that can contribute to the Bag of Words model again resulted with a non sophisticated number of characters result. This shows us that the number of characters is a good distinguisher of identity, and that it is loosely dependent on the choice of words.
 
 \section{Further Work}
 \label{Further Work}
+
+Due to time constraints and low CPU/GPU power, and the long time it takes to train our models, we've left many interesting cases still unresolved for benchmarking.
+We've noticed that the number of authors, and the number of features used, slowed down the training exponentially, and running training could take from few minutes to days and weeks on our platforms.
+We haven't checked the Logistic Regression model with Bag of Words feature set, or any other words based feature sets.
+We tried finding best kernel for SVM by working on small data sets, and projecting our results to larger sets. This may not be true, and checking other kernels directly on larger data sets may improve results.
+We haven't checked more sophisticated learning models, such as neural networks and deep neural networks models.
+It would be also interesting to check more feature rich combinations, and check the contribution of specific features to the overall accuracy. This requires training on CPU/GPU intensive machines, with perhaps more concurrency capabilities within the models.
+Also, this research used small data sets, where it is easy to gain much more data from publicly available social networks publications.
+Specifically, it can be interesting to check on more areas of work of the tested users.
+Hebrew has some unique style based features that can be used as basis for identification, such as letter repetitions, deliberated typos and slang usage. Since our corpus was taken from the tweets of journalists, these unique style based features was not seen.
+We could use for journalism a sentiment analysis approach, and we suppose that this approach can help achieve good improvement, and can also be good idea for further research.
+
 %(@asi - not sure this is the right place to put the following paragraph, but I wanted to relate to one of the points in the submission guidelines)
-One of the things that made our task difficult is the extensive time it took for training in relation to the number of authors examined. We noticed that this time duration grew almost exponentially; running a small number of authors (2-5) could take from a few minutes to a few hours. As the number of authors grew, the execution time increased to day(s), which given the time-frame at hand impeded our ability to explore further.
+%One of the things that made our task difficult is the extensive time it took for training in relation to the number of authors examined. We noticed that this time duration grew almost exponentially; running a small number of authors (2-5) could take from a few minutes to a few hours. As the number of authors grew, the execution time increased to day(s), which given the time-frame at hand impeded our ability to explore further.
 % asi: I think we should not criticise YAP...
 %Another challenge we noticed is the performance of the YAP parser - after running its disambiguation command, we noticed a non-trivial amount of errors in its parsing. We did not have time to explore other parsers, and it's unclear as to how these errors affected the authorship detection, but this is an issue we would have loved to explore further.
 
-possible under discussion, if more subsections required
 \section{Conclusion}
 \label{Conclusion}
 
+Our attempt to research the capabilities of machine learning with NLP methods for Hebrew stylometry with Hebrew driven methods such as morphological analysis and disambiguation POS analysis provided results similar to those of works on the English language, without those Hebrew driven methods.
+Still, our model's accuracy was quite the same as those of work performed on English based models, and we assume that with better models and more training our model can provide even better accuracy.
+
 \section{Acknowledgments}
 \label{Acknowledgements}
+
 We would like to acknowledge and thank the following publicly available libraries that we used as part of facilitating our model and experiments:\\
 1. Twitter4j: Twitter4J is released under Apache License 2.0, Copyright 2007 Yusuke Yamamoto. For additional information: 
 	\href{http://twitter4j.org/en/index.html}{Twitter4j site}\\
@@ -239,7 +260,6 @@ Full citation (TODO: need to further process the 'InProceedings' field):\\
   location = {Osaka}
 }\\
 3. libSVM\\
-
 
 \begin{thebibliography}{9}
 \bibitem{rachel}
