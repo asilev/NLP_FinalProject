@@ -16,8 +16,6 @@ After built into an executable tool, we used YAP with two commands:
 "yap hebma -raw input.raw -out lattices.conll": This command runs YAP as a morphological analyzer. The ouptut file "lattices.conll" is then fed to the second command - 
 "yap md -in lattices.conll -om output.conll": This command runs YAP disambiguation function and outputs the file "output.conll" which provides, for each tweet, its morphological analysis, allowing us to continue with the simulations.
  
-** TODO: Also, resources should be moved the a dedicated folder for resouces (YAP outputs, twetter outputs, etc.).**
-
 The files in Feature model are helper classes that help arrange the output data from YAP according to different types of feature sets:
 **AllFeaturesModel** creates a vector with all the features from other models.
 **BagOfWordsModel** has several static methods that create different types of vectors, where each feature in the vector is a word or word-based feature (bi-gram, word with POS, stemmed word, etc.).
@@ -48,12 +46,34 @@ Each line contains a name of a feature-set, and lines preceded with "%" are cons
 We used the windows executable version of svmlib, in the following manner:
 * Updating the model file according to the required feature sets.
 * Running the SupportVectorMachine utility to produce inputs.
-* If scaling is tested, running svm-scale.exe -l 0 <name of training input file> > <name of desired scaled training input file>
-* Then, if scaling is tested, running svm-scale.exe -l 0 <name of evaluation input file> > <name of desired scaled evaluation input file>
-* running svm-train.exe -t 1 -d 1 -r 0 -g <gamma parameter> -c <c parameter> <name of training / scaled training input file>
-** The c and gamma parameters were changed in runs in order to find optimal values.
-* running svm-predict.txt <name of evaluation / scaled evaluation input file> <name of training / scaked training model file> eval
+* If scaling is tested, running svm-scale.exe -l 0 [name of training input file] > [name of desired scaled training input file]
+* Then, if scaling is tested, running svm-scale.exe -l 0 [name of evaluation input file] > [name of desired scaled evaluation input file]
+* running svm-train.exe -t 1 -d 1 -r 0 -g [gamma parameter] -c [c parameter] [name of training / scaled training input file]
+   - The c and gamma parameters were changed in runs in order to find optimal values.
+* running svm-predict.txt [name of evaluation / scaled evaluation input file] [name of training / scaked training model file] eval
 * The output of the svm-predict was saved as the accuracy of the model.
 Examples of python scripts that we used for this process can be found in resources folder.
 
 The last class we've used is the "ConfusionMatrixBuilder", that takes a tagged evaluation file and an actual evaluation from libSVM, and creates the confusion matrix for these parameters. This currently assumes 10 authors exactly.
+
+The rosources folder is organized as follows:
+* RawDataFromTwitter is the output of the TwitterReader, and its normalized form.
+* OutputFromYap is the output from YAP, after given the normalized form of the twitter reader as input. It is further divided to 1K_20A for ~1000 tweets from 20 authors, 10K_20A for ~4,000 tweets from 20 authors, and 10K_10A for ~4,000 tweets from 10 authors
+* Results shows results for our runs. Each result folder may contain:
+   - How we ran the SVM model, using a python script call SvmRunner. (Logistic Regression was ran without scripts). This also includes the hyper parameters in use.
+   - model.txt file, that lists the features that were used (features listed in this file without the % symbol).
+   - The training file, which is the output of the SvmPrepare (on gold corpus) and input for svm-train.
+   - The evaluation file, which is also the outptu of the SvmPrepare (on test corpus) and input for svm-predict.
+   - The training model, which is the output of svm-train.
+   - FeatureMapper, a file that maps the number of features in other files to their names.
+   - resultFile, the output of the running script, with all the accuract results from svm-predict.
+   - The folders are arranged as follows:
+      - BOBW: A test for Bag of Bigram Words.
+      - BOPW: A test for Bag of POS Words.
+      - BOSW: A test for Bag of Stemmed Words.
+      - BOW: A test for simple Bag of Words.
+      - ConfusionMatrix: A test to provide input to confusion matrix analysis (includes the actual prediction inside as eval file).
+      - FeatureContribution: A test to see which feature from style marker mostly improves bag of words. This folder includes a file for each style marker feature.
+      - SVMn: For each n, an SVM run with all style marker feature for n authors.
+      - Scale-FM: A run of SVM with all style marker features with feature scaling.
+      - Scale-BOW: A run of SVM with Bag of Words features with feature scaling.
